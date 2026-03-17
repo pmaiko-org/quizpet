@@ -10,7 +10,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - "5000:5000"
+      - "4999:4999"
     networks:
       - shared_network
       - internal_network

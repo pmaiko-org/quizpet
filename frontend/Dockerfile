@@ -16,6 +16,6 @@ COPY package*.json ./
 RUN npm ci
 RUN npm run build
 
-EXPOSE 5000
+EXPOSE 4999
 
 CMD sh -c "nginx && node .output/server/index.mjs"

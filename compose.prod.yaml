@@ -10,10 +10,10 @@ services:
       - shared_network
       - internal_network
     ports:
-      - "5000:5000"
+      - "4999:4999"
     environment:
-      VITE_SERVER_PORT: ${FRONTEND_PORT}
-      VITE_API_URL: ${FRONTEND_API_URL}
+      NITRO_PORT: ${FRONTEND_PORT}
+      NUXT_API_URL: ${FRONTEND_API_URL}
 
   backend:
     container_name: "${PROJECT_PREFIX}-backend"
