@@ -1,0 +1,23 @@
+name: Prod Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-prod:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Copy .env from server
+        run: cp /home/petya/projects/quizpet/.env .env
+
+      - name: Sync code to server folder
+        run: rsync -av --delete ./ /home/petya/projects/quizpet/
+
+      - name: Run make prod
+        run: make prod
