@@ -15,4 +15,6 @@ COPY package*.json ./
 
 RUN npm ci
 
+EXPOSE 5000
+
 CMD sh -c "nginx && npm run dev"
