@@ -1,0 +1,1 @@
+sudo chown -R petya:petya /home/petya/projects/quizpet/
