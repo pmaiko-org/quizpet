@@ -1,0 +1,51 @@
+services:
+  frontend:
+    container_name: "${PROJECT_PREFIX}-frontend"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5000:5000"
+    networks:
+      - shared_network
+      - internal_network
+    environment:
+      NITRO_PORT: ${FRONTEND_PORT}
+      NUXT_API_URL: ${FRONTEND_API_URL}
+
+  backend:
+    container_name: "${PROJECT_PREFIX}-backend"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - internal_network
+    environment:
+      PORT: ${BACKEND_PORT}
+
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_DATABASE: ${POSTGRES_DB}
+
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GOOGLE_SERVICE_ACCOUNT_KEY: ${GOOGLE_SERVICE_ACCOUNT_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REFRESH_TOKEN: ${GOOGLE_REFRESH_TOKEN}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+      GOOGLE_DRIVE_FOLDER_ID: ${GOOGLE_DRIVE_FOLDER_ID}
+
+  db:
+    container_name: "${PROJECT_PREFIX}-db"
+    ports:
+      - "${POSTGRES_PORT}:5432"
