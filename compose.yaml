@@ -9,6 +9,36 @@ volumes:
   db-data:
 
 services:
+  frontend:
+    container_name: "${PROJECT_PREFIX}-frontend"
+    depends_on:
+      - backend
+    networks:
+      - shared_network
+      - internal_network
+    environment:
+      NITRO_PORT: ${FRONTEND_PORT}
+      NUXT_API_URL: ${FRONTEND_API_URL}
+
+  backend:
+    container_name: "${PROJECT_PREFIX}-backend"
+    networks:
+      - internal_network
+    depends_on:
+      - db
+    environment:
+      PORT: ${BACKEND_PORT}
+
+      DB_HOST: "${PROJECT_PREFIX}-db"
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_DATABASE: ${POSTGRES_DB}
+
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+
   db:
     image: postgres:17-alpine
     container_name: "${PROJECT_PREFIX}-db"
@@ -22,3 +52,5 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - internal_network
+    ports:
+      - "${POSTGRES_PORT}:5432"
