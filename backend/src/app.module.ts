@@ -21,7 +21,7 @@ import { SetsModule } from './modules/sets/sets.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService<EnvironmentVariables>) => {
         const db = configService.get('db', { infer: true })!;
-        console.log(db);
+
         return {
           type: 'postgres',
           host: db.host,

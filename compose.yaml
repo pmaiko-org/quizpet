@@ -7,7 +7,6 @@ networks:
 
 volumes:
   db-data:
-  gdrive-data:
 
 services:
   frontend:
@@ -27,6 +26,14 @@ services:
       - internal_network
     depends_on:
       - db
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - ./rclone:/root/.config/rclone
     environment:
       PORT: ${BACKEND_PORT}
 
@@ -55,18 +62,3 @@ services:
       - internal_network
     ports:
       - "${POSTGRES_PORT}:5432"
-
-  gdrive-mount:
-    image: rclone/rclone:latest
-    container_name: gdrive
-    command: "mount gdrive: /mnt/gdrive --vfs-cache-mode=off --allow-other --allow-non-empty"
-    cap_add:
-      - SYS_ADMIN
-    devices:
-      - /dev/fuse
-    security_opt:
-      - apparmor:unconfined
-    volumes:
-      - ./rclone/rclone.conf:/config/rclone/rclone.conf:ro
-      - gdrive-data:/mnt/gdrive
-    restart: unless-stopped

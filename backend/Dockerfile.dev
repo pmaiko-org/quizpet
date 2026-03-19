@@ -3,7 +3,12 @@ FROM node:22.18.0-alpine
 WORKDIR /app
 
 COPY package*.json ./
+RUN npm ci && npm cache clean --force
 
-RUN npm ci
+COPY . .
 
-CMD ["npm", "run", "start:dev"]
+RUN apk add --no-cache rclone fuse3 bash
+RUN mkdir -p /storage
+VOLUME ["/storage"]
+
+CMD ["sh", "-c", "rclone mount gdrive: /storage --vfs-cache-mode=off --allow-other --allow-non-empty & npm run start:dev"]
