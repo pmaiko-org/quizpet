@@ -16,6 +16,9 @@ jobs:
       - name: Copy .env from server
         run: cp /home/petya/projects/quizpet/.env .env
 
+      - name: Copy rclone.conf from server
+        run: cp /home/petya/projects/quizpet/rclone/rclone.conf rclone/rclone.conf
+
       - name: Sync code to server folder
         run: rsync -av --delete ./ /home/petya/projects/quizpet/
 

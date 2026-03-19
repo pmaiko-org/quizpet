@@ -1,5 +1,6 @@
 .idea
 .env
+rclone/rclone.conf
 .env.development.local
 .env.test.local
 .env.production.local
