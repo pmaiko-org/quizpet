@@ -12,3 +12,4 @@ RUN mkdir -p /storage
 VOLUME ["/storage"]
 
 CMD ["sh", "-c", "rclone mount gdrive: /storage --vfs-cache-mode=off --allow-other --allow-non-empty & npm run start:dev"]
+#CMD sh -c 'rclone mount gdrive: /storage --vfs-cache-mode=off --allow-other --allow-non-empty & NODE_OPTIONS="--trace-deprecation" npm run start:dev'

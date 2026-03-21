@@ -17,4 +17,4 @@ services:
       - ./backend:/app
       - /app/node_modules
     environment:
-      NODE_ENV: "production"
+      NODE_ENV: "development"
