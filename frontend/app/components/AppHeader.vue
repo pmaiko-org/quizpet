@@ -2,11 +2,10 @@
   <UHeader :toggle="false">
     <template #left>
       <UButton
-        v-if="!sidebarVisible"
         icon="i-lucide-menu"
         variant="outline"
         class="cursor-pointer"
-        @click="openSidebar"
+        @click="toggleSidebar"
       />
 
       <NuxtLink to="/" class="text-2xl font-bold">QuizPet</NuxtLink>
@@ -15,5 +14,5 @@
 </template>
 
 <script setup lang="ts">
-const { sidebarVisible, openSidebar } = useUiStore();
+const { toggleSidebar } = useUiStore();
 </script>

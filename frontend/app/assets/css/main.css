@@ -1,2 +1,28 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+.slide-left-enter-from {
+    @apply xl:-ml-[320px];
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.slide-left-enter-active {
+    transition: margin-left 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+.slide-left-enter-to {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.slide-left-leave-from {
+    transform: translateX(0);
+    opacity: 1;
+}
+.slide-left-leave-active {
+    transition: margin-left 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+.slide-left-leave-to {
+    @apply xl:-ml-[320px];
+    transform: translateX(-100%);
+    opacity: 0;
+}

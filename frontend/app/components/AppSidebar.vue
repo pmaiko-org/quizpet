@@ -1,35 +1,37 @@
 <template>
-  <aside
-    v-if="sidebarVisible"
-    class="sidebar"
-  >
-    <div class="flex items-center justify-end h-(--ui-header-height) px-2">
-      <UButton
-        icon="i-lucide-sidebar-close"
-        variant="outline"
-        class="cursor-pointer"
-        @click="closeSidebar"
-      />
-    </div>
+  <Transition name="slide-left">
+    <aside
+      v-if="sidebarVisible"
+      class="sidebar"
+    >
+      <div class="flex items-center justify-end h-(--ui-header-height) px-2">
+        <UButton
+          icon="i-lucide-sidebar-close"
+          variant="outline"
+          class="cursor-pointer"
+          @click="closeSidebar"
+        />
+      </div>
 
-    <div class="px-2">
-      <UUser
-        name="John Doe"
-        description="Software Engineer"
-        :avatar="{
-          src: 'https://i.pravatar.cc/150?u=john-doe',
-          loading: 'lazy',
-          icon: 'i-lucide-image',
-        }"
-        class="mb-4"
-      />
+      <div class="px-2">
+        <UUser
+          name="John Doe"
+          description="Software Engineer"
+          :avatar="{
+            src: 'https://i.pravatar.cc/150?u=john-doe',
+            loading: 'lazy',
+            icon: 'i-lucide-image',
+          }"
+          class="mb-4"
+        />
 
-      <UNavigationMenu
-        :items="items"
-        orientation="vertical"
-      />
-    </div>
-  </aside>
+        <UNavigationMenu
+          :items="items"
+          orientation="vertical"
+        />
+      </div>
+    </aside>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -163,8 +165,7 @@ const { sidebarVisible, closeSidebar } = useUiStore();
 @reference "~/assets/css/main.css";
 
 .sidebar {
-  @apply
-  fixed
+  @apply fixed
   xl:sticky
   z-51
   top-0
@@ -177,6 +178,7 @@ const { sidebarVisible, closeSidebar } = useUiStore();
   bg-default/75
   backdrop-blur
   border-r
-  border-default;
+  border-default
+  will-change-transform;
 }
 </style>

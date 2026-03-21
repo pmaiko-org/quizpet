@@ -11,9 +11,14 @@ export const useUiStore = () => {
     state.value.sidebarVisible = false
   }
 
+  const toggleSidebar = () => {
+    state.value.sidebarVisible = !state.value.sidebarVisible
+  }
+
   return {
     ...toRefs(state.value),
     openSidebar,
     closeSidebar,
+    toggleSidebar,
   } as const
 }
