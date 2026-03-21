@@ -1,5 +1,7 @@
 <template>
-  cabinet
+  <div>
+    cabinet
+  </div>
 </template>
 
 <script lang="ts">
