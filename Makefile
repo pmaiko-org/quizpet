@@ -6,7 +6,8 @@ NETWORK_NAME = shared_network
 .PHONY: dev prod down rebuild logs ps
 
 dev:
-	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) up --build --remove-orphans
+	docker volume ls -qf dangling=true | xargs -r docker volume rm
+	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) up --build --remove-orphans --renew-anon-volumes
 
 prod: create-network
 	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_PROD) up --build -d --remove-orphans

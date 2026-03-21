@@ -17,4 +17,4 @@ RUN npm ci
 
 EXPOSE 4999
 
-CMD sh -c "nginx && npm run dev"
+CMD ["sh", "-c", "npm run dev || true && tail -f /dev/null"]
