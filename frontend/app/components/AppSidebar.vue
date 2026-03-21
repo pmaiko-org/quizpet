@@ -163,6 +163,20 @@ const { sidebarVisible, closeSidebar } = useUiStore();
 @reference "~/assets/css/main.css";
 
 .sidebar {
-  @apply fixed xl:sticky z-51 top-0 left-0 w-xs h-dvh overflow-x-hidden overflow-y-auto overscroll-y-contain bg-default/75 backdrop-blur border-r border-default;
+  @apply
+  fixed
+  xl:sticky
+  z-51
+  top-0
+  left-0
+  w-xs
+  h-dvh
+  overflow-x-hidden
+  overflow-y-auto
+  overscroll-y-contain
+  bg-default/75
+  backdrop-blur
+  border-r
+  border-default;
 }
 </style>

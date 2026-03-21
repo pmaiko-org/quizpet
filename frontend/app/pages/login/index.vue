@@ -62,9 +62,8 @@
           </p>
 
           <div class="mt-8 space-y-4">
-            <NuxtLink
-              type="button"
-              to="/backend/auth/google"
+            <a
+              href="/backend/auth/google"
               class="flex w-full items-center justify-center gap-3 rounded-2xl bg-slate-950 px-5 py-4 text-base font-medium text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
             >
               <img
@@ -73,7 +72,7 @@
                 class="h-5 w-5 rounded-full"
               />
               Продовжити з Google
-            </NuxtLink>
+            </a>
 
             <NuxtLink
               to="/"

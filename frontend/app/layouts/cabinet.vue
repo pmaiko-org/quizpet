@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-dvh">
+  <div class="flex min-h-lvh">
     <AppSidebar />
 
     <div class="flex-1">
