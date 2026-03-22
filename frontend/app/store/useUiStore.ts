@@ -1,6 +1,6 @@
 export const useUiStore = () => {
   const state = useState('uiStore', () => ({
-    sidebarVisible: false,
+    sidebarVisible: true,
   }))
 
   const openSidebar = () => {
