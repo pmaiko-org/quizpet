@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-lvh">
+  <div class="flex min-h-screen">
     <AppSidebar />
 
     <div class="flex-1 transition-all duration-1300">

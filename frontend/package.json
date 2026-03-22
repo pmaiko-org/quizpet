@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --public",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.5.1",
+    "@vueuse/core": "^14.2.1",
     "nuxt": "^4.4.2",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5.30",
@@ -21,6 +22,7 @@
     "vue-router": "^5.0.3"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.98"
+    "@iconify-json/lucide": "^1.2.98",
+    "sass": "^1.98.0"
   }
 }

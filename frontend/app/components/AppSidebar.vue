@@ -129,12 +129,14 @@ const { sidebarVisible, closeSidebar } = useUiStore();
 
 .sidebar {
   @apply fixed
+  w-xs
   xl:sticky
+  xl:h-screen
+  xl:bottom-auto
   z-51
   top-0
   left-0
-  w-xs
-  h-lvh
+  bottom-0
   isolate
   overflow-x-hidden
   overflow-y-auto
