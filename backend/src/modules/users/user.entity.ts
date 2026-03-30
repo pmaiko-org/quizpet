@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
 import { Set } from '../sets/set.entity';
+import { StorageFile } from '../storage/storage.entity';
 
 @Entity('users')
 export class User {
@@ -18,8 +26,9 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column({ nullable: true })
-  picture: string;
+  @OneToOne(() => StorageFile, { nullable: true, cascade: true, eager: true })
+  @JoinColumn({ name: 'pictureId' })
+  picture?: StorageFile;
 
   @OneToMany(() => Set, (set) => set.user)
   sets: Set[];

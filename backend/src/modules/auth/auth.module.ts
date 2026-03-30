@@ -7,6 +7,8 @@ import { User } from '../users/user.entity';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { StorageModule } from '../storage/storage.module';
+import { RequestModule } from '../../common/request/request.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.JWT_SECRET || 'secretKey',
       signOptions: { expiresIn: '1d' },
     }),
+    StorageModule,
+    RequestModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy, JwtStrategy],

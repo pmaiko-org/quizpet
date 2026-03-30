@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { RefreshTokenPayload } from './interfaces/jwt-payload.interface';
+import { StorageService } from '../storage/services/storage.service';
+import { RequestService } from '../../common/request/request.service';
+import { StorageFile } from '../storage/storage.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +14,8 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
+    private storageService: StorageService,
+    private requestService: RequestService,
   ) {}
 
   async validateUser(profile: any) {
@@ -18,19 +23,37 @@ export class AuthService {
     let user = await this.userRepository.findOne({ where: { googleId } });
 
     if (!user) {
+      const picture = photos[0].value;
+
+      let storageFile: StorageFile | undefined = undefined;
+
+      if (picture) {
+        const response = await this.requestService.get<ArrayBuffer>(picture, {
+          responseType: 'arraybuffer',
+        });
+        storageFile = await this.storageService.uploadFile({
+          originalname: `user-${googleId}`,
+          mimetype: response.headers['content-type'],
+          size: Number(response.headers['content-length'] ?? 0),
+          buffer: Buffer.from(response.data),
+        });
+      }
+
       user = this.userRepository.create({
         googleId,
         email: emails[0].value,
         firstName: name.givenName,
         lastName: name.familyName,
-        picture: photos[0].value,
+        picture: storageFile,
       });
+
       await this.userRepository.save(user);
     }
 
-    const token = this.jwtService.sign({ sub: user.id });
+    const token = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
 
-    return { user, token };
+    return { user, token, refreshToken };
   }
 
   generateAccessToken(user: User) {

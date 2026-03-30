@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -12,8 +20,12 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req) {
-    return req.user; // { user, token }
+  googleAuthRedirect(@Req() req, @Res() res) {
+    const { token, refreshToken } = req.user;
+
+    return res.redirect(
+      `/login?token=${encodeURIComponent(token)}&refreshToken=${encodeURIComponent(refreshToken)}`,
+    );
   }
 
   @Post('refresh')

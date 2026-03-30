@@ -9,9 +9,12 @@ import { UsersModule } from './modules/users/users.module';
 import { CardsModule } from './modules/cards/cards.module';
 import { SetsService } from './modules/sets/sets.service';
 import { SetsModule } from './modules/sets/sets.module';
+import { StorageModule } from './modules/storage/storage.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
@@ -39,6 +42,7 @@ import { SetsModule } from './modules/sets/sets.module';
     UsersModule,
     CardsModule,
     SetsModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService, SetsService],
