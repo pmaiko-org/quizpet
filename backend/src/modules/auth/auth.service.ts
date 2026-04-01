@@ -50,10 +50,10 @@ export class AuthService {
       await this.userRepository.save(user);
     }
 
-    const token = this.generateAccessToken(user);
+    const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
 
-    return { user, token, refreshToken };
+    return { user, accessToken, refreshToken };
   }
 
   generateAccessToken(user: User) {
@@ -70,9 +70,9 @@ export class AuthService {
     );
   }
 
-  verifyRefreshToken(token: string) {
+  verifyRefreshToken(refreshToken: string) {
     try {
-      return this.jwtService.verify<RefreshTokenPayload>(token, {
+      return this.jwtService.verify<RefreshTokenPayload>(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
     } catch {

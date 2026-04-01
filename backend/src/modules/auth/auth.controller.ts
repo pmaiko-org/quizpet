@@ -21,10 +21,10 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req, @Res() res) {
-    const { token, refreshToken } = req.user;
+    const { accessToken, refreshToken } = req.user;
 
     return res.redirect(
-      `/login?token=${encodeURIComponent(token)}&refreshToken=${encodeURIComponent(refreshToken)}`,
+      `/login?accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`,
     );
   }
 
