@@ -113,15 +113,13 @@ const { setTokens } = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
-onBeforeMount(() => {
+onMounted(() => {
   const accessToken = route.query.accessToken
   const refreshToken = route.query.refreshToken
 
   if (accessToken && refreshToken) {
     setTokens(accessToken as string, refreshToken as string)
-    setTimeout(() => {
-      router.go(0)
-    }, 300)
+    router.push('/')
   }
 })
 </script>

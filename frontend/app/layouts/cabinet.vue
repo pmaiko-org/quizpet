@@ -15,4 +15,25 @@
 </template>
 
 <script setup lang="ts">
+const { isLoggedIn } = useAuthStore()
+const { getProfile } = useProfileStore()
+
+onMounted(() => {
+  if (import.meta.client) {
+    if (isLoggedIn.value) {
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+      getProfile()
+    }
+  }
+})
 </script>
