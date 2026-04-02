@@ -119,7 +119,7 @@ onMounted(() => {
 
   if (accessToken && refreshToken) {
     setTokens(accessToken as string, refreshToken as string)
-    router.push('/')
+    router.replace('/')
   }
 })
 </script>
