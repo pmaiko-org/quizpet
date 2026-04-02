@@ -18,6 +18,13 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["~/store"],
   },
+  routeRules: {
+    "/**": {
+      headers: {
+        "Cache-Control": "no-cache",
+      },
+    },
+  },
   features: {
     inlineStyles: true,
   },
