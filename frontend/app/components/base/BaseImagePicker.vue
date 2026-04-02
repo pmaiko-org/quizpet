@@ -238,6 +238,10 @@ const normalizedItems = computed<ImageItem[]>(() => {
   });
 });
 
+const setImageValue = (value: string | undefined) => {
+  modelValue.value = value;
+};
+
 const selectedLibraryValue = computed<string | undefined>({
   get: () => {
     const selected = normalizedItems.value.find((item) => item.value === modelValue.value);

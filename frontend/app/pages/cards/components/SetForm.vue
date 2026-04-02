@@ -47,7 +47,7 @@
             >
               <USelectMenu
                 v-model="state.topic"
-                :items="topicOptions"
+                :items="topicSelectItems"
                 value-key="value"
                 label-key="label"
                 :search-input="{ placeholder: 'Знайти тематику' }"
@@ -56,6 +56,7 @@
               >
                 <template #item-leading="{ item }">
                   <UIcon
+                    v-if="isTopicOption(item)"
                     :name="item.icon"
                     class="size-4 text-primary"
                   />
@@ -175,11 +176,12 @@
         <CardForm
           v-for="(card, index) in state.cards"
           :key="card.position"
-          v-model="state.cards[index]"
+          :model-value="card"
           :index="index"
           :can-remove="state.cards.length > 2"
           :is-first="index === 0"
           :is-last="index === state.cards.length - 1"
+          @update:model-value="updateCard(index, $event)"
           @remove="removeCard(index)"
           @move-up="moveCard(index, index - 1)"
           @move-down="moveCard(index, index + 1)"
@@ -281,6 +283,19 @@ const topicOptions = [
 ] as const;
 
 type TopicValue = (typeof topicOptions)[number]["value"];
+type TopicOption = (typeof topicOptions)[number];
+
+const topicSelectItems = computed<TopicOption[]>(() => {
+  return topicOptions.map((topic) => ({ ...topic }));
+});
+
+const isTopicOption = (item: unknown): item is TopicOption => {
+  if (typeof item !== "object" || item === null) {
+    return false;
+  }
+
+  return "icon" in item;
+};
 
 const optionalString = z.preprocess(
   (value) => (typeof value === "string" ? value.trim() || undefined : undefined),
@@ -362,8 +377,20 @@ const moveCard = (fromIndex: number, toIndex: number) => {
   }
 
   const [card] = state.cards.splice(fromIndex, 1);
+  if (!card) {
+    return;
+  }
+
   state.cards.splice(toIndex, 0, card);
   syncCardPositions();
+};
+
+const updateCard = (index: number, card: ICard) => {
+  if (!state.cards[index]) {
+    return;
+  }
+
+  state.cards[index] = card;
 };
 
 const onSubmit = (event: { data: z.output<typeof setSchema> }) => {

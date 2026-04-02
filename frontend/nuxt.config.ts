@@ -29,4 +29,10 @@ export default defineNuxtConfig({
   features: {
     inlineStyles: true,
   },
+
+  runtimeConfig: {
+    public: {
+      apiUrl: '/backend',
+    },
+  }
 });

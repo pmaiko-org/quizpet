@@ -18,22 +18,9 @@
 const { isLoggedIn } = useAuthStore()
 const { getProfile } = useProfileStore()
 
-onMounted(() => {
-  if (import.meta.client) {
-    if (isLoggedIn.value) {
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-      getProfile()
-    }
+onMounted(async () => {
+  if (isLoggedIn.value) {
+    await getProfile()
   }
 })
 </script>

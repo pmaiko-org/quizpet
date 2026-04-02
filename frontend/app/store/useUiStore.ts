@@ -16,7 +16,7 @@ export const useUiStore = () => {
   }
 
   return {
-    ...toRefs(state.value),
+    ...toComputedStateRefs(state),
     openSidebar,
     closeSidebar,
     toggleSidebar,

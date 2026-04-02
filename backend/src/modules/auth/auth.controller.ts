@@ -1,4 +1,5 @@
 import {
+  UnauthorizedException,
   Body,
   Controller,
   Get,
@@ -31,7 +32,9 @@ export class AuthController {
   @Post('refresh')
   refreshToken(@Body('refreshToken') refreshToken: string) {
     const payload = this.authService.verifyRefreshToken(refreshToken);
-    if (!payload) return { error: 'Invalid refresh token' };
+    if (!payload) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
 
     const accessToken = this.authService.generateAccessToken({
       id: payload.sub,

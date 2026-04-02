@@ -4,13 +4,12 @@ export const useProfileStore = () => {
     profile: null as never,
   }))
 
-  const getProfile = () => {
-    const response = $repository.profile.getProfile()
-    console.log(response);
+  const getProfile = async () => {
+    await $repository.profile.getProfile()
   }
 
   return {
-    ...toRefs(state.value),
+    ...toComputedStateRefs(state),
     getProfile,
   } as const
 }

@@ -1,3 +1,3 @@
-export enum HTTP {
-  HTTP_STATUS_UNAUTHORIZED = 401
+export enum StatusCodes {
+  UNAUTHORIZED = 401
 }
