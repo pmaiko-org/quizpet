@@ -1,5 +1,6 @@
 import { createRepository } from "~/repository";
 import { StatusCodes } from "~/constants";
+import { FetchError } from 'ofetch'
 
 export default defineNuxtPlugin(() => {
   const apiUrl = useApiUrl();
@@ -46,16 +47,17 @@ export default defineNuxtPlugin(() => {
         } as Record<string, unknown>
 
         try {
-          context.response = await api(context.request, {
+          await api(context.request, {
             ...retryOptions,
             // https://github.com/unjs/ofetch/issues/224
             onResponse(ctx) {
               Object.assign(context, ctx);
             }
           })
-        } catch {
-          executeAllAbortControllers()
-          await doLogout()
+        } catch (error) {
+          if (error instanceof FetchError) {
+            console.error(error)
+          }
         }
       }
     }

@@ -81,20 +81,18 @@
         />
       </UFormField>
 
-      <BaseImagePicker
+      <BaseFilePicker
         v-model="modelValue.termImage"
         :name="fieldName('termImage')"
         label="Зображення для терміна"
         description="Додаткове зображення, якщо хочете підсилити асоціацію."
-        :items="imageOptions"
       />
 
-      <BaseImagePicker
+      <BaseFilePicker
         v-model="modelValue.definitionImage"
         :name="fieldName('definitionImage')"
         label="Зображення для визначення"
         description="Можна використати окрему ілюстрацію для відповіді."
-        :items="imageOptions"
       />
 
       <BaseColorChooser
@@ -115,17 +113,9 @@
 </template>
 
 <script setup lang="ts">
-export interface ICard {
-  position: number;
-  term: string;
-  termImage: string | undefined;
-  definition: string;
-  definitionImage: string | undefined;
-  textColor: string | undefined;
-  backgroundColor: string | undefined;
-}
+import type { CardFormData } from "~/form";
 
-const props = defineProps<{
+const { index } = defineProps<{
   index: number;
   canRemove?: boolean;
   isFirst?: boolean;
@@ -138,16 +128,11 @@ defineEmits<{
   moveDown: [];
 }>();
 
-const imageOptions = [
-  "/2FPjlAyMQTA.jpg",
-  "/google-logo.svg",
-];
-
-const modelValue = defineModel<ICard>({
+const modelValue = defineModel<CardFormData>({
   required: true,
 });
 
-const fieldName = (field: keyof ICard) => {
-  return `cards.${props.index}.${field}`;
+const fieldName = (field: keyof CardFormData) => {
+  return `cards.${index}.${field}`;
 };
 </script>

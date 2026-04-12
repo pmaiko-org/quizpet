@@ -34,5 +34,8 @@ export default defineNuxtConfig({
     public: {
       apiUrl: '/backend',
     },
+  },
+  image: {
+    provider: 'none'
   }
 });

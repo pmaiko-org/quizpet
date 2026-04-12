@@ -6,19 +6,26 @@
     @submit="onSubmit"
     @error="onError"
   >
-    <section class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8">
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]">
+    <section
+      class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8"
+    >
+      <div
+        class="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]"
+      >
         <div class="space-y-5">
           <div class="space-y-2">
-            <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
-              Новий модуль
+            <p
+              class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+            >
+              Новий набір
             </p>
             <h2 class="text-3xl font-semibold text-highlighted">
               Створіть набір карток з чистою структурою
             </h2>
             <p class="max-w-2xl text-sm leading-6 text-toned">
-              Дайте модулю зрозумілу назву, коротко опишіть тему й додайте картки.
-              Форма підтримує світлу та темну тему через стандартні токени Nuxt UI.
+              Дайте модулю зрозумілу назву, коротко опишіть тему й додайте
+              картки. Форма підтримує світлу та темну тему через стандартні
+              токени Nuxt UI.
             </p>
           </div>
 
@@ -39,24 +46,25 @@
             </UFormField>
 
             <UFormField
+              v-if="topics"
               label="Тематика модуля"
-              name="topic"
+              name="topics"
               description="Це допоможе зрозуміти, до якої сфери належить набір."
               required
               size="xl"
             >
               <USelectMenu
-                v-model="state.topic"
-                :items="topicSelectItems"
-                value-key="value"
+                v-model="state.topicIds"
+                :items="topics"
                 label-key="label"
+                value-key="id"
+                :multiple="true"
                 :search-input="{ placeholder: 'Знайти тематику' }"
                 size="xl"
                 class="w-full"
               >
                 <template #item-leading="{ item }">
                   <UIcon
-                    v-if="isTopicOption(item)"
                     :name="item.icon"
                     class="size-4 text-primary"
                   />
@@ -77,86 +85,51 @@
               autoresize
               :rows="4"
               class="w-full"
-              placeholder="Опишіть, для кого цей модуль і що саме він покриває"
+              placeholder="Опишіть, для кого цей набір і що саме він покриває"
             />
           </UFormField>
-
-          <div class="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]">
-            <div
-              class="relative overflow-hidden rounded-2xl border border-default p-5 text-white"
-              :class="selectedTopic.previewClass"
-            >
-              <div class="absolute inset-0 bg-black/10" />
-              <div class="relative">
-                <p class="text-xs font-medium uppercase tracking-[0.24em] text-white/80">
-                  Preview
-                </p>
-                <h3 class="mt-3 text-xl font-semibold">
-                  {{ state.name.trim() || "Назва вашого модуля" }}
-                </h3>
-                <p class="mt-2 max-w-sm text-sm leading-6 text-white/85">
-                  {{ state.description.trim() || selectedTopic.description }}
-                </p>
-                <div class="mt-6 inline-flex rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs">
-                  {{ selectedTopic.label }}
-                </div>
-              </div>
-            </div>
-
-            <div class="rounded-2xl border border-default bg-elevated/60 p-5">
-              <p class="text-sm font-medium text-highlighted">Коротке зведення</p>
-              <div class="mt-4 space-y-3 text-sm text-toned">
-                <div class="flex items-center justify-between gap-4">
-                  <span>Кількість карток</span>
-                  <span class="font-semibold text-highlighted">{{ state.cards.length }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                  <span>Мінімум для форми</span>
-                  <span class="font-semibold text-highlighted">2</span>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                  <span>Опис</span>
-                  <span class="font-semibold text-highlighted">
-                    {{ state.description.trim() ? "Заповнений" : "Опціонально" }}
-                  </span>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                  <span>Тематика</span>
-                  <span class="font-semibold text-highlighted">{{ selectedTopic.label }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div class="rounded-[1.75rem] border border-default bg-gradient-to-br from-primary/10 via-transparent to-success/10 p-6">
-          <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+        <div
+          class="rounded-[1.75rem] border border-default bg-gradient-to-br from-primary/10 via-transparent to-success/10 p-6"
+        >
+          <p
+            class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+          >
             Порада
           </p>
           <h3 class="mt-3 text-xl font-semibold text-highlighted">
             Краще робити картки короткими
           </h3>
           <p class="mt-3 text-sm leading-6 text-toned">
-            Один термін, одна думка, один візуальний акцент. Так модуль читається
+            Один термін, одна думка, один візуальний акцент. Так набір читається
             швидше і краще працює на повторення.
           </p>
 
-          <div class="mt-5 rounded-2xl border border-default bg-default/80 p-4 text-sm text-toned">
-            Для кольорів і зображень нижче використані базові компоненти з підтримкою
-            помилок, світлої та темної теми.
+          <div
+            class="mt-5 rounded-2xl border border-default bg-default/80 p-4 text-sm text-toned"
+          >
+            Для кольорів і зображень нижче використані базові компоненти з
+            підтримкою помилок, світлої та темної теми.
           </div>
         </div>
       </div>
     </section>
 
-    <section class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8">
-      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <section
+      class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8"
+    >
+      <div
+        class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <div>
-          <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+          <p
+            class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+          >
             Картки
           </p>
           <h2 class="mt-1 text-2xl font-semibold text-highlighted">
-            Наповніть модуль контентом
+            Наповніть набір контентом
           </h2>
         </div>
 
@@ -206,7 +179,7 @@
         size="xl"
         class="justify-center"
       >
-        Створити модуль
+        Створити набір
       </UButton>
     </div>
   </UForm>
@@ -214,146 +187,53 @@
 
 <script setup lang="ts">
 import { z } from "zod";
-import type { ICard } from "../components/CardForm.vue";
+import { FetchError } from "ofetch";
+import type { ISetPayload, Topic } from "~/repository/sets";
+import {
+  initialCard,
+  initialSet,
+  type SetFormData,
+  type CardFormData,
+} from "~/form";
+import { storageFileSchema } from "~/repository/storage-files";
+import type { FormErrorEvent } from "#ui/types/form";
 
-interface ISet {
-  name: string;
-  topic: TopicValue;
-  description: string;
-  cards: ICard[];
-}
+const { $repository } = useNuxtApp();
 
-const topicOptions = [
-  {
-    label: "Музика",
-    value: "music",
-    icon: "i-lucide-music-4",
-    description: "Терміни, стилі, інструменти, жанри та все, що пов’язано з музикою.",
-    previewClass: "bg-gradient-to-br from-fuchsia-600 via-rose-500 to-orange-400",
-  },
-  {
-    label: "Медицина",
-    value: "medicine",
-    icon: "i-lucide-stethoscope",
-    description: "Анатомія, терміни, діагнози, препарати та інший медичний контент.",
-    previewClass: "bg-gradient-to-br from-cyan-700 via-sky-600 to-emerald-500",
-  },
-  {
-    label: "Книги",
-    value: "books",
-    icon: "i-lucide-book-open-text",
-    description: "Автори, сюжети, персонажі, літературні терміни та читацькі добірки.",
-    previewClass: "bg-gradient-to-br from-amber-700 via-orange-600 to-yellow-500",
-  },
-  {
-    label: "Спорт",
-    value: "sport",
-    icon: "i-lucide-trophy",
-    description: "Види спорту, правила, інвентар, команди, тактики та спортивні терміни.",
-    previewClass: "bg-gradient-to-br from-lime-600 via-emerald-500 to-cyan-500",
-  },
-  {
-    label: "Мови",
-    value: "languages",
-    icon: "i-lucide-languages",
-    description: "Слова, переклади, фрази, граматика та мовні конструкції.",
-    previewClass: "bg-gradient-to-br from-violet-700 via-purple-600 to-fuchsia-500",
-  },
-  {
-    label: "Наука",
-    value: "science",
-    icon: "i-lucide-flask-conical",
-    description: "Формули, поняття, процеси, явища та матеріали з природничих наук.",
-    previewClass: "bg-gradient-to-br from-blue-700 via-indigo-600 to-cyan-500",
-  },
-  {
-    label: "Історія",
-    value: "history",
-    icon: "i-lucide-landmark",
-    description: "Дати, події, особистості, епохи та історичні поняття.",
-    previewClass: "bg-gradient-to-br from-stone-700 via-amber-700 to-orange-500",
-  },
-  {
-    label: "Інше",
-    value: "other",
-    icon: "i-lucide-shapes",
-    description: "Універсальна тематика для наборів, які не входять в основні категорії.",
-    previewClass: "bg-gradient-to-br from-slate-700 via-slate-600 to-zinc-500",
-  },
-] as const;
+const topics = ref<Topic[] | null>(null);
 
-type TopicValue = (typeof topicOptions)[number]["value"];
-type TopicOption = (typeof topicOptions)[number];
-
-const topicSelectItems = computed<TopicOption[]>(() => {
-  return topicOptions.map((topic) => ({ ...topic }));
+onMounted(async () => {
+  topics.value = await $repository.sets.getTopics();
 });
 
-const isTopicOption = (item: unknown): item is TopicOption => {
-  if (typeof item !== "object" || item === null) {
-    return false;
-  }
-
-  return "icon" in item;
-};
-
-const optionalString = z.preprocess(
-  (value) => (typeof value === "string" ? value.trim() || undefined : undefined),
-  z.string().trim().optional(),
-);
-
 const optionalHexColor = z.preprocess(
-  (value) => (typeof value === "string" && !value.trim() ? undefined : value),
+  value => (typeof value === "string" && !value.trim() ? undefined : value),
   z
     .string()
-    .regex(/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, "Вкажіть коректний HEX-колір")
-    .optional(),
+    .regex(/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/)
+    .optional()
 );
 
 const cardSchema = z.object({
   position: z.number(),
-  term: z.string().trim().min(1, "Вкажіть термін"),
-  termImage: optionalString,
-  definition: z.string().trim().min(1, "Вкажіть визначення"),
-  definitionImage: optionalString,
+  term: z.string().trim().min(1),
+  termImage: storageFileSchema.optional(),
+  definition: z.string().trim().min(1),
+  definitionImage: storageFileSchema.optional(),
   textColor: optionalHexColor,
   backgroundColor: optionalHexColor,
 });
 
 const setSchema = z.object({
-  name: z.string().trim().min(2, "Назва має містити щонайменше 2 символи"),
-  topic: z.enum(topicOptions.map((topic) => topic.value) as [TopicValue, ...TopicValue[]], {
-    error: "Оберіть тематику модуля",
-  }),
-  description: z.preprocess(
-    (value) => (typeof value === "string" && !value.trim() ? undefined : value),
-    z.string().trim().max(280, "Опис має бути коротшим за 280 символів").optional(),
-  ),
-  cards: z.array(cardSchema).min(2, "Додайте щонайменше дві картки"),
+  name: z.string().trim().min(2),
+  topicIds: z.array(z.string().trim().min(1)).min(1),
+  description: z.string().trim().max(280),
+  cards: z.array(cardSchema).min(2),
 });
 
-const initialCard = (position: number): ICard => {
-  return {
-    position,
-    term: "",
-    termImage: undefined,
-    definition: "",
-    definitionImage: undefined,
-    textColor: undefined,
-    backgroundColor: undefined,
-  };
-};
-
-const state = reactive<ISet>({
-  name: "",
-  topic: "music",
-  description: "",
-  cards: [initialCard(0), initialCard(1)],
-});
-
-const selectedTopic = computed(() => {
-  return topicOptions.find((topic) => topic.value === state.topic) || topicOptions[0];
-});
+const state = reactive<SetFormData>(
+  initialSet([initialCard(0), initialCard(1)])
+);
 
 const syncCardPositions = () => {
   state.cards.forEach((card, index) => {
@@ -385,7 +265,7 @@ const moveCard = (fromIndex: number, toIndex: number) => {
   syncCardPositions();
 };
 
-const updateCard = (index: number, card: ICard) => {
+const updateCard = (index: number, card: CardFormData) => {
   if (!state.cards[index]) {
     return;
   }
@@ -393,11 +273,32 @@ const updateCard = (index: number, card: ICard) => {
   state.cards[index] = card;
 };
 
-const onSubmit = (event: { data: z.output<typeof setSchema> }) => {
-  console.log("validated set", event.data);
+const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
+  const payload: ISetPayload = {
+    name: event.data.name,
+    description: event.data.description,
+    topicIds: event.data.topicIds,
+    cards: event.data.cards.map(card => ({
+      position: card.position,
+      term: card.term,
+      termImageId: card.termImage?.id || null,
+      definition: card.definition,
+      definitionImageId: card.definitionImage?.id || null,
+      textColor: card.textColor || null,
+      backgroundColor: card.backgroundColor || null,
+    })),
+  };
+
+  try {
+    await $repository.sets.createSet(payload);
+  } catch (error) {
+    if (error instanceof FetchError) {
+      console.log(error.data);
+    }
+  }
 };
 
-const onError = async (event: { errors?: Array<{ id?: string }> }) => {
+const onError = async (event: FormErrorEvent) => {
   const firstErrorId = event.errors?.[0]?.id;
 
   if (!firstErrorId) {
@@ -412,7 +313,10 @@ const onError = async (event: { errors?: Array<{ id?: string }> }) => {
     block: "center",
   });
 
-  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+  if (
+    element instanceof HTMLInputElement ||
+    element instanceof HTMLTextAreaElement
+  ) {
     element.focus();
   }
 };

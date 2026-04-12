@@ -20,29 +20,31 @@
           </div>
         </div>
 
-        <section class="sidebar__profile">
-          <UUser
-            name="John Doe"
-            description="Software Engineer"
-            :avatar="{
-              src: 'https://i.pravatar.cc/150?u=john-doe',
+        <client-only>
+          <section class="sidebar__profile">
+            <UUser
+              :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
+              :description="profile?.email || ''"
+              :avatar="{
+              src: profile?.avatar,
               loading: 'lazy',
               icon: 'i-lucide-image',
             }"
-            size="xl"
-          />
+              size="xl"
+            />
 
-          <div class="sidebar__metrics">
-            <div
-              v-for="metric in metrics"
-              :key="metric.label"
-              class="sidebar__metric"
-            >
-              <span class="sidebar__metric-value">{{ metric.value }}</span>
-              <span class="sidebar__metric-label">{{ metric.label }}</span>
+            <div class="sidebar__metrics">
+              <div
+                v-for="metric in metrics"
+                :key="metric.label"
+                class="sidebar__metric"
+              >
+                <span class="sidebar__metric-value">{{ metric.value }}</span>
+                <span class="sidebar__metric-label">{{ metric.label }}</span>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </client-only>
 
         <section class="sidebar__nav">
           <div class="sidebar__section-heading">
@@ -122,6 +124,8 @@ const metrics = [
 ];
 
 const { sidebarVisible, closeSidebar } = useUiStore();
+
+const { profile } = useProfileStore()
 </script>
 
 <style>

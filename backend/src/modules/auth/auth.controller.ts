@@ -7,6 +7,8 @@ import {
   Req,
   Res,
   UseGuards,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -30,6 +32,20 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: (errors) => {
+        return new UnauthorizedException({
+          message: 'Validation failed',
+          errors: errors.map((error) => ({
+            field: error.property,
+            constraints: error.constraints,
+          })),
+        });
+      },
+    }),
+  )
   refreshToken(@Body('refreshToken') refreshToken: string) {
     const payload = this.authService.verifyRefreshToken(refreshToken);
     if (!payload) {

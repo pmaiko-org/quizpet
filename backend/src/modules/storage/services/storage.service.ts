@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
-import { StorageFile } from '../storage.entity';
+import { EntityManager, Repository } from 'typeorm';
+import { StorageFileEntity } from '../storage-file.entity';
 import { StorageFsService } from './storage-fs.service';
 import * as mime from 'mime-types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FileResponseDto } from '../dto/file.response.dto';
+import { CardEntity } from '../../cards/card.entity';
 
 @Injectable()
 export class StorageService {
   constructor(
     private readonly entityManager: EntityManager,
+    @InjectRepository(StorageFileEntity)
+    private readonly storageFileRepository: Repository<StorageFileEntity>,
+    @InjectRepository(CardEntity)
+    private readonly cardRepository: Repository<CardEntity>,
     private readonly fsService: StorageFsService,
   ) {}
 
@@ -23,7 +30,7 @@ export class StorageService {
     await queryRunner.startTransaction();
 
     try {
-      const storageFile = queryRunner.manager.create(StorageFile, {
+      const storageFile = queryRunner.manager.create(StorageFileEntity, {
         name: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
@@ -38,13 +45,50 @@ export class StorageService {
       await this.fsService.set(`${savedFile.id}.${ext}`, file.buffer);
 
       await queryRunner.commitTransaction();
-      return savedFile;
+      return new FileResponseDto(savedFile);
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async getFiles() {
+    const storageFiles = await this.storageFileRepository.find();
+    return storageFiles.map((file) => new FileResponseDto(file));
+  }
+
+  async deleteFile(id: string) {
+    const storageFile = await this.storageFileRepository.findOneBy({ id });
+
+    if (!storageFile) {
+      return { success: true };
+    }
+
+    const ext = mime.extension(storageFile.mimetype);
+
+    await this.cardRepository
+      .createQueryBuilder()
+      .update(CardEntity)
+      .set({ termImage: () => 'NULL' })
+      .where('termImageId = :id', { id })
+      .execute();
+
+    await this.cardRepository
+      .createQueryBuilder()
+      .update(CardEntity)
+      .set({ definitionImage: () => 'NULL' })
+      .where('definitionImageId = :id', { id })
+      .execute();
+
+    await this.storageFileRepository.remove(storageFile);
+
+    if (ext) {
+      await this.fsService.delete(`${storageFile.id}.${ext}`);
+    }
+
+    return { success: true };
   }
 }
 

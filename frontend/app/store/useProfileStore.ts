@@ -1,11 +1,14 @@
+import type { IUser } from "~/repository/profile";
+
 export const useProfileStore = () => {
   const { $repository } = useNuxtApp()
   const state = useState('profileStore', () => ({
-    profile: null as never,
+    profile: null as null | IUser,
   }))
 
   const getProfile = async () => {
-    await $repository.profile.getProfile()
+    const response = await $repository.profile.getProfile()
+    state.value.profile = response
   }
 
   return {
