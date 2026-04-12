@@ -11,14 +11,22 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @Column()
   term: string; // word or question
 
-  @ManyToOne(() => StorageFileEntity, { nullable: true, eager: true })
+  @ManyToOne(() => StorageFileEntity, {
+    nullable: true,
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'termImageId' })
   termImage?: StorageFileEntity;
 
   @Column()
   definition: string; // translation or answer
 
-  @ManyToOne(() => StorageFileEntity, { nullable: true, eager: true })
+  @ManyToOne(() => StorageFileEntity, {
+    nullable: true,
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'definitionImageId' })
   definitionImage?: StorageFileEntity;
 

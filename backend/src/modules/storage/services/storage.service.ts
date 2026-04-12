@@ -5,7 +5,6 @@ import { StorageFsService } from './storage-fs.service';
 import * as mime from 'mime-types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileResponseDto } from '../dto/file.response.dto';
-import { CardEntity } from '../../cards/card.entity';
 
 @Injectable()
 export class StorageService {
@@ -13,8 +12,6 @@ export class StorageService {
     private readonly entityManager: EntityManager,
     @InjectRepository(StorageFileEntity)
     private readonly storageFileRepository: Repository<StorageFileEntity>,
-    @InjectRepository(CardEntity)
-    private readonly cardRepository: Repository<CardEntity>,
     private readonly fsService: StorageFsService,
   ) {}
 
@@ -67,20 +64,6 @@ export class StorageService {
     }
 
     const ext = mime.extension(storageFile.mimetype);
-
-    await this.cardRepository
-      .createQueryBuilder()
-      .update(CardEntity)
-      .set({ termImage: () => 'NULL' })
-      .where('termImageId = :id', { id })
-      .execute();
-
-    await this.cardRepository
-      .createQueryBuilder()
-      .update(CardEntity)
-      .set({ definitionImage: () => 'NULL' })
-      .where('definitionImageId = :id', { id })
-      .execute();
 
     await this.storageFileRepository.remove(storageFile);
 

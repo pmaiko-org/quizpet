@@ -6,11 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { StorageFileEntity } from './storage-file.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { StorageCleanService } from './services/storage-clean.service';
-import { CardEntity } from '../cards/card.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([StorageFileEntity, CardEntity]),
+    TypeOrmModule.forFeature([StorageFileEntity]),
     ServeStaticModule.forRoot({
       rootPath: storagePath,
       serveRoot: storagePath,
