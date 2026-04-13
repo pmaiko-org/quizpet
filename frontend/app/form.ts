@@ -27,6 +27,7 @@ export const initialCard = (
     id: card?.id || null as string | null,
     position: card?.position || position,
     term: card?.term || "",
+    termDescription: card?.termDescription || "",
     termImage: card?.termImage || (undefined as IStorageFile | undefined),
     definition: card?.definition || "",
     definitionImage:

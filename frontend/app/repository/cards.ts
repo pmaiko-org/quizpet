@@ -5,6 +5,7 @@ export interface ICardDetails {
   id: string;
   position: number;
   term: string;
+  termDescription: string | null;
   termImage: IStorageFile | null;
   definition: string;
   definitionImage: IStorageFile | null;

@@ -234,6 +234,7 @@ const optionalHexColor = z.preprocess(
 const cardSchema = z.object({
   position: z.number(),
   term: z.string().trim().min(1),
+  termDescription: z.string().trim().min(1).or(z.literal('')).optional(),
   termImage: storageFileSchema.optional(),
   definition: z.string().trim().min(1),
   definitionImage: storageFileSchema.optional(),
@@ -331,6 +332,7 @@ const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
     cards: event.data.cards.map((card) => ({
       position: card.position,
       term: card.term,
+      termDescription: card.termDescription || null,
       termImageId: card.termImage?.id ?? null,
       definition: card.definition,
       definitionImageId: card.definitionImage?.id ?? null,
@@ -350,6 +352,7 @@ const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
           id: state.cards[card.position]?.id ?? null,
           position: card.position,
           term: card.term,
+          termDescription: card.termDescription || null,
           termImageId: card.termImage?.id ?? null,
           definition: card.definition,
           definitionImageId: card.definitionImage?.id ?? null,

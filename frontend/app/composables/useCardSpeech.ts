@@ -1,5 +1,19 @@
 const CYRILLIC_PATTERN = /[А-Яа-яІіЇїЄєҐґ]/;
 
+const VOICE_PRIORITY: Record<string, string[]> = {
+  "uk-UA": [
+    "Microsoft Ostap",
+    "Google українська",
+    "Ukrainian",
+  ],
+  "en-US": [
+    "Google US English",
+    "Microsoft Aria Online",
+    "Samantha",
+    "Alex",
+  ],
+};
+
 const detectLanguage = (text: string) => {
   return CYRILLIC_PATTERN.test(text) ? "uk-UA" : "en-US";
 };
@@ -22,13 +36,25 @@ export const useCardSpeech = () => {
   };
 
   const pickVoice = (language: string) => {
-    const preferredVoice = voices.value.find(voice => voice.lang === language);
+    const normalizedLang = language.toLowerCase();
+    const candidates = voices.value.filter(voice =>
+      voice.lang.toLowerCase() === normalizedLang ||
+      voice.lang.toLowerCase().startsWith(normalizedLang.slice(0, 2)),
+    );
 
-    if (preferredVoice) {
-      return preferredVoice;
+    const preferredNames = VOICE_PRIORITY[language] ?? [];
+
+    for (const preferredName of preferredNames) {
+      const matched = candidates.find(voice =>
+        voice.name.toLowerCase().includes(preferredName.toLowerCase()),
+      );
+
+      if (matched) {
+        return matched;
+      }
     }
 
-    return voices.value.find(voice => voice.lang.startsWith(language.slice(0, 2)))
+    return candidates[0]
       ?? voices.value.find(voice => voice.lang.startsWith("en"))
       ?? null;
   };

@@ -11,6 +11,9 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @Column()
   term: string; // word or question
 
+  @Column({ nullable: true })
+  termDescription?: string;
+
   @ManyToOne(() => StorageFileEntity, {
     nullable: true,
     eager: true,

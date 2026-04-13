@@ -65,11 +65,27 @@
       </UFormField>
 
       <UFormField
+        :name="fieldName('termDescription')"
+        label="Опис терміна"
+        description="Коротке пояснення, підказка або уточнення до терміна."
+        required
+        size="xl"
+      >
+        <UInput
+          v-model="modelValue.termDescription"
+          size="xl"
+          class="w-full"
+          placeholder="Наприклад, Process plants use to convert light into energy"
+        />
+      </UFormField>
+
+      <UFormField
         :name="fieldName('definition')"
         label="Визначення"
         description="Пояснення, переклад або правильна відповідь."
         required
         size="xl"
+        class="col-span-full"
       >
         <UTextarea
           v-model="modelValue.definition"

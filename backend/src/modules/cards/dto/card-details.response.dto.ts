@@ -5,6 +5,7 @@ export class CardDetailsResponseDto {
   id: string;
   position: number;
   term: string;
+  termDescription: string | null;
   termImage: FileResponseDto | null;
   definition: string;
   definitionImage: FileResponseDto | null;
@@ -15,6 +16,7 @@ export class CardDetailsResponseDto {
     this.id = entity.id;
     this.position = entity.position;
     this.term = entity.term;
+    this.termDescription = entity.termDescription || null;
     this.termImage = entity.termImage
       ? new FileResponseDto(entity.termImage)
       : null;

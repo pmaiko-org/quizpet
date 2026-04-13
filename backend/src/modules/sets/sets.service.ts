@@ -34,6 +34,12 @@ export class SetsService {
   async getSet(setId: string) {
     const set = await this.setRepository.findOne({
       where: { id: setId },
+      relations: {
+        cards: true,
+      },
+      order: {
+        cards: { position: 'ASC' },
+      },
     });
     if (set) return new SetDetailsResponseDto(set);
   }
@@ -169,6 +175,7 @@ export class SetsService {
         id: ('id' in card && card.id) || undefined,
         position: card.position,
         term: card.term,
+        termDescription: card.termDescription,
         termImage: card.termImageId
           ? ({ id: card.termImageId } as DeepPartial<CardEntity['termImage']>)
           : (null as unknown as DeepPartial<CardEntity['termImage']>),

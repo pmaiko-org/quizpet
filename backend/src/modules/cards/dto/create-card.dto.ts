@@ -9,6 +9,10 @@ export class CreateCardDto {
   @IsString()
   term: string;
 
+  @IsOptional()
+  @IsString()
+  termDescription?: string;
+
   @IsString()
   @IsOptional()
   termImageId?: string;
