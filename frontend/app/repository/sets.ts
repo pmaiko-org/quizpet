@@ -61,9 +61,9 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
       });
     },
 
-    updateSet: (data: IUpdateSetPayload) => {
-      return fetch(`/backend/sets/${data.id}`, {
-        method: "POST",
+    updateSet: (setId: string, data: IUpdateSetPayload) => {
+      return fetch(`/backend/sets/${setId}`, {
+        method: "PATCH",
         body: data,
       });
     },

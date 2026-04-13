@@ -17,15 +17,13 @@
             <p
               class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
             >
-              Новий набір
+              {{ formEyebrow }}
             </p>
             <h2 class="text-3xl font-semibold text-highlighted">
-              Створіть набір карток з чистою структурою
+              {{ formTitle }}
             </h2>
             <p class="max-w-2xl text-sm leading-6 text-toned">
-              Дайте модулю зрозумілу назву, коротко опишіть тему й додайте
-              картки. Форма підтримує світлу та темну тему через стандартні
-              токени Nuxt UI.
+              {{ formDescription }}
             </p>
           </div>
 
@@ -181,7 +179,7 @@
         :loading="submitting"
         class="justify-center"
       >
-        Створити набір
+        {{ submitLabel }}
       </UButton>
     </div>
   </UForm>
@@ -190,7 +188,12 @@
 <script setup lang="ts">
 import { z } from "zod";
 import { FetchError } from "ofetch";
-import type { ICreateSetPayload, ISetDetails, ITopic } from "~/repository/sets";
+import type {
+  ICreateSetPayload,
+  ISetDetails,
+  ITopic,
+  IUpdateSetPayload,
+} from "~/repository/sets";
 import {
   initialCard,
   initialSet,
@@ -200,9 +203,10 @@ import {
 import { storageFileSchema } from "~/repository/storage-files";
 import type { FormErrorEvent } from "#ui/types/form";
 
-const { set } = defineProps<{
-  set: ISetDetails
-}>()
+const props = defineProps<{
+  set?: ISetDetails;
+}>();
+
 const { $repository } = useNuxtApp();
 
 const submitting = ref(false);
@@ -238,8 +242,32 @@ const setSchema = z.object({
   cards: z.array(cardSchema).min(2),
 });
 
-const state = reactive<SetFormData>(
-  initialSet(set)
+const state = reactive<SetFormData>(initialSet(props.set));
+
+watch(
+  () => props.set,
+  (nextSet) => {
+    Object.assign(state, initialSet(nextSet));
+  },
+  { immediate: true }
+);
+
+const isEditMode = computed(() => Boolean(state.id));
+const formEyebrow = computed(() =>
+  isEditMode.value ? "Редагування набору" : "Новий набір"
+);
+const formTitle = computed(() =>
+  isEditMode.value
+    ? "Оновіть набір карток без втрати структури"
+    : "Створіть набір карток з чистою структурою"
+);
+const formDescription = computed(() =>
+  isEditMode.value
+    ? "Оновіть назву, опис, тематики й картки. Існуючі картки збережуться та оновляться по id."
+    : "Дайте модулю зрозумілу назву, коротко опишіть тему й додайте картки. Форма підтримує світлу та темну тему через стандартні токени Nuxt UI."
+);
+const submitLabel = computed(() =>
+  isEditMode.value ? "Зберегти зміни" : "Створити набір"
 );
 
 const syncCardPositions = () => {
@@ -280,50 +308,66 @@ const updateCard = (index: number, card: CardFormData) => {
   state.cards[index] = card;
 };
 
-const toast = useToast()
+const toast = useToast();
 
-const router = useRouter()
+const router = useRouter();
 
 const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
-  const payload: ICreateSetPayload = {
+  const basePayload: ICreateSetPayload = {
     name: event.data.name,
     description: event.data.description,
     topicIds: event.data.topicIds,
-    cards: event.data.cards.map(card => ({
+    cards: event.data.cards.map((card) => ({
       position: card.position,
       term: card.term,
-      termImageId: card.termImage?.id || null,
+      termImageId: card.termImage?.id ?? null,
       definition: card.definition,
-      definitionImageId: card.definitionImage?.id || null,
-      textColor: card.textColor || null,
-      backgroundColor: card.backgroundColor || null,
+      definitionImageId: card.definitionImage?.id ?? null,
+      textColor: card.textColor ?? null,
+      backgroundColor: card.backgroundColor ?? null,
     })),
   };
 
-  console.log(event);
-
-  return
-
   try {
-    submitting.value = true
-    await $repository.sets.createSet(payload);
+    submitting.value = true;
 
-    router.push('/cards')
+    if (state.id) {
+      const payload: IUpdateSetPayload = {
+        id: state.id,
+        ...basePayload,
+        cards: event.data.cards.map((card) => ({
+          id: state.cards[card.position]?.id ?? null,
+          position: card.position,
+          term: card.term,
+          termImageId: card.termImage?.id ?? null,
+          definition: card.definition,
+          definitionImageId: card.definitionImage?.id ?? null,
+          textColor: card.textColor ?? null,
+          backgroundColor: card.backgroundColor ?? null,
+        })),
+      };
+
+      await $repository.sets.updateSet(state.id, payload);
+    } else {
+      await $repository.sets.createSet(basePayload);
+    }
+
+    await router.push("/cards");
     toast.add({
-      title: 'Success',
-      description: ''
-    })
+      title: isEditMode.value ? "Набір оновлено" : "Набір створено",
+      description: "",
+    });
   } catch (error) {
     if (error instanceof FetchError) {
       console.log(error.data);
     }
 
     toast.add({
-      title: 'Error',
-      description: ''
-    })
+      title: "Помилка",
+      description: "",
+    });
   } finally {
-    submitting.value = false
+    submitting.value = false;
   }
 };
 

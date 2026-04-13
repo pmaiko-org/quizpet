@@ -19,7 +19,7 @@ export interface ICreateCardPayload
 }
 
 export interface IUpdateCardPayload extends ICreateCardPayload {
-  id: string;
+  id: string | null;
 }
 
 export const cardsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {

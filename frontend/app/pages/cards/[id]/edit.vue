@@ -34,11 +34,18 @@
           Перейти до навчання
         </UButton>
       </div>
+    </section>
 
-      <SetForm
-        v-if="set"
-        :set="set"
-      />
+    <SetForm
+      v-if="set"
+      :set="set"
+    />
+
+    <section
+      v-else-if="status === 'pending'"
+      class="rounded-[2rem] border border-default bg-default/80 p-6 text-sm text-toned shadow-sm sm:p-8"
+    >
+      Завантажуємо набір для редагування...
     </section>
   </div>
 </template>
@@ -52,7 +59,7 @@ definePageMeta({
 
 const { $repository } = useNuxtApp();
 
-const { data: set } = useAsyncData(
+const { data: set, status } = useAsyncData(
   () => $repository.sets.getSet(route.params.id as string),
   {
     server: false,
