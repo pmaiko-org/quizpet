@@ -117,6 +117,12 @@
     <section
       class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8"
     >
+      <SetCsvTransfer
+        :cards="state.cards"
+        class="mb-6"
+        @import-cards="replaceCards"
+      />
+
       <div
         class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
       >
@@ -278,6 +284,11 @@ const syncCardPositions = () => {
 
 const addCard = () => {
   state.cards.push(initialCard(state.cards.length));
+  syncCardPositions();
+};
+
+const replaceCards = (cards: CardFormData[]) => {
+  state.cards.splice(0, state.cards.length, ...cards);
   syncCardPositions();
 };
 

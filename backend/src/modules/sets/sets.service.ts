@@ -12,6 +12,8 @@ import { CardEntity } from '../cards/card.entity';
 import { SetListItemResponseDto } from './dto/set-list-item.response.dto';
 import { UpdateSetDto } from './dto/update-set.dto';
 import { UpdateCardDto } from '../cards/dto/update-card.dto';
+import { SetDetailsResponseDto } from './dto/set-details.response.dto';
+import { CreateCardDto } from '../cards/dto/create-card.dto';
 
 @Injectable()
 export class SetsService {
@@ -30,9 +32,10 @@ export class SetsService {
   }
 
   async getSet(setId: string) {
-    return await this.setRepository.findOne({
+    const set = await this.setRepository.findOne({
       where: { id: setId },
     });
+    if (set) return new SetDetailsResponseDto(set);
   }
 
   async createSet(userId: string, createSetDto: CreateSetDto) {
@@ -75,7 +78,7 @@ export class SetsService {
       (cardId) => !existingCardIds.has(cardId),
     );
 
-    if (invalidCardIds.length > 0) {
+    if (invalidCardIds.length) {
       throw new BadRequestException(
         `Cards do not belong to set "${setId}": ${invalidCardIds.join(', ')}`,
       );
@@ -86,7 +89,7 @@ export class SetsService {
         .filter((card) => !incomingCardIds.includes(card.id))
         .map((card) => card.id);
 
-      if (cardIdsToDelete.length > 0) {
+      if (cardIdsToDelete.length) {
         await manager.delete(CardEntity, cardIdsToDelete);
       }
 
@@ -102,7 +105,7 @@ export class SetsService {
 
       const cardsToSave = this.mapCards(updateSetDto.cards, setId);
 
-      if (cardsToSave.length > 0) {
+      if (cardsToSave.length) {
         await manager.save(CardEntity, cardsToSave);
       }
 
@@ -158,12 +161,12 @@ export class SetsService {
   }
 
   private mapCards(
-    cards: Array<CreateSetDto['cards'][number] | UpdateCardDto>,
+    cards: Array<CreateCardDto | UpdateCardDto>,
     setId?: string,
   ): DeepPartial<CardEntity>[] {
     return cards.map((card) => {
       const mappedCard: DeepPartial<CardEntity> = {
-        id: 'id' in card ? card.id : undefined,
+        id: ('id' in card && card.id) || undefined,
         position: card.position,
         term: card.term,
         termImage: card.termImageId
