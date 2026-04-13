@@ -169,6 +169,7 @@
         variant="ghost"
         color="neutral"
         icon="i-lucide-plus"
+        :disabled="submitting"
         @click="addCard"
       >
         Ще одна картка
@@ -177,6 +178,7 @@
       <UButton
         type="submit"
         size="xl"
+        :loading="submitting"
         class="justify-center"
       >
         Створити набір
@@ -188,7 +190,7 @@
 <script setup lang="ts">
 import { z } from "zod";
 import { FetchError } from "ofetch";
-import type { ISetPayload, Topic } from "~/repository/sets";
+import type { ICreateSetPayload, ISetDetails, ITopic } from "~/repository/sets";
 import {
   initialCard,
   initialSet,
@@ -198,9 +200,14 @@ import {
 import { storageFileSchema } from "~/repository/storage-files";
 import type { FormErrorEvent } from "#ui/types/form";
 
+const { set } = defineProps<{
+  set: ISetDetails
+}>()
 const { $repository } = useNuxtApp();
 
-const topics = ref<Topic[] | null>(null);
+const submitting = ref(false);
+
+const topics = ref<ITopic[] | null>(null);
 
 onMounted(async () => {
   topics.value = await $repository.sets.getTopics();
@@ -232,7 +239,7 @@ const setSchema = z.object({
 });
 
 const state = reactive<SetFormData>(
-  initialSet([initialCard(0), initialCard(1)])
+  initialSet(set)
 );
 
 const syncCardPositions = () => {
@@ -273,8 +280,12 @@ const updateCard = (index: number, card: CardFormData) => {
   state.cards[index] = card;
 };
 
+const toast = useToast()
+
+const router = useRouter()
+
 const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
-  const payload: ISetPayload = {
+  const payload: ICreateSetPayload = {
     name: event.data.name,
     description: event.data.description,
     topicIds: event.data.topicIds,
@@ -289,12 +300,30 @@ const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
     })),
   };
 
+  console.log(event);
+
+  return
+
   try {
+    submitting.value = true
     await $repository.sets.createSet(payload);
+
+    router.push('/cards')
+    toast.add({
+      title: 'Success',
+      description: ''
+    })
   } catch (error) {
     if (error instanceof FetchError) {
       console.log(error.data);
     }
+
+    toast.add({
+      title: 'Error',
+      description: ''
+    })
+  } finally {
+    submitting.value = false
   }
 };
 

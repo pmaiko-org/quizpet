@@ -34,6 +34,11 @@
           Перейти до навчання
         </UButton>
       </div>
+
+      <SetForm
+        v-if="set"
+        :set="set"
+      />
     </section>
   </div>
 </template>
@@ -44,4 +49,13 @@ const route = useRoute();
 definePageMeta({
   layout: "cabinet",
 });
+
+const { $repository } = useNuxtApp();
+
+const { data: set } = useAsyncData(
+  () => $repository.sets.getSet(route.params.id as string),
+  {
+    server: false,
+  }
+);
 </script>

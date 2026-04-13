@@ -2,17 +2,14 @@ import { Injectable } from '@nestjs/common';
 import path from 'path';
 import fs, { promises as fsAsync } from 'fs';
 import { FsException } from '../../../common/exceptions/fs.exception';
-
-const charset = 'utf8';
-
-export const storagePath = '/storage/uploads';
+import { CHARSET, STORAGE_PATH } from '../../../config/constants';
 
 @Injectable()
 export class StorageFsService {
   private readonly storageBasePath: string;
 
   constructor() {
-    this.storageBasePath = storagePath;
+    this.storageBasePath = STORAGE_PATH;
     this.ensureDirSync(this.storageBasePath);
   }
 
@@ -39,7 +36,7 @@ export class StorageFsService {
       await this.ensureDir(path.dirname(filePath));
 
       if (typeof data === 'string') {
-        await fsAsync.writeFile(filePath, data, charset);
+        await fsAsync.writeFile(filePath, data, CHARSET);
       } else {
         await fsAsync.writeFile(filePath, data as unknown as Uint8Array);
       }
@@ -62,7 +59,7 @@ export class StorageFsService {
         return fsAsync.readdir(filePath);
       } else {
         const data = await fsAsync.readFile(filePath);
-        return data.toString(charset);
+        return data.toString(CHARSET);
       }
     } catch {
       return null;

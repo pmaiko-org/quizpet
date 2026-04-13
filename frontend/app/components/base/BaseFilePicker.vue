@@ -235,10 +235,9 @@
                         variant="ghost"
                         icon="i-lucide-trash-2"
                         :loading="deletingFileId === item.id"
+                        class="cursor-pointer"
                         @click="handleDeleteFile(item)"
-                      >
-                        Видалити
-                      </UButton>
+                      />
                     </div>
                   </article>
                 </div>

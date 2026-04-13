@@ -37,6 +37,7 @@ export class SetEntity extends AbstractEntity<SetEntity> {
 
   @OneToMany(() => CardEntity, (card) => card.set, {
     cascade: true,
+    eager: true,
   })
   cards: CardEntity[];
 }

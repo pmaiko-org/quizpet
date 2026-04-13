@@ -65,10 +65,9 @@ export class StorageService {
 
     const ext = mime.extension(storageFile.mimetype);
 
-    await this.storageFileRepository.remove(storageFile);
-
     if (ext) {
       await this.fsService.delete(`${storageFile.id}.${ext}`);
+      await this.storageFileRepository.remove(storageFile);
     }
 
     return { success: true };

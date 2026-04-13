@@ -331,7 +331,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISet } from "~/repository/sets";
+import type { ISetListItem } from "~/repository/sets";
 
 definePageMeta({
   layout: "cabinet",
@@ -351,7 +351,7 @@ const {
 });
 
 const deletingSetId = ref<string | null>(null);
-const sets = computed<ISet[]>(() => data.value ?? []);
+const sets = computed<ISetListItem[]>(() => data.value ?? []);
 
 const stats = computed(() => {
   const topicsCount = new Set(
@@ -393,17 +393,17 @@ const summaryText = computed(() => {
   return `${total} набори зібрано в одній бібліотеці для швидкого доступу.`;
 });
 
-const getAuthorName = (set: ISet) => {
+const getAuthorName = (set: ISetListItem) => {
   const fullName = `${set.user.firstName} ${set.user.lastName}`.trim();
 
   return fullName || set.user.email;
 };
 
-const canDeleteSet = (set: ISet) => {
+const canDeleteSet = (set: ISetListItem) => {
   return Boolean(profile.value?.email && profile.value.email === set.user.email);
 };
 
-const handleDeleteSet = async (set: ISet) => {
+const handleDeleteSet = async (set: ISetListItem) => {
   if (deletingSetId.value) {
     return;
   }

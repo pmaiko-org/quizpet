@@ -1,7 +1,6 @@
 import { StorageFileEntity } from '../storage-file.entity';
 import * as mime from 'mime-types';
-import { GLOBAL_PREFIX } from '../../../config/constants';
-import { storagePath } from '../services/storage-fs.service';
+import { GLOBAL_PREFIX, STORAGE_PATH } from '../../../config/constants';
 
 export class FileResponseDto {
   id: string;
@@ -11,7 +10,7 @@ export class FileResponseDto {
   constructor(entity: StorageFileEntity) {
     this.id = entity.id;
     const ext = mime.extension(entity.mimetype);
-    this.src = `/${GLOBAL_PREFIX}${storagePath}/${entity.id}.${ext}`;
+    this.src = `/${GLOBAL_PREFIX}${STORAGE_PATH}/${entity.id}.${ext}`;
     this.name = entity.name;
   }
 }

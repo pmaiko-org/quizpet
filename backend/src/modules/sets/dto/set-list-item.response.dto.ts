@@ -2,7 +2,7 @@ import { SetEntity } from '../entity/set.entity';
 import { TopicEntity } from '../entity/topic.entity';
 import { UserResponseDto } from '../../users/dto/user.response.dto';
 
-export class SetResponseDto {
+export class SetListItemResponseDto {
   id: string;
   name: string;
   description: string;

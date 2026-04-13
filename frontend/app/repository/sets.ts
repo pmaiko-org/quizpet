@@ -1,8 +1,8 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
-import type { ICardPayload } from "~/repository/cards";
+import type { ICreateCardPayload, ICardDetails, IUpdateCardPayload } from "~/repository/cards";
 import type { IUser } from "~/repository/profile";
 
-export interface Topic {
+export interface ITopic {
   id: string;
   label: string;
   value: string;
@@ -10,32 +10,59 @@ export interface Topic {
   description: string;
 }
 
-export interface ISet {
+export interface ISetListItem {
   id: string;
   name: string;
   description: string;
-  topics: Topic[];
+  topics: ITopic[];
   user: IUser;
   cardsCount: number;
 }
 
-export interface ISetPayload {
+export interface ISetDetails {
+  id: string;
+  name: string;
+  description: string;
+  topics: ITopic[];
+  user: IUser;
+  cards: ICardDetails[]
+}
+
+export interface ICreateSetPayload {
   name: string;
   description: string;
   topicIds: string[];
-  cards: ICardPayload[];
+  cards: ICreateCardPayload[];
+}
+
+export interface IUpdateSetPayload extends ICreateSetPayload {
+  id: string;
+  cards: IUpdateCardPayload[];
 }
 
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
     getSets: () => {
-      return fetch<ISet[]>("/backend/sets", {
+      return fetch<ISetListItem[]>("/backend/sets", {
         method: "GET",
       });
     },
 
-    createSet: (data: ISetPayload) => {
+    getSet: (setId: string) => {
+      return fetch<ISetDetails>(`/backend/sets/${setId}`, {
+        method: "GET",
+      });
+    },
+
+    createSet: (data: ICreateSetPayload) => {
       return fetch("/backend/sets", {
+        method: "POST",
+        body: data,
+      });
+    },
+
+    updateSet: (data: IUpdateSetPayload) => {
+      return fetch(`/backend/sets/${data.id}`, {
         method: "POST",
         body: data,
       });
@@ -49,7 +76,7 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
 
 
     getTopics: () => {
-      return fetch<Topic[]>("/backend/sets/topics", {
+      return fetch<ITopic[]>("/backend/sets/topics", {
         method: "GET",
       });
     },
