@@ -17,7 +17,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 RUN npm ci --omit=dev
 
-RUN apk add --no-cache rclone fuse3 bash
+RUN apk add --no-cache rclone fuse3 bash postgresql-client
 RUN mkdir -p /storage
 VOLUME ["/storage"]
 

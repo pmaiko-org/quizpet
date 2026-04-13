@@ -11,10 +11,14 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './services/storage.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { StorageDbBackupsService } from './services/storage-db-backups.service';
 
 @Controller('storage')
 export class StorageController {
-  constructor(private readonly storageService: StorageService) {}
+  constructor(
+    private readonly storageService: StorageService,
+    private readonly storageDbBackupsService: StorageDbBackupsService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('upload')
@@ -27,6 +31,12 @@ export class StorageController {
   @Get('files')
   getFiles() {
     return this.storageService.getFiles();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('backups/run')
+  runBackup() {
+    return this.storageDbBackupsService.createBackup();
   }
 
   @UseGuards(JwtAuthGuard)

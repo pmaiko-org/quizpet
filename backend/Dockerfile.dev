@@ -7,7 +7,7 @@ RUN npm ci && npm cache clean --force
 
 COPY . .
 
-RUN apk add --no-cache rclone fuse3 bash
+RUN apk add --no-cache rclone fuse3 bash postgresql-client
 RUN mkdir -p /storage
 VOLUME ["/storage"]
 
