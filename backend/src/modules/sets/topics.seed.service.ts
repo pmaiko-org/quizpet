@@ -52,6 +52,27 @@ const TOPIC_OPTIONS = [
     description: 'Дати, події, особистості, епохи та історичні поняття.',
   },
   {
+    label: 'Еротика',
+    value: 'erotica',
+    icon: 'i-lucide-heart',
+    description:
+      'Тематика для дорослого контенту, інтимної лексики та пов’язаних наборів.',
+  },
+  {
+    label: 'Стосунки 18+',
+    value: 'adult-relationships',
+    icon: 'i-lucide-flame',
+    description:
+      'Набори про інтимні стосунки, дорослу комунікацію та романтичну лексику.',
+  },
+  {
+    label: 'ІТ',
+    value: 'it',
+    icon: 'i-lucide-cpu',
+    description:
+      'Програмування, технології, інструменти, архітектура та інший технічний контент.',
+  },
+  {
     label: 'Інше',
     value: 'other',
     icon: 'i-lucide-shapes',
