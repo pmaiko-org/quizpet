@@ -3,7 +3,7 @@ COMPOSE_DEV  = compose.dev.yaml
 COMPOSE_PROD = compose.prod.yaml
 NETWORK_NAME = shared_network
 
-.PHONY: dev prod down rebuild logs ps
+.PHONY: dev prod down rebuild logs ps precommit
 
 dev:
 	docker volume ls -qf dangling=true | xargs -r docker volume rm
@@ -27,6 +27,10 @@ logs:
 
 ps:
 	docker compose ps
+
+precommit:
+	npm --prefix ./backend run precommit
+	npm --prefix ./frontend run precommit
 
 create-network:
 	@docker network inspect $(NETWORK_NAME) > /dev/null 2>&1 || \
