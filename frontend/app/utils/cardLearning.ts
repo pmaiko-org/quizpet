@@ -1,5 +1,5 @@
 import type { CSSProperties } from "vue";
-import type { ICardDetails } from "~/repository/cards";
+import type { ICardDetailsResponse } from "~/repository/cards";
 
 export type LearningOutcome = "known" | "missed";
 
@@ -11,7 +11,7 @@ export interface LearningAttempt {
 }
 
 export interface LearningCardReport {
-  card: ICardDetails;
+  card: ICardDetailsResponse;
   attempts: LearningAttempt[];
   mistakes: number;
   successes: number;
@@ -80,10 +80,11 @@ export const getContrastColor = (background?: string | null) => {
   return brightness > 160 ? DARK_TEXT : LIGHT_TEXT;
 };
 
-export const buildFlashcardTheme = (card: ICardDetails) => {
+export const buildFlashcardTheme = (card: ICardDetailsResponse) => {
   const backgroundColor = normalizeHexColor(card.backgroundColor);
-  const textColor = normalizeHexColor(card.textColor)
-    ?? (backgroundColor ? getContrastColor(backgroundColor) : null);
+  const textColor =
+    normalizeHexColor(card.textColor) ??
+    (backgroundColor ? getContrastColor(backgroundColor) : null);
   const accentColor = textColor ?? backgroundColor ?? "#2563eb";
 
   const cardStyle: CSSProperties = {
@@ -150,7 +151,10 @@ export const formatStopwatch = (value: number) => {
 };
 
 export const getAccuracy = (reports: LearningCardReport[]) => {
-  const attempts = reports.reduce((total, report) => total + report.attempts.length, 0);
+  const attempts = reports.reduce(
+    (total, report) => total + report.attempts.length,
+    0
+  );
 
   if (!attempts) {
     return 0;

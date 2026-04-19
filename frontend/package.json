@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --public",
+    "generate:api-types": "npm --prefix ../backend run generate:openapi && openapi-typescript ../backend/openapi.json -o ./app/types/api.generated.ts && node ./scripts/append-openapi-aliases.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.98",
+    "openapi-typescript": "^7.13.0",
     "sass": "^1.98.0"
   }
 }

@@ -6,3 +6,4 @@ rclone/rclone.conf
 .env.production.local
 .env.local
 backup.sql
+backend/openapi.json

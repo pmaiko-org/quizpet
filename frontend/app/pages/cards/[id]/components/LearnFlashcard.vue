@@ -1,6 +1,10 @@
 <template>
-  <section class="rounded-[2rem] border border-default bg-default/85 p-5 shadow-sm sm:p-6">
-    <div class="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+  <section
+    class="rounded-[2rem] border border-default bg-default/85 p-5 shadow-sm sm:p-6"
+  >
+    <div
+      class="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"
+    >
       <div class="space-y-3">
         <div class="flex flex-wrap gap-2">
           <UBadge
@@ -80,15 +84,23 @@
             <div
               class="grid h-full gap-5"
               :class="[
-                hasTermImage ? 'pt-10 pb-0 sm:pb-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]' : 'place-items-center text-center',
+                hasTermImage
+                  ? 'pt-10 pb-0 sm:pb-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]'
+                  : 'place-items-center text-center',
               ]"
             >
               <div
                 class="flex flex-col gap-4"
-                :class="hasTermImage ? 'justify-center' : 'max-w-3xl items-center justify-center'"
+                :class="
+                  hasTermImage
+                    ? 'justify-center'
+                    : 'max-w-3xl items-center justify-center'
+                "
               >
                 <div>
-                  <h3 class="text-4xl font-semibold leading-tight text-highlighted sm:text-5xl lg:text-6xl">
+                  <h3
+                    class="text-4xl font-semibold leading-tight text-highlighted sm:text-5xl lg:text-6xl"
+                  >
                     {{ card.term }}
                   </h3>
                   <p
@@ -109,7 +121,7 @@
                   :src="card.termImage!.src"
                   :alt="card.termImage!.name || card.term"
                   class="h-full max-h-[18rem] w-full rounded-[1.25rem] object-cover sm:max-h-[22rem]"
-                >
+                />
               </div>
             </div>
           </article>
@@ -128,15 +140,23 @@
             <div
               class="grid h-full gap-5"
               :class="[
-                hasDefinitionImage ? 'pt-10 pb-0 sm:pb-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]' : 'place-items-center text-center',
+                hasDefinitionImage
+                  ? 'pt-10 pb-0 sm:pb-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]'
+                  : 'place-items-center text-center',
               ]"
             >
               <div
                 class="flex flex-col gap-4"
-                :class="hasDefinitionImage ? 'justify-center' : 'max-w-3xl items-center justify-center'"
+                :class="
+                  hasDefinitionImage
+                    ? 'justify-center'
+                    : 'max-w-3xl items-center justify-center'
+                "
               >
                 <div>
-                  <h3 class="text-4xl font-semibold leading-tight text-highlighted sm:text-5xl lg:text-6xl">
+                  <h3
+                    class="text-4xl font-semibold leading-tight text-highlighted sm:text-5xl lg:text-6xl"
+                  >
                     {{ card.definition }}
                   </h3>
                 </div>
@@ -151,7 +171,7 @@
                   :src="card.definitionImage!.src"
                   :alt="card.definitionImage!.name || card.definition"
                   class="h-full max-h-[18rem] w-full rounded-[1.25rem] object-cover sm:max-h-[22rem]"
-                >
+                />
               </div>
             </div>
           </article>
@@ -162,11 +182,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ICardDetails } from "~/repository/cards";
+import type { ICardDetailsResponse } from "~/repository/cards";
 import { buildFlashcardTheme } from "~/utils/cardLearning";
 
 const props = defineProps<{
-  card: ICardDetails;
+  card: ICardDetailsResponse;
   currentPosition: number;
   currentCardTime: string;
   flipped: boolean;
@@ -177,12 +197,7 @@ defineEmits<{
   flip: [];
 }>();
 
-const {
-  isSupported,
-  isSpeaking,
-  speak,
-  stop,
-} = useCardSpeech();
+const { isSupported, isSpeaking, speak, stop } = useCardSpeech();
 
 const theme = computed(() => buildFlashcardTheme(props.card));
 const hasTermImage = computed(() => Boolean(props.card.termImage));

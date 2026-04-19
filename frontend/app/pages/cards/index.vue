@@ -8,7 +8,9 @@
       >
         <div class="space-y-5">
           <div class="space-y-3">
-            <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+            <p
+              class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+            >
               Бібліотека карток
             </p>
             <div class="space-y-3">
@@ -87,9 +89,13 @@
     </section>
 
     <section class="space-y-4">
-      <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div
+        class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"
+      >
         <div>
-          <p class="text-sm font-medium uppercase tracking-[0.2em] text-primary">
+          <p
+            class="text-sm font-medium uppercase tracking-[0.2em] text-primary"
+          >
             Набори
           </p>
           <h2 class="mt-1 text-2xl font-semibold text-highlighted">
@@ -130,9 +136,13 @@
         v-else-if="error"
         class="rounded-[1.75rem] border border-error/30 bg-error/5 p-6"
       >
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        >
           <div class="space-y-2">
-            <p class="text-sm font-medium uppercase tracking-[0.2em] text-error">
+            <p
+              class="text-sm font-medium uppercase tracking-[0.2em] text-error"
+            >
               Помилка
             </p>
             <h3 class="text-xl font-semibold text-highlighted">
@@ -196,7 +206,9 @@
         >
           <div class="flex items-start justify-between gap-4">
             <div class="space-y-3">
-              <p class="text-sm font-medium uppercase tracking-[0.2em] text-primary">
+              <p
+                class="text-sm font-medium uppercase tracking-[0.2em] text-primary"
+              >
                 Набір карток
               </p>
               <h3 class="text-2xl font-semibold text-highlighted">
@@ -214,8 +226,13 @@
             </div>
           </div>
 
-          <p class="mt-4 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-toned">
-            {{ set.description || "Опис ще не доданий, але набір уже готовий до наповнення." }}
+          <p
+            class="mt-4 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-toned"
+          >
+            {{
+              set.description ||
+              "Опис ще не доданий, але набір уже готовий до наповнення."
+            }}
           </p>
 
           <div class="mt-5 flex flex-wrap gap-2">
@@ -252,27 +269,21 @@
           >
             <div class="grid gap-4 sm:grid-cols-3 sm:gap-6">
               <div>
-                <p class="text-sm text-toned">
-                  Карток у наборі
-                </p>
+                <p class="text-sm text-toned">Карток у наборі</p>
                 <p class="text-lg font-semibold text-highlighted">
                   {{ set.cardsCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-toned">
-                  Тем у наборі
-                </p>
+                <p class="text-sm text-toned">Тем у наборі</p>
                 <p class="text-lg font-semibold text-highlighted">
                   {{ set.topics.length }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-toned">
-                  Створив
-                </p>
+                <p class="text-sm text-toned">Створив</p>
                 <p class="text-lg font-semibold text-highlighted">
                   {{ getAuthorName(set) }}
                 </p>
@@ -331,7 +342,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISetListItem } from "~/repository/sets";
+import type { ISetListItemResponse } from "~/repository/sets";
 
 definePageMeta({
   layout: "cabinet",
@@ -340,25 +351,26 @@ definePageMeta({
 const { $repository } = useNuxtApp();
 const { profile } = useProfileStore();
 
-const {
-  data,
-  pending,
-  error,
-  refresh,
-} = await useAsyncData("card-sets", () => $repository.sets.getSets(), {
-  default: () => [],
-  server: false,
-});
+const { data, pending, error, refresh } = await useAsyncData(
+  "card-sets",
+  () => $repository.sets.getSets(),
+  {
+    default: () => [],
+    server: false,
+  }
+);
 
 const deletingSetId = ref<string | null>(null);
-const sets = computed<ISetListItem[]>(() => data.value ?? []);
+const sets = computed<ISetListItemResponse[]>(() => data.value ?? []);
 
 const stats = computed(() => {
   const topicsCount = new Set(
     sets.value.flatMap(set => set.topics.map(topic => topic.id))
   ).size;
 
-  const describedSets = sets.value.filter(set => set.description?.trim()).length;
+  const describedSets = sets.value.filter(set =>
+    set.description?.trim()
+  ).length;
 
   return [
     {
@@ -393,17 +405,19 @@ const summaryText = computed(() => {
   return `${total} набори зібрано в одній бібліотеці для швидкого доступу.`;
 });
 
-const getAuthorName = (set: ISetListItem) => {
+const getAuthorName = (set: ISetListItemResponse) => {
   const fullName = `${set.user.firstName} ${set.user.lastName}`.trim();
 
   return fullName || set.user.email;
 };
 
-const canDeleteSet = (set: ISetListItem) => {
-  return Boolean(profile.value?.email && profile.value.email === set.user.email);
+const canDeleteSet = (set: ISetListItemResponse) => {
+  return Boolean(
+    profile.value?.email && profile.value.email === set.user.email
+  );
 };
 
-const handleDeleteSet = async (set: ISetListItem) => {
+const handleDeleteSet = async (set: ISetListItemResponse) => {
   if (deletingSetId.value) {
     return;
   }

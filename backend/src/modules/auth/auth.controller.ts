@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { RefreshTokenResponseDto } from './dto/refresh-token.response.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -46,8 +48,12 @@ export class AuthController {
       },
     }),
   )
-  refreshToken(@Body('refreshToken') refreshToken: string) {
-    const payload = this.authService.verifyRefreshToken(refreshToken);
+  refreshToken(
+    @Body() refreshTokenDto: RefreshTokenDto,
+  ): RefreshTokenResponseDto {
+    const payload = this.authService.verifyRefreshToken(
+      refreshTokenDto.refreshToken,
+    );
     if (!payload) {
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -57,6 +63,6 @@ export class AuthController {
       email: '',
     } as any);
 
-    return { accessToken };
+    return new RefreshTokenResponseDto(accessToken);
   }
 }

@@ -3,9 +3,13 @@
     <section
       class="overflow-hidden rounded-[2rem] border border-default bg-gradient-to-br from-primary/12 via-default to-success/10 p-6 shadow-sm sm:p-8"
     >
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
+      <div
+        class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]"
+      >
         <div class="space-y-4">
-          <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+          <p
+            class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+          >
             Режим навчання
           </p>
           <h1 class="text-3xl font-semibold text-highlighted sm:text-4xl">
@@ -75,7 +79,9 @@
       v-else-if="error"
       class="rounded-[2rem] border border-error/30 bg-error/5 p-6 shadow-sm sm:p-8"
     >
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <div class="space-y-2">
           <p class="text-sm font-medium uppercase tracking-[0.2em] text-error">
             Помилка
@@ -116,7 +122,8 @@
         У наборі поки немає карток
       </h2>
       <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-toned">
-        Додайте кілька карток у редакторі, і тут одразу з’явиться повноцінний режим навчання з повторенням та статистикою.
+        Додайте кілька карток у редакторі, і тут одразу з’явиться повноцінний
+        режим навчання з повторенням та статистикою.
       </p>
       <UButton
         :to="editSetLink"
@@ -175,7 +182,7 @@
 
 <script setup lang="ts">
 import { useNow } from "@vueuse/core";
-import type { ICardDetails } from "~/repository/cards";
+import type { ICardDetailsResponse } from "~/repository/cards";
 import type { LearningAttempt, LearningCardReport } from "~/utils/cardLearning";
 import { formatStopwatch } from "~/utils/cardLearning";
 
@@ -223,7 +230,7 @@ const cardStates = reactive<Record<string, CardSessionState>>({});
 
 let advanceTimeout: number | null = null;
 
-const cards = computed<ICardDetails[]>(() => {
+const cards = computed<ICardDetailsResponse[]>(() => {
   return [...(setData.value?.cards ?? [])].sort((left, right) => {
     return left.position - right.position;
   });
@@ -238,8 +245,10 @@ const setName = computed(() => {
 });
 
 const setDescription = computed(() => {
-  return setData.value?.description?.trim()
-    || "Перевертайте картки, відмічайте складні місця і проходьте повторення, доки весь набір не стане впевненим.";
+  return (
+    setData.value?.description?.trim() ||
+    "Перевертайте картки, відмічайте складні місця і проходьте повторення, доки весь набір не стане впевненим."
+  );
 });
 
 const headerStats = computed(() => {
@@ -247,12 +256,14 @@ const headerStats = computed(() => {
     {
       label: "Карток у наборі",
       value: cards.value.length,
-      description: "Усі картки доступні в поточному сеансі й можуть повернутися в повторення після помилок.",
+      description:
+        "Усі картки доступні в поточному сеансі й можуть повернутися в повторення після помилок.",
     },
     {
       label: "Озвучення",
       value: "Web Speech",
-      description: "Озвучення term та definition працює через системні голоси браузера без окремого бекенд-сервісу.",
+      description:
+        "Озвучення term та definition працює через системні голоси браузера без окремого бекенд-сервісу.",
     },
   ];
 });
@@ -317,7 +328,7 @@ const totalStopwatch = computed(() => {
 
 const reports = computed<LearningCardReport[]>(() => {
   return activeCardIds.value
-    .map((cardId) => {
+    .map(cardId => {
       const card = cardMap.value.get(cardId);
       const state = cardStates[cardId];
 
@@ -361,11 +372,11 @@ const clearAdvanceTimeout = () => {
 };
 
 const resetCardStates = (cardIds: string[]) => {
-  Object.keys(cardStates).forEach((key) => {
+  Object.keys(cardStates).forEach(key => {
     delete cardStates[key];
   });
 
-  cardIds.forEach((cardId) => {
+  cardIds.forEach(cardId => {
     cardStates[cardId] = {
       attempts: [],
       mistakes: 0,
@@ -503,7 +514,7 @@ const restartMistakes = () => {
 
 watch(
   cards,
-  (nextCards) => {
+  nextCards => {
     if (initialized.value || !nextCards.length) {
       return;
     }
@@ -526,7 +537,7 @@ watch(
   }
 );
 
-watch(currentCardId, (cardId) => {
+watch(currentCardId, cardId => {
   if (!cardId || isShowingResults.value) {
     return;
   }

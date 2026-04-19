@@ -17,6 +17,6 @@ export class CardsService {
       order: { position: 'ASC' },
     });
 
-    if (cards) return cards.map((card) => new CardDetailsResponseDto(card));
+    return cards.map((card) => new CardDetailsResponseDto(card));
   }
 }

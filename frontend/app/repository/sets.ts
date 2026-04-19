@@ -1,67 +1,43 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
-import type { ICreateCardPayload, ICardDetails, IUpdateCardPayload } from "~/repository/cards";
-import type { IUser } from "~/repository/profile";
+import type {
+  ICreateSet,
+  ISetDetailsResponse,
+  ISetListItemResponse,
+  ITopicResponse,
+  IUpdateSet,
+  ISuccessResponse,
+} from "~/types/api.generated";
 
-export interface ITopic {
-  id: string;
-  label: string;
-  value: string;
-  icon: string;
-  description: string;
-}
-
-export interface ISetListItem {
-  id: string;
-  name: string;
-  description: string;
-  topics: ITopic[];
-  user: IUser;
-  cardsCount: number;
-}
-
-export interface ISetDetails {
-  id: string;
-  name: string;
-  description: string;
-  topics: ITopic[];
-  user: IUser;
-  cards: ICardDetails[]
-}
-
-export interface ICreateSetPayload {
-  name: string;
-  description: string;
-  topicIds: string[];
-  cards: ICreateCardPayload[];
-}
-
-export interface IUpdateSetPayload extends ICreateSetPayload {
-  id: string;
-  cards: IUpdateCardPayload[];
-}
+export type {
+  ICreateSet,
+  ISetDetailsResponse,
+  ISetListItemResponse,
+  ITopicResponse,
+  IUpdateSet,
+};
 
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
     getSets: () => {
-      return fetch<ISetListItem[]>("/backend/sets", {
+      return fetch<ISetListItemResponse[]>("/backend/sets", {
         method: "GET",
       });
     },
 
     getSet: (setId: string) => {
-      return fetch<ISetDetails>(`/backend/sets/${setId}`, {
+      return fetch<ISetDetailsResponse>(`/backend/sets/${setId}`, {
         method: "GET",
       });
     },
 
-    createSet: (data: ICreateSetPayload) => {
+    createSet: (data: ICreateSet) => {
       return fetch("/backend/sets", {
         method: "POST",
         body: data,
       });
     },
 
-    updateSet: (setId: string, data: IUpdateSetPayload) => {
+    updateSet: (setId: string, data: IUpdateSet) => {
       return fetch(`/backend/sets/${setId}`, {
         method: "PATCH",
         body: data,
@@ -69,14 +45,13 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     },
 
     deleteSet: (setId: string) => {
-      return fetch<{ success: boolean }>(`/backend/sets/${setId}`, {
+      return fetch<ISuccessResponse>(`/backend/sets/${setId}`, {
         method: "DELETE",
       });
     },
 
-
     getTopics: () => {
-      return fetch<ITopic[]>("/backend/sets/topics", {
+      return fetch<ITopicResponse[]>("/backend/sets/topics", {
         method: "GET",
       });
     },

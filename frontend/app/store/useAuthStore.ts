@@ -1,8 +1,8 @@
 import { useLocalStorage } from "@vueuse/core";
-
-export interface IRefreshTokenResponseInterface {
-  accessToken: string;
-}
+import type {
+  IRefreshToken,
+  IRefreshTokenResponse,
+} from "~/types/api.generated";
 
 export const useAuthStore = () => {
   const apiUrl = useApiUrl();
@@ -62,7 +62,7 @@ export const useAuthStore = () => {
   };
 
   const promiseAuthRefreshToken =
-    useState<Promise<IRefreshTokenResponseInterface> | null>(
+    useState<Promise<IRefreshTokenResponse> | null>(
       "promiseRefreshToken",
       () => null
     );
@@ -70,14 +70,12 @@ export const useAuthStore = () => {
   const authRefreshToken = async () => {
     promiseAuthRefreshToken.value =
       promiseAuthRefreshToken.value ||
-      $fetch<IRefreshTokenResponseInterface>(
-        `${apiUrl}/auth/refresh`, {
-          method: 'POST',
-          body: {
-            refreshToken: refreshToken.value
-          }
-        }
-      );
+      $fetch<IRefreshTokenResponse>(`${apiUrl}/auth/refresh`, {
+        method: "POST",
+        body: {
+          refreshToken: refreshToken.value,
+        } satisfies IRefreshToken,
+      });
 
     try {
       const response = await promiseAuthRefreshToken.value;

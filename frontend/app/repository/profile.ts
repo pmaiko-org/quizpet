@@ -1,16 +1,12 @@
-import type { $Fetch, NitroFetchRequest } from 'nitropack'
+import type { $Fetch, NitroFetchRequest } from "nitropack";
+import type { IUserResponse } from "~/types/api.generated";
 
-export interface IUser {
-  firstName: string;
-  lastName: string;
-  email: string;
-  avatar?: string;
-}
+export type { IUserResponse };
 
 export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
     getProfile: () => {
-      return fetch<IUser>('/backend/users/me')
+      return fetch<IUserResponse>("/backend/users/me");
     },
-  }
-}
+  };
+};

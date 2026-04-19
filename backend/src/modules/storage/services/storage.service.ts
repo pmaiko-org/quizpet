@@ -5,6 +5,7 @@ import { StorageFsService } from './storage-fs.service';
 import * as mime from 'mime-types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileResponseDto } from '../dto/file.response.dto';
+import { SuccessResponseDto } from '../../../common/dto/success.response.dto';
 
 @Injectable()
 export class StorageService {
@@ -60,7 +61,7 @@ export class StorageService {
     const storageFile = await this.storageFileRepository.findOneBy({ id });
 
     if (!storageFile) {
-      return { success: true };
+      return new SuccessResponseDto();
     }
 
     const ext = mime.extension(storageFile.mimetype);
@@ -70,7 +71,7 @@ export class StorageService {
       await this.storageFileRepository.remove(storageFile);
     }
 
-    return { success: true };
+    return new SuccessResponseDto();
   }
 }
 

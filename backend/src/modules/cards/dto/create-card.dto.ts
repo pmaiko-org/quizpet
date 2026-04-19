@@ -11,24 +11,24 @@ export class CreateCardDto {
 
   @IsOptional()
   @IsString()
-  termDescription?: string;
+  termDescription?: string | null;
 
   @IsString()
   @IsOptional()
-  termImageId?: string;
+  termImageId?: string | null;
 
   @IsString()
   definition: string;
 
   @IsString()
   @IsOptional()
-  definitionImageId?: string;
+  definitionImageId?: string | null;
 
   @IsString()
   @IsOptional()
-  textColor?: string;
+  textColor?: string | null;
 
   @IsString()
   @IsOptional()
-  backgroundColor?: string;
+  backgroundColor?: string | null;
 }

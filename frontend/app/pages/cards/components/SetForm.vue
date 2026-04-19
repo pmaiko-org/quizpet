@@ -195,10 +195,10 @@
 import { z } from "zod";
 import { FetchError } from "ofetch";
 import type {
-  ICreateSetPayload,
-  ISetDetails,
-  ITopic,
-  IUpdateSetPayload,
+  ICreateSet,
+  ISetDetailsResponse,
+  ITopicResponse,
+  IUpdateSet,
 } from "~/repository/sets";
 import {
   initialCard,
@@ -210,14 +210,14 @@ import { storageFileSchema } from "~/repository/storage-files";
 import type { FormErrorEvent } from "#ui/types/form";
 
 const props = defineProps<{
-  set?: ISetDetails;
+  set?: ISetDetailsResponse;
 }>();
 
 const { $repository } = useNuxtApp();
 
 const submitting = ref(false);
 
-const topics = ref<ITopic[] | null>(null);
+const topics = ref<ITopicResponse[] | null>(null);
 
 onMounted(async () => {
   topics.value = await $repository.sets.getTopics();
@@ -234,7 +234,7 @@ const optionalHexColor = z.preprocess(
 const cardSchema = z.object({
   position: z.number(),
   term: z.string().trim().min(1),
-  termDescription: z.string().trim().min(1).or(z.literal('')).optional(),
+  termDescription: z.string().trim().min(1).or(z.literal("")).optional(),
   termImage: storageFileSchema.optional(),
   definition: z.string().trim().min(1),
   definitionImage: storageFileSchema.optional(),
@@ -253,7 +253,7 @@ const state = reactive<SetFormData>(initialSet(props.set));
 
 watch(
   () => props.set,
-  (nextSet) => {
+  nextSet => {
     Object.assign(state, initialSet(nextSet));
   },
   { immediate: true }
@@ -325,11 +325,11 @@ const toast = useToast();
 const router = useRouter();
 
 const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
-  const basePayload: ICreateSetPayload = {
+  const basePayload: ICreateSet = {
     name: event.data.name,
     description: event.data.description,
     topicIds: event.data.topicIds,
-    cards: event.data.cards.map((card) => ({
+    cards: event.data.cards.map(card => ({
       position: card.position,
       term: card.term,
       termDescription: card.termDescription || null,
@@ -345,10 +345,9 @@ const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
     submitting.value = true;
 
     if (state.id) {
-      const payload: IUpdateSetPayload = {
-        id: state.id,
+      const payload: IUpdateSet = {
         ...basePayload,
-        cards: event.data.cards.map((card) => ({
+        cards: event.data.cards.map(card => ({
           id: state.cards[card.position]?.id ?? null,
           position: card.position,
           term: card.term,

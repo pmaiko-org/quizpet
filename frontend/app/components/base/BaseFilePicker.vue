@@ -20,7 +20,7 @@
             :src="currentPreview.src"
             alt="Preview"
             class="h-full w-full object-cover"
-          >
+          />
 
           <div
             v-else
@@ -34,7 +34,9 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between gap-3 border-t border-default px-4 py-3">
+        <div
+          class="flex items-center justify-between gap-3 border-t border-default px-4 py-3"
+        >
           <p class="truncate text-sm text-highlighted">
             {{ modelValue?.name || "Зображення не вибране" }}
           </p>
@@ -80,7 +82,9 @@
     >
       <template #body>
         <div class="space-y-4">
-          <div class="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
+          <div
+            class="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]"
+          >
             <div class="space-y-4">
               <div class="rounded-2xl border border-default bg-default/80 p-4">
                 <div class="mb-3 flex items-start justify-between gap-3">
@@ -118,9 +122,12 @@
               <div class="rounded-2xl border border-default bg-default/80 p-4">
                 <div class="mb-4 flex items-start justify-between gap-3">
                   <div>
-                    <p class="text-sm font-medium text-highlighted">Бібліотека</p>
+                    <p class="text-sm font-medium text-highlighted">
+                      Бібліотека
+                    </p>
                     <p class="text-xs text-toned">
-                      Клік по картці вибирає файл. Видалення прибирає його з бібліотеки.
+                      Клік по картці вибирає файл. Видалення прибирає його з
+                      бібліотеки.
                     </p>
                   </div>
 
@@ -188,12 +195,14 @@
                       class="block w-full text-left"
                       @click="setImageValue(item)"
                     >
-                      <div class="relative aspect-square overflow-hidden bg-muted/50">
+                      <div
+                        class="relative aspect-square overflow-hidden bg-muted/50"
+                      >
                         <img
                           :src="item.src"
                           :alt="item.name"
                           class="h-full w-full object-cover transition duration-200 hover:scale-[1.02]"
-                        >
+                        />
 
                         <div class="absolute left-3 top-3">
                           <UBadge
@@ -208,7 +217,9 @@
 
                       <div class="space-y-3 p-3">
                         <div>
-                          <p class="line-clamp-1 text-sm font-medium text-highlighted">
+                          <p
+                            class="line-clamp-1 text-sm font-medium text-highlighted"
+                          >
                             {{ item.name }}
                           </p>
                           <p class="line-clamp-1 text-xs text-toned">
@@ -218,7 +229,9 @@
                       </div>
                     </button>
 
-                    <div class="flex items-center justify-between gap-2 border-t border-default px-3 py-3">
+                    <div
+                      class="flex items-center justify-between gap-2 border-t border-default px-3 py-3"
+                    >
                       <UButton
                         size="sm"
                         :variant="isSelected(item) ? 'solid' : 'outline'"
@@ -244,14 +257,18 @@
               </div>
             </div>
 
-            <div class="overflow-hidden rounded-2xl border border-default bg-elevated/70">
-              <div class="flex aspect-[4/3] items-center justify-center bg-muted/50">
+            <div
+              class="overflow-hidden rounded-2xl border border-default bg-elevated/70"
+            >
+              <div
+                class="flex aspect-[4/3] items-center justify-center bg-muted/50"
+              >
                 <img
                   v-if="currentPreview"
                   :src="currentPreview.src"
                   alt="Preview"
                   class="h-full w-full object-cover"
-                >
+                />
 
                 <div
                   v-else
@@ -267,14 +284,19 @@
 
               <div class="space-y-4 border-t border-default px-4 py-4">
                 <div>
-                  <p class="text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                  <p
+                    class="text-xs font-medium uppercase tracking-[0.2em] text-primary"
+                  >
                     Активний файл
                   </p>
                   <p class="mt-2 text-base font-semibold text-highlighted">
                     {{ currentPreview?.name || "Файл ще не вибраний" }}
                   </p>
                   <p class="mt-1 break-all text-xs leading-5 text-toned">
-                    {{ currentPreview?.src || "Після вибору тут з’явиться шлях до файлу." }}
+                    {{
+                      currentPreview?.src ||
+                      "Після вибору тут з’явиться шлях до файлу."
+                    }}
                   </p>
                 </div>
 
@@ -294,7 +316,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IStorageFile } from "~/repository/storage-files";
+import type { IFileResponse } from "~/repository/storage-files";
 
 defineProps<{
   label?: string;
@@ -305,7 +327,7 @@ defineProps<{
   required?: boolean;
 }>();
 
-const modelValue = defineModel<IStorageFile | undefined>({
+const modelValue = defineModel<IFileResponse | undefined>({
   required: true,
 });
 
@@ -316,20 +338,20 @@ const isLoading = ref(false);
 const isUploading = ref(false);
 const requestError = ref<string>();
 const selectedFile = ref<File | null>(null);
-const remoteItems = ref<IStorageFile[]>([]);
+const remoteItems = ref<IFileResponse[]>([]);
 const deletingFileId = ref<string | null>(null);
 
-const setImageValue = (value: IStorageFile | undefined) => {
+const setImageValue = (value: IFileResponse | undefined) => {
   modelValue.value = value;
 };
 
 const currentPreview = computed(() => modelValue.value);
 
-const isSelected = (item: IStorageFile) => {
+const isSelected = (item: IFileResponse) => {
   return modelValue.value?.id === item.id;
 };
 
-const itemCardClass = (item: IStorageFile) => {
+const itemCardClass = (item: IFileResponse) => {
   return isSelected(item)
     ? "border-primary bg-primary/5 shadow-sm"
     : "border-default hover:border-primary/40 hover:bg-elevated/70";
@@ -363,7 +385,7 @@ const uploadFile = async (file: File) => {
   }
 };
 
-const handleDeleteFile = async (item: IStorageFile) => {
+const handleDeleteFile = async (item: IFileResponse) => {
   const shouldDelete = window.confirm(
     `Видалити файл "${item.name}" з бібліотеки?`
   );
@@ -390,7 +412,7 @@ const handleDeleteFile = async (item: IStorageFile) => {
   }
 };
 
-watch(selectedFile, async (file) => {
+watch(selectedFile, async file => {
   if (!file) {
     return;
   }
@@ -398,7 +420,7 @@ watch(selectedFile, async (file) => {
   await uploadFile(file);
 });
 
-watch(isOpen, async (value) => {
+watch(isOpen, async value => {
   if (!value) {
     return;
   }

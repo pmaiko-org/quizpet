@@ -7,7 +7,6 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { UsersModule } from './modules/users/users.module';
 import { CardsModule } from './modules/cards/cards.module';
-import { SetsService } from './modules/sets/sets.service';
 import { SetsModule } from './modules/sets/sets.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { ScheduleModule } from '@nestjs/schedule';

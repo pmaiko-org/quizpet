@@ -1,11 +1,11 @@
-import type { IStorageFile } from "~/repository/storage-files";
-import type { ISetDetails } from "~/repository/sets";
+import type { IFileResponse } from "~/repository/storage-files";
+import type { ISetDetailsResponse } from "~/repository/sets";
 import type { DeepPartial } from "#ui/types";
-import type { ICardDetails } from "~/repository/cards";
+import type { ICardDetailsResponse } from "~/repository/cards";
 
-export const initialSet = (set?: DeepPartial<ISetDetails>) => {
+export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
   return {
-    id: set?.id || null as string | null,
+    id: set?.id || (null as string | null),
     name: set?.name || "",
     description: set?.description || "",
     topicIds: (set?.topics?.map(topic => topic?.id).filter(Boolean) ||
@@ -21,17 +21,17 @@ export type SetFormData = ReturnType<typeof initialSet>;
 
 export const initialCard = (
   position: number,
-  card?: DeepPartial<ICardDetails>
+  card?: DeepPartial<ICardDetailsResponse>
 ) => {
   return {
-    id: card?.id || null as string | null,
+    id: card?.id || (null as string | null),
     position: card?.position || position,
     term: card?.term || "",
     termDescription: card?.termDescription || "",
-    termImage: card?.termImage || (undefined as IStorageFile | undefined),
+    termImage: card?.termImage || (undefined as IFileResponse | undefined),
     definition: card?.definition || "",
     definitionImage:
-      card?.definitionImage || (undefined as IStorageFile | undefined),
+      card?.definitionImage || (undefined as IFileResponse | undefined),
     textColor: card?.textColor || (undefined as string | undefined),
     backgroundColor: card?.backgroundColor || (undefined as string | undefined),
   };

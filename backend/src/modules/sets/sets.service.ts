@@ -14,6 +14,8 @@ import { UpdateSetDto } from './dto/update-set.dto';
 import { UpdateCardDto } from '../cards/dto/update-card.dto';
 import { SetDetailsResponseDto } from './dto/set-details.response.dto';
 import { CreateCardDto } from '../cards/dto/create-card.dto';
+import { TopicResponseDto } from './dto/topic.response.dto';
+import { SuccessResponseDto } from '../../common/dto/success.response.dto';
 
 @Injectable()
 export class SetsService {
@@ -56,7 +58,8 @@ export class SetsService {
       cards,
     });
 
-    return this.setRepository.save(set);
+    const savedSet = await this.setRepository.save(set);
+    return this.getSet(savedSet.id);
   }
 
   async updateSet(userId: string, setId: string, updateSetDto: UpdateSetDto) {
@@ -99,7 +102,7 @@ export class SetsService {
         await manager.delete(CardEntity, cardIdsToDelete);
       }
 
-      const updatedSet = manager.create(SetEntity, {
+      const setToSave = manager.create(SetEntity, {
         id: set.id,
         name: updateSetDto.name,
         description: updateSetDto.description,
@@ -107,7 +110,7 @@ export class SetsService {
         user: set.user,
       });
 
-      await manager.save(SetEntity, updatedSet);
+      await manager.save(SetEntity, setToSave);
 
       const cardsToSave = this.mapCards(updateSetDto.cards, setId);
 
@@ -115,12 +118,17 @@ export class SetsService {
         await manager.save(CardEntity, cardsToSave);
       }
 
-      return manager.findOne(SetEntity, {
+      const updatedSet = await manager.findOne(SetEntity, {
         where: { id: setId },
         relations: {
           cards: true,
         },
+        order: {
+          cards: { position: 'ASC' },
+        },
       });
+
+      return updatedSet ? new SetDetailsResponseDto(updatedSet) : undefined;
     });
   }
 
@@ -138,11 +146,13 @@ export class SetsService {
 
     await this.setRepository.remove(set);
 
-    return { success: true };
+    return new SuccessResponseDto();
   }
 
   getTopics() {
-    return this.topicRepository.find();
+    return this.topicRepository
+      .find()
+      .then((topics) => topics.map((topic) => new TopicResponseDto(topic)));
   }
 
   private async getValidatedTopics(topicIds: string[]) {
@@ -175,7 +185,7 @@ export class SetsService {
         id: ('id' in card && card.id) || undefined,
         position: card.position,
         term: card.term,
-        termDescription: card.termDescription,
+        termDescription: card.termDescription ?? undefined,
         termImage: card.termImageId
           ? ({ id: card.termImageId } as DeepPartial<CardEntity['termImage']>)
           : (null as unknown as DeepPartial<CardEntity['termImage']>),

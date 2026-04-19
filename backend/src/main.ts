@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { GLOBAL_PREFIX } from './config/constants';
+import { setupOpenApi } from './openapi';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,6 +23,7 @@ async function bootstrap() {
     }),
   );
   app.setGlobalPrefix(GLOBAL_PREFIX);
+  setupOpenApi(app);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
