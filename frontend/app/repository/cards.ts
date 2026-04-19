@@ -1,11 +1,5 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
-import type {
-  ICardDetailsResponse,
-  ICreateCard,
-  IUpdateCard,
-} from "~/types/api.generated";
-
-export type { ICardDetailsResponse, ICreateCard, IUpdateCard };
+import type { ICardDetailsResponse } from "~/types/api.generated";
 
 export const cardsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "vue";
-import type { ICardDetailsResponse } from "~/repository/cards";
+import type { ICardDetailsResponse } from "~/types/api.generated";
 
 export type LearningOutcome = "known" | "missed";
 

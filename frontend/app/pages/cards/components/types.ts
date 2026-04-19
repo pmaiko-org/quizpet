@@ -1,7 +1,9 @@
-import type { IFileResponse } from "~/repository/storage-files";
-import type { ISetDetailsResponse } from "~/repository/sets";
 import type { DeepPartial } from "#ui/types";
-import type { ICardDetailsResponse } from "~/repository/cards";
+import type {
+  ICardDetailsResponse,
+  IFileResponse,
+  ISetDetailsResponse,
+} from "~/types/api.generated";
 
 export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
   return {
@@ -37,4 +39,4 @@ export const initialCard = (
   };
 };
 
-export type CardFormData = ReturnType<typeof initialCard>;
+export type ICardFormData = ReturnType<typeof initialCard>;

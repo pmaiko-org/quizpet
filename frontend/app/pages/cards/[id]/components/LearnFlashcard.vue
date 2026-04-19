@@ -235,8 +235,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ICardDetailsResponse } from "~/repository/cards";
 import { buildFlashcardTheme } from "~/utils/cardLearning";
+import type { ICardDetailsResponse } from "~/types/api.generated";
 
 const props = defineProps<{
   card: ICardDetailsResponse;

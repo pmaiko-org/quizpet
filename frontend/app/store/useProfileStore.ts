@@ -1,4 +1,4 @@
-import type { IUserResponse } from "~/repository/profile";
+import type { IUserResponse } from "~/types/api.generated";
 
 export const useProfileStore = () => {
   const { $repository } = useNuxtApp();

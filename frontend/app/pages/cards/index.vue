@@ -420,7 +420,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISetListItemResponse } from "~/repository/sets";
+import type { ISetListItemResponse } from "~/types/api.generated";
 
 definePageMeta({
   layout: "cabinet",

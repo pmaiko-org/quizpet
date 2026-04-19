@@ -8,14 +8,6 @@ import type {
   ISuccessResponse,
 } from "~/types/api.generated";
 
-export type {
-  ICreateSet,
-  ISetDetailsResponse,
-  ISetListItemResponse,
-  ITopicResponse,
-  IUpdateSet,
-};
-
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
     getSets: () => {

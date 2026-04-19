@@ -67,7 +67,10 @@
 </template>
 
 <script setup lang="ts">
-import { initialCard, type CardFormData } from "~/form";
+import {
+  type ICardFormData,
+  initialCard,
+} from "~/pages/cards/components/types";
 
 interface CsvRow {
   term: string;
@@ -76,11 +79,11 @@ interface CsvRow {
 }
 
 const props = defineProps<{
-  cards: CardFormData[];
+  cards: ICardFormData[];
 }>();
 
 const emit = defineEmits<{
-  importCards: [cards: CardFormData[]];
+  importCards: [cards: ICardFormData[]];
 }>();
 
 const toast = useToast();

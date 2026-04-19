@@ -1,14 +1,5 @@
-import { z } from "zod";
 import type { $Fetch, NitroFetchRequest } from "nitropack";
 import type { IFileResponse, ISuccessResponse } from "~/types/api.generated";
-
-export type { IFileResponse };
-
-export const storageFileSchema = z.object({
-  id: z.string(),
-  src: z.string(),
-  name: z.string(),
-});
 
 export const storageFilesRepository = <T>(
   fetch: $Fetch<T, NitroFetchRequest>,

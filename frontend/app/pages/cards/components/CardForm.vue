@@ -139,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CardFormData } from "~/form";
+import type { ICardFormData } from "~/pages/cards/components/types";
 
 const { index } = defineProps<{
   index: number;
@@ -154,11 +154,11 @@ defineEmits<{
   moveDown: [];
 }>();
 
-const modelValue = defineModel<CardFormData>({
+const modelValue = defineModel<ICardFormData>({
   required: true,
 });
 
-const fieldName = (field: keyof CardFormData) => {
+const fieldName = (field: keyof ICardFormData) => {
   return `cards.${index}.${field}`;
 };
 </script>

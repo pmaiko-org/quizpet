@@ -224,20 +224,20 @@
 <script setup lang="ts">
 import { z } from "zod";
 import { FetchError } from "ofetch";
+import type { FormErrorEvent } from "#ui/types/form";
 import type {
   ICreateSet,
   ISetDetailsResponse,
   ITopicResponse,
   IUpdateSet,
-} from "~/repository/sets";
+} from "~/types/api.generated";
+import { fileSchema } from "~/validation";
 import {
+  type ICardFormData,
   initialCard,
   initialSet,
   type SetFormData,
-  type CardFormData,
-} from "~/form";
-import { storageFileSchema } from "~/repository/storage-files";
-import type { FormErrorEvent } from "#ui/types/form";
+} from "~/pages/cards/components/types";
 
 const props = defineProps<{
   set?: ISetDetailsResponse;
@@ -265,9 +265,9 @@ const cardSchema = z.object({
   position: z.number(),
   term: z.string().trim().min(1),
   termDescription: z.string().trim().min(1).or(z.literal("")).optional(),
-  termImage: storageFileSchema.optional(),
+  termImage: fileSchema.optional(),
   definition: z.string().trim().min(1),
-  definitionImage: storageFileSchema.optional(),
+  definitionImage: fileSchema.optional(),
   textColor: optionalHexColor,
   backgroundColor: optionalHexColor,
 });
@@ -318,7 +318,7 @@ const addCard = () => {
   syncCardPositions();
 };
 
-const replaceCards = (cards: CardFormData[]) => {
+const replaceCards = (cards: ICardFormData[]) => {
   state.cards.splice(0, state.cards.length, ...cards);
   syncCardPositions();
 };
@@ -342,7 +342,7 @@ const moveCard = (fromIndex: number, toIndex: number) => {
   syncCardPositions();
 };
 
-const updateCard = (index: number, card: CardFormData) => {
+const updateCard = (index: number, card: ICardFormData) => {
   if (!state.cards[index]) {
     return;
   }

@@ -225,9 +225,9 @@
 
 <script setup lang="ts">
 import { useNow } from "@vueuse/core";
-import type { ICardDetailsResponse } from "~/repository/cards";
 import type { LearningAttempt, LearningCardReport } from "~/utils/cardLearning";
 import { formatStopwatch } from "~/utils/cardLearning";
+import type { ICardDetailsResponse } from "~/types/api.generated";
 
 interface CardSessionState {
   attempts: LearningAttempt[];
