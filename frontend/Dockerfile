@@ -2,6 +2,8 @@ FROM node:22-alpine AS node
 
 FROM nginx:stable-alpine
 
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
