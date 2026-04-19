@@ -15,12 +15,12 @@
 </template>
 
 <script setup lang="ts">
-const { isLoggedIn } = useAuthStore()
-const { getProfile } = useProfileStore()
+const { isLoggedIn } = useAuthStore();
+const { getProfile } = useProfileStore();
 
 onMounted(async () => {
   if (isLoggedIn.value) {
-    await getProfile()
+    await getProfile();
   }
-})
+});
 </script>

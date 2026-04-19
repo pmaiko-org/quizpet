@@ -8,7 +8,13 @@
     "generate:api-types": "npm --prefix ../backend run generate:openapi && openapi-typescript ../backend/openapi.json -o ./app/types/api.generated.ts && node ./scripts/append-openapi-aliases.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "type-check": "nuxi typecheck",
+    "precommit": "npm run type-check && npm run format:fix && npm run lint:fix"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.15.2",
@@ -18,15 +24,18 @@
     "nuxt": "^4.4.2",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5.30",
-    "vue-router": "^5.0.3",
+    "vue-router": "^5.0.4",
     "zod": "^4.3.6"
-  },
-  "overrides": {
-    "vue-router": "^5.0.3"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.98",
+    "@vue/language-core": "^3.1.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-better-tailwindcss": "^4.4.1",
     "openapi-typescript": "^7.13.0",
-    "sass": "^1.98.0"
+    "prettier": "^3.8.3",
+    "sass": "^1.98.0",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.7"
   }
 }

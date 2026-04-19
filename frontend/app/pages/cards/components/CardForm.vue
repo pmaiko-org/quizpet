@@ -1,8 +1,13 @@
 <template>
-  <div class="rounded-3xl border border-default bg-default/80 p-5 shadow-sm sm:p-6">
+  <div
+    class="
+      rounded-3xl border border-default bg-default/80 p-5 shadow-sm
+      sm:p-6
+    "
+  >
     <div class="mb-5 flex items-start justify-between gap-4">
       <div>
-        <p class="text-xs font-medium uppercase tracking-[0.24em] text-primary">
+        <p class="text-xs font-medium tracking-[0.24em] text-primary uppercase">
           Картка {{ index + 1 }}
         </p>
         <h3 class="mt-1 text-lg font-semibold text-highlighted">
@@ -48,7 +53,12 @@
       </UButton>
     </div>
 
-    <div class="grid gap-5 xl:grid-cols-2">
+    <div
+      class="
+        grid gap-5
+        xl:grid-cols-2
+      "
+    >
       <UFormField
         :name="fieldName('term')"
         label="Термін"

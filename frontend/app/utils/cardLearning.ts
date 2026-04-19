@@ -82,9 +82,9 @@ export const getContrastColor = (background?: string | null) => {
 
 export const buildFlashcardTheme = (card: ICardDetailsResponse) => {
   const backgroundColor = normalizeHexColor(card.backgroundColor);
-  const textColor =
-    normalizeHexColor(card.textColor) ??
-    (backgroundColor ? getContrastColor(backgroundColor) : null);
+  const textColor
+    = normalizeHexColor(card.textColor)
+      ?? (backgroundColor ? getContrastColor(backgroundColor) : null);
   const accentColor = textColor ?? backgroundColor ?? "#2563eb";
 
   const cardStyle: CSSProperties = {
@@ -153,7 +153,7 @@ export const formatStopwatch = (value: number) => {
 export const getAccuracy = (reports: LearningCardReport[]) => {
   const attempts = reports.reduce(
     (total, report) => total + report.attempts.length,
-    0
+    0,
   );
 
   if (!attempts) {
@@ -162,7 +162,7 @@ export const getAccuracy = (reports: LearningCardReport[]) => {
 
   const successfulAttempts = reports.reduce(
     (total, report) => total + report.successes,
-    0
+    0,
   );
 
   return Math.round((successfulAttempts / attempts) * 100);

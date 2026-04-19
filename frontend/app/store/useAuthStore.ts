@@ -30,7 +30,7 @@ export const useAuthStore = () => {
 
   const logoutPromise = useState<Promise<void> | null>(
     "logoutPromise",
-    () => null
+    () => null,
   );
   const isLoggingOut = computed(() => Boolean(logoutPromise.value));
 
@@ -61,21 +61,26 @@ export const useAuthStore = () => {
     return `Bearer ${accessToken}`;
   };
 
-  const promiseAuthRefreshToken =
-    useState<Promise<IRefreshTokenResponse> | null>(
+  const promiseAuthRefreshToken
+    = useState<Promise<IRefreshTokenResponse> | null>(
       "promiseRefreshToken",
-      () => null
+      () => null,
     );
 
   const authRefreshToken = async () => {
-    promiseAuthRefreshToken.value =
-      promiseAuthRefreshToken.value ||
-      $fetch<IRefreshTokenResponse>(`${apiUrl}/auth/refresh`, {
-        method: "POST",
-        body: {
-          refreshToken: refreshToken.value,
-        } satisfies IRefreshToken,
-      });
+    if (!refreshToken.value) {
+      clearTokens();
+      return;
+    }
+
+    promiseAuthRefreshToken.value
+      = promiseAuthRefreshToken.value
+        || $fetch<IRefreshTokenResponse>(`${apiUrl}/auth/refresh`, {
+          method: "POST",
+          body: {
+            refreshToken: refreshToken.value,
+          } satisfies IRefreshToken,
+        });
 
     try {
       const response = await promiseAuthRefreshToken.value;

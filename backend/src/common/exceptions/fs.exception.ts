@@ -8,7 +8,7 @@ export class FsException extends Error {
   ) {
     super(message);
 
-    this.name = 'FsException';
+    this.name = "FsException";
     this.filename = options?.filename;
     this.cause = options?.cause;
 

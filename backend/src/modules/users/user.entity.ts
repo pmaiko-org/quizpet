@@ -1,9 +1,9 @@
-import { Entity, Column, OneToMany, JoinColumn, OneToOne } from 'typeorm';
-import { SetEntity } from '../sets/entity/set.entity';
-import { StorageFileEntity } from '../storage/storage-file.entity';
-import { AbstractEntity } from '../../common/abstract.entity';
+import { Entity, Column, OneToMany, JoinColumn, OneToOne } from "typeorm";
+import { SetEntity } from "../sets/entity/set.entity";
+import { StorageFileEntity } from "../storage/storage-file.entity";
+import { AbstractEntity } from "../../common/abstract.entity";
 
-@Entity('users')
+@Entity("users")
 export class UserEntity extends AbstractEntity<UserEntity> {
   @Column({ unique: true })
   googleId: string;
@@ -22,9 +22,9 @@ export class UserEntity extends AbstractEntity<UserEntity> {
     cascade: true,
     eager: true,
   })
-  @JoinColumn({ name: 'pictureId' })
+  @JoinColumn({ name: "pictureId" })
   picture?: StorageFileEntity;
 
-  @OneToMany(() => SetEntity, (set) => set.user)
+  @OneToMany(() => SetEntity, set => set.user)
   sets: SetEntity[];
 }

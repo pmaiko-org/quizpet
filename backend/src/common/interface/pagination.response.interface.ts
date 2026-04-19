@@ -1,4 +1,4 @@
-import { ResponseInterface } from './response.interface';
+import { ResponseInterface } from "./response.interface";
 
 export interface PaginationResponseInterface<
   T,

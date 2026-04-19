@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { firstValueFrom } from 'rxjs';
+import { Injectable } from "@nestjs/common";
+import { HttpService } from "@nestjs/axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { firstValueFrom } from "rxjs";
 
 @Injectable()
 export class RequestService {
@@ -11,7 +11,7 @@ export class RequestService {
     config?: AxiosRequestConfig<D>,
   ): Promise<AxiosResponse<T, D>> {
     return await firstValueFrom(
-      this.httpService.get<T, D>(url || 'https://google.com', config),
+      this.httpService.get<T, D>(url || "https://google.com", config),
     );
   }
 }

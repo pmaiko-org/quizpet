@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { AbstractEntity } from '../../common/abstract.entity';
-import { UserEntity } from '../users/user.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { AbstractEntity } from "../../common/abstract.entity";
+import { UserEntity } from "../users/user.entity";
 
-@Entity('storage_files')
+@Entity("storage_files")
 export class StorageFileEntity extends AbstractEntity<StorageFileEntity> {
   @Column()
   name: string;
@@ -10,12 +10,12 @@ export class StorageFileEntity extends AbstractEntity<StorageFileEntity> {
   @Column()
   mimetype: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: "int" })
   size: number;
 
   @ManyToOne(() => UserEntity, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: "userId" })
   user: UserEntity;
 }

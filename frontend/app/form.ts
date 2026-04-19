@@ -8,8 +8,8 @@ export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
     id: set?.id || (null as string | null),
     name: set?.name || "",
     description: set?.description || "",
-    topicIds: (set?.topics?.map(topic => topic?.id).filter(Boolean) ||
-      []) as string[],
+    topicIds: (set?.topics?.map(topic => topic?.id).filter(Boolean)
+      || []) as string[],
     cards: set?.cards?.map((card, index) => initialCard(index, card)) || [
       initialCard(0),
       initialCard(1),
@@ -21,7 +21,7 @@ export type SetFormData = ReturnType<typeof initialSet>;
 
 export const initialCard = (
   position: number,
-  card?: DeepPartial<ICardDetailsResponse>
+  card?: DeepPartial<ICardDetailsResponse>,
 ) => {
   return {
     id: card?.id || (null as string | null),

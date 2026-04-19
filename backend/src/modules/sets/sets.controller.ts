@@ -9,22 +9,22 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { SetsService } from './sets.service';
-import { CreateSetDto } from './dto/create-set.dto';
-import { UpdateSetDto } from './dto/update-set.dto';
-import { TopicResponseDto } from './dto/topic.response.dto';
-import { SetListItemResponseDto } from './dto/set-list-item.response.dto';
-import { SetDetailsResponseDto } from './dto/set-details.response.dto';
-import { SuccessResponseDto } from '../../common/dto/success.response.dto';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { SetsService } from "./sets.service";
+import { CreateSetDto } from "./dto/create-set.dto";
+import { UpdateSetDto } from "./dto/update-set.dto";
+import { TopicResponseDto } from "./dto/topic.response.dto";
+import { SetListItemResponseDto } from "./dto/set-list-item.response.dto";
+import { SetDetailsResponseDto } from "./dto/set-details.response.dto";
+import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 
-@Controller('sets')
+@Controller("sets")
 export class SetsController {
   constructor(private readonly setsService: SetsService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get('topics')
+  @Get("topics")
   getTopics(): Promise<TopicResponseDto[]> {
     return this.setsService.getTopics();
   }
@@ -36,9 +36,9 @@ export class SetsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get(":id")
   getSet(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<SetDetailsResponseDto | undefined> {
     return this.setsService.getSet(id);
   }
@@ -53,19 +53,19 @@ export class SetsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
+  @Delete(":id")
   deleteSet(
     @Req() req,
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<SuccessResponseDto> {
     return this.setsService.deleteSet(req.user.sub, id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Patch(":id")
   updateSet(
     @Req() req,
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
     @Body() updateSetDto: UpdateSetDto,
   ): Promise<SetDetailsResponseDto | undefined> {
     return this.setsService.updateSet(req.user.sub, id, updateSetDto);

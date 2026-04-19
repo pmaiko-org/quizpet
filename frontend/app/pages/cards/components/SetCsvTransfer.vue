@@ -1,25 +1,36 @@
 <template>
   <div
-    class="rounded-3xl border border-default bg-default/80 p-5 shadow-sm sm:p-6"
+    class="
+      rounded-3xl border border-default bg-default/80 p-5 shadow-sm
+      sm:p-6
+    "
   >
     <div
-      class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"
+      class="
+        flex flex-col gap-4
+        lg:flex-row lg:items-start lg:justify-between
+      "
     >
       <div class="space-y-2">
-        <p class="text-xs font-medium uppercase tracking-[0.24em] text-primary">
+        <p class="text-xs font-medium tracking-[0.24em] text-primary uppercase">
           CSV
         </p>
         <h3 class="text-lg font-semibold text-highlighted">
           Імпорт і експорт карток
         </h3>
-        <p class="max-w-2xl text-sm leading-6 text-toned">
+        <p class="max-w-2xl text-sm/6 text-toned">
           CSV працює з колонками <code>term</code>,
           <code>termDescription</code> і <code>definition</code>. Імпорт
           повністю замінює поточний список карток у формі.
         </p>
       </div>
 
-      <div class="flex flex-col gap-3 sm:flex-row">
+      <div
+        class="
+          flex flex-col gap-3
+          sm:flex-row
+        "
+      >
         <UButton
           type="button"
           size="lg"
@@ -119,7 +130,7 @@ const onFileChange = async (event: Event) => {
 
     if (!importedRows.length) {
       throw new Error(
-        "CSV не містить жодного рядка з term, termDescription і definition."
+        "CSV не містить жодного рядка з term, termDescription і definition.",
       );
     }
 
@@ -130,7 +141,7 @@ const onFileChange = async (event: Event) => {
         term: row.term,
         termDescription: row.termDescription,
         definition: row.definition,
-      }))
+      })),
     );
 
     toast.add({
@@ -153,7 +164,7 @@ const onFileChange = async (event: Event) => {
 
 const escapeCsvValue = (value: string) => {
   const normalizedValue = value.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-  const escapedValue = normalizedValue.replace(/"/g, '""');
+  const escapedValue = normalizedValue.replace(/"/g, "\"\"");
 
   return `"${escapedValue}"`;
 };
@@ -161,7 +172,7 @@ const escapeCsvValue = (value: string) => {
 const parseCsv = (input: string): CsvRow[] => {
   const normalizedInput = input.replace(/^\uFEFF/, "");
   const rows = parseCsvRows(normalizedInput).filter(row =>
-    row.some(cell => cell.trim().length)
+    row.some(cell => cell.trim().length),
   );
 
   if (!rows.length) {
@@ -170,7 +181,7 @@ const parseCsv = (input: string): CsvRow[] => {
 
   const [headerRow, ...dataRows] = rows;
   const headerMap = new Map(
-    headerRow?.map((column, index) => [column.trim().toLowerCase(), index])
+    headerRow?.map((column, index) => [column.trim().toLowerCase(), index]),
   );
 
   const termIndex = headerMap.get("term");
@@ -178,12 +189,12 @@ const parseCsv = (input: string): CsvRow[] => {
   const definitionIndex = headerMap.get("definition");
 
   if (
-    termIndex === undefined ||
-    termDescriptionIndex === undefined ||
-    definitionIndex === undefined
+    termIndex === undefined
+    || termDescriptionIndex === undefined
+    || definitionIndex === undefined
   ) {
     throw new Error(
-      "CSV має містити заголовки term, termDescription і definition."
+      "CSV має містити заголовки term, termDescription і definition.",
     );
   }
 
@@ -195,7 +206,7 @@ const parseCsv = (input: string): CsvRow[] => {
     }))
     .filter(
       row =>
-        row.term.length || row.termDescription.length || row.definition.length
+        row.term.length || row.termDescription.length || row.definition.length,
     );
 };
 
@@ -209,9 +220,9 @@ const parseCsvRows = (input: string): string[][] => {
     const char = input[index];
     const nextChar = input[index + 1];
 
-    if (char === '"') {
-      if (insideQuotes && nextChar === '"') {
-        currentCell += '"';
+    if (char === "\"") {
+      if (insideQuotes && nextChar === "\"") {
+        currentCell += "\"";
         index += 1;
       } else {
         insideQuotes = !insideQuotes;

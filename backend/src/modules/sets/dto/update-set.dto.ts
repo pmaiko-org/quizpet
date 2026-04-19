@@ -1,12 +1,12 @@
-import { Type } from 'class-transformer';
+import { Type } from "class-transformer";
 import {
   ArrayNotEmpty,
   IsArray,
   IsString,
   IsUUID,
   ValidateNested,
-} from 'class-validator';
-import { UpdateCardDto } from '../../cards/dto/update-card.dto';
+} from "class-validator";
+import { UpdateCardDto } from "../../cards/dto/update-card.dto";
 
 export class UpdateSetDto {
   @IsString()
@@ -17,7 +17,7 @@ export class UpdateSetDto {
 
   @IsArray()
   @ArrayNotEmpty()
-  @IsUUID('4', { each: true })
+  @IsUUID("4", { each: true })
   topicIds: string[];
 
   @IsArray()

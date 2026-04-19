@@ -66,12 +66,23 @@
         </UButton>
       </div>
 
-      <div class="grid grid-cols-5 gap-2 sm:grid-cols-10">
+      <div
+        class="
+          grid grid-cols-5 gap-2
+          sm:grid-cols-10
+        "
+      >
         <button
           v-for="preset in normalizedPresets"
           :key="preset"
           type="button"
-          class="group relative h-10 rounded-xl border border-default transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          class="
+            group relative h-10 rounded-xl border border-default
+            transition-transform
+            hover:-translate-y-0.5
+            focus:outline-none
+            focus-visible:ring-2 focus-visible:ring-primary
+          "
           :class="modelValue === preset ? 'ring-2 ring-primary' : ''"
           :style="{ backgroundColor: preset }"
           :aria-label="`Обрати колір ${preset}`"
@@ -81,7 +92,7 @@
           <UIcon
             v-if="modelValue === preset"
             name="i-lucide-check"
-            class="absolute inset-0 m-auto size-4 text-white drop-shadow"
+            class="absolute inset-0 m-auto size-4 text-white drop-shadow-sm"
           />
         </button>
       </div>

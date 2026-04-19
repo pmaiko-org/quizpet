@@ -1,11 +1,9 @@
 <template>
-  <div>
-    cabinet
-  </div>
+  <div>cabinet</div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'cabinet'
-})
+  layout: "cabinet",
+});
 </script>

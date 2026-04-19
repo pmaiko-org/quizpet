@@ -9,6 +9,6 @@ export const createRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     profile: profileRepository(fetch),
     sets: setsRepository(fetch),
     cards: cardsRepository(fetch),
-    storageFiles: storageFilesRepository(fetch)
-  }
-}
+    storageFiles: storageFilesRepository(fetch),
+  };
+};

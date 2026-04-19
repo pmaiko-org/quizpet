@@ -1,21 +1,47 @@
 <template>
   <section class="space-y-6">
     <section
-      class="overflow-hidden rounded-[2rem] border border-default bg-gradient-to-br from-primary/12 via-default to-success/10 p-6 shadow-sm sm:p-8"
+      class="
+        overflow-hidden rounded-4xl border border-default bg-linear-to-br
+        from-primary/12 via-default to-success/10 p-6 shadow-sm
+        sm:p-8
+      "
     >
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]">
+      <div
+        class="
+          grid gap-6
+          xl:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]
+        "
+      >
         <div class="space-y-4">
-          <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+          <p
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
+          >
             Результати
           </p>
-          <h2 class="text-3xl font-semibold text-highlighted sm:text-4xl">
+          <h2
+            class="
+              text-3xl font-semibold text-highlighted
+              sm:text-4xl
+            "
+          >
             {{ heading }}
           </h2>
-          <p class="max-w-2xl text-sm leading-6 text-toned sm:text-base">
+          <p
+            class="
+              max-w-2xl text-sm/6 text-toned
+              sm:text-base
+            "
+          >
             {{ summary }}
           </p>
 
-          <div class="flex flex-col gap-3 sm:flex-row">
+          <div
+            class="
+              flex flex-col gap-3
+              sm:flex-row
+            "
+          >
             <UButton
               size="xl"
               icon="i-lucide-rotate-ccw"
@@ -39,19 +65,25 @@
           </div>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
+        <div
+          class="
+            grid gap-3
+            sm:grid-cols-2
+            xl:grid-cols-2
+          "
+        >
           <div
             v-for="stat in stats"
             :key="stat.label"
             class="rounded-[1.5rem] border border-default bg-default/80 p-4"
           >
-            <p class="text-xs uppercase tracking-[0.2em] text-toned">
+            <p class="text-xs tracking-[0.2em] text-toned uppercase">
               {{ stat.label }}
             </p>
             <p class="mt-2 text-2xl font-semibold text-highlighted">
               {{ stat.value }}
             </p>
-            <p class="mt-2 text-sm leading-6 text-toned">
+            <p class="mt-2 text-sm/6 text-toned">
               {{ stat.description }}
             </p>
           </div>
@@ -59,10 +91,22 @@
       </div>
     </section>
 
-    <section class="rounded-[2rem] border border-default bg-default/85 p-5 shadow-sm sm:p-6">
-      <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <section
+      class="
+        rounded-4xl border border-default bg-default/85 p-5 shadow-sm
+        sm:p-6
+      "
+    >
+      <div
+        class="
+          flex flex-col gap-2
+          sm:flex-row sm:items-end sm:justify-between
+        "
+      >
         <div>
-          <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+          <p
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
+          >
             Розбір карток
           </p>
           <h3 class="mt-1 text-2xl font-semibold text-highlighted">
@@ -80,9 +124,18 @@
           v-for="report in orderedReports"
           :key="report.card.id"
           class="rounded-[1.5rem] border p-4"
-          :class="report.mistakes ? 'border-error/20 bg-error/5' : 'border-success/20 bg-success/5'"
+          :class="
+            report.mistakes
+              ? 'border-error/20 bg-error/5'
+              : 'border-success/20 bg-success/5'
+          "
         >
-          <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div
+            class="
+              flex flex-col gap-4
+              lg:flex-row lg:items-start lg:justify-between
+            "
+          >
             <div class="space-y-3">
               <div class="flex flex-wrap items-center gap-2">
                 <h4 class="text-lg font-semibold text-highlighted">
@@ -95,18 +148,28 @@
                   size="lg"
                   class="rounded-full px-3 py-1"
                 >
-                  {{ report.mistakes ? `Було помилок: ${report.mistakes}` : "Без помилок" }}
+                  {{
+                    report.mistakes
+                      ? `Було помилок: ${report.mistakes}`
+                      : "Без помилок"
+                  }}
                 </UBadge>
               </div>
 
-              <p class="max-w-3xl text-sm leading-6 text-toned">
+              <p class="max-w-3xl text-sm/6 text-toned">
                 {{ report.card.definition }}
               </p>
             </div>
 
-            <div class="grid gap-2 sm:grid-cols-3 lg:min-w-[22rem]">
-              <div class="rounded-2xl border border-default bg-default/70 px-3 py-3">
-                <p class="text-xs uppercase tracking-[0.16em] text-toned">
+            <div
+              class="
+                grid gap-2
+                sm:grid-cols-3
+                lg:min-w-88
+              "
+            >
+              <div class="rounded-2xl border border-default bg-default/70 p-3">
+                <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Спроб
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
@@ -114,8 +177,8 @@
                 </p>
               </div>
 
-              <div class="rounded-2xl border border-default bg-default/70 px-3 py-3">
-                <p class="text-xs uppercase tracking-[0.16em] text-toned">
+              <div class="rounded-2xl border border-default bg-default/70 p-3">
+                <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Час
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
@@ -123,8 +186,8 @@
                 </p>
               </div>
 
-              <div class="rounded-2xl border border-default bg-default/70 px-3 py-3">
-                <p class="text-xs uppercase tracking-[0.16em] text-toned">
+              <div class="rounded-2xl border border-default bg-default/70 p-3">
+                <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Середнє
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
@@ -205,7 +268,8 @@ const stats = computed(() => {
     {
       label: "Точність",
       value: `${accuracy.value}%`,
-      description: "Частка вдалих відповідей серед усіх натискань на кнопки оцінки.",
+      description:
+        "Частка вдалих відповідей серед усіх натискань на кнопки оцінки.",
     },
     {
       label: "З першого разу",

@@ -1,7 +1,7 @@
 <template>
   <UFooter>
     <template #left>
-      <p class="text-muted text-sm">
+      <p class="text-sm text-muted">
         Copyright © {{ new Date().getFullYear() }}
       </p>
     </template>

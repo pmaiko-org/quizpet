@@ -1,6 +1,6 @@
 const vars = {
   port: process.env.PORT || 3000,
-  isProd: process.env.NODE_ENV === 'production',
+  isProd: process.env.NODE_ENV === "production",
 
   db: {
     host: String(process.env.DB_HOST),

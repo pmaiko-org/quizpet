@@ -14,7 +14,10 @@
               icon="i-lucide-sidebar-close"
               variant="ghost"
               color="neutral"
-              class="rounded-2xl border border-default bg-elevated/70 shadow-sm cursor-pointer"
+              class="
+                cursor-pointer rounded-2xl border border-default bg-elevated/70
+                shadow-sm
+              "
               @click="closeSidebar"
             />
           </div>
@@ -26,10 +29,10 @@
               :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
               :description="profile?.email || ''"
               :avatar="{
-              src: profile?.avatar,
-              loading: 'lazy',
-              icon: 'i-lucide-image',
-            }"
+                src: profile?.avatar,
+                loading: 'lazy',
+                icon: 'i-lucide-image',
+              }"
               size="xl"
             />
 
@@ -60,17 +63,22 @@
               list: 'flex flex-col gap-2',
               item: 'min-w-0',
               link: 'group relative overflow-hidden rounded-2xl border border-transparent bg-default/40 px-3 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-default hover:bg-elevated/90 hover:shadow-lg data-[active=true]:border-primary/30 data-[active=true]:bg-primary/10 data-[active=true]:shadow-[0_12px_30px_color-mix(in_oklab,var(--ui-primary)_18%,transparent)]',
-              linkLeadingIcon: 'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
-              linkLabel: 'truncate text-sm font-medium text-toned transition-colors duration-200 group-hover:text-highlighted group-data-[active=true]:text-highlighted',
+              linkLeadingIcon:
+                'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
+              linkLabel:
+                'truncate text-sm font-medium text-toned transition-colors duration-200 group-hover:text-highlighted group-data-[active=true]:text-highlighted',
               linkLabelExternalIcon: 'hidden',
-              linkTrailingIcon: 'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
+              linkTrailingIcon:
+                'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
             }"
           />
         </section>
 
         <section class="sidebar__tip">
           <div>
-            <p class="sidebar__tip-title">Ритм дня</p>
+            <p class="sidebar__tip-title">
+              Ритм дня
+            </p>
             <p class="sidebar__tip-text">
               Почни з карток, а потім перевір прогрес у статистиці.
             </p>
@@ -91,30 +99,30 @@ import type { NavigationMenuItem } from "#ui/components/NavigationMenu.vue";
 
 const items = ref<NavigationMenuItem[]>([
   {
-    label: 'Головна',
-    to: '/',
+    label: "Головна",
+    to: "/",
     icon: "i-lucide-home",
   },
   {
-    label: 'Папки',
-    to: '/folders',
+    label: "Папки",
+    to: "/folders",
     icon: "i-lucide-folder",
   },
   {
-    label: 'Картки',
-    to: '/cards',
+    label: "Картки",
+    to: "/cards",
     icon: "i-lucide-layers",
   },
   {
-    label: 'Статистика',
-    to: '/statistic',
+    label: "Статистика",
+    to: "/statistic",
     icon: "i-lucide-bar-chart-3",
   },
   {
-    label: 'Люди',
-    to: '/peoples',
+    label: "Люди",
+    to: "/peoples",
     icon: "i-lucide-users",
-  }
+  },
 ]);
 
 const metrics = [
@@ -125,7 +133,7 @@ const metrics = [
 
 const { sidebarVisible, closeSidebar } = useUiStore();
 
-const { profile } = useProfileStore()
+const { profile } = useProfileStore();
 </script>
 
 <style>

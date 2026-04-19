@@ -1,3 +1,3 @@
 export const useApiUrl = () => {
-  return useRuntimeConfig().public.apiUrl
-}
+  return useRuntimeConfig().public.apiUrl;
+};

@@ -1,4 +1,4 @@
-import { ResponseInterface } from '../interface/response.interface';
+import { ResponseInterface } from "../interface/response.interface";
 
 export class ResponseDto<D, M> implements ResponseInterface<D, M> {
   constructor(

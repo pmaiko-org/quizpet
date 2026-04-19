@@ -1,9 +1,15 @@
 <template>
   <section
-    class="rounded-[2rem] border border-default bg-default/85 p-5 shadow-sm sm:p-6"
+    class="
+      rounded-4xl border border-default bg-default/85 p-5 shadow-sm
+      sm:p-6
+    "
   >
     <div
-      class="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"
+      class="
+        mb-5 flex flex-col gap-4
+        lg:flex-row lg:items-start lg:justify-between
+      "
     >
       <div class="space-y-3">
         <div class="flex flex-wrap gap-2">
@@ -60,22 +66,37 @@
     <div class="perspective-[2200px]">
       <button
         type="button"
-        class="group block w-full rounded-[2rem] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+        class="
+          group block w-full rounded-4xl text-left
+          focus:outline-none
+          focus-visible:ring-2 focus-visible:ring-primary/70
+        "
         :aria-pressed="flipped"
         @click="$emit('flip')"
         @keydown.enter.prevent="$emit('flip')"
         @keydown.space.prevent="$emit('flip')"
       >
         <div
-          class="relative min-h-[27rem] w-full transition-transform duration-500 [transform-style:preserve-3d] sm:min-h-[31rem]"
-          :class="flipped ? '[transform:rotateY(180deg)]' : ''"
+          class="
+            relative min-h-108 w-full transition-transform duration-500
+            transform-3d
+            sm:min-h-124
+          "
+          :class="flipped ? 'transform-[rotateY(180deg)]' : ''"
         >
           <article
-            class="absolute inset-0 overflow-hidden rounded-[2rem] border p-5 [backface-visibility:hidden] sm:p-7"
+            class="
+              absolute inset-0 overflow-hidden rounded-4xl border p-5
+              backface-hidden
+              sm:p-7
+            "
             :style="theme.cardStyle"
           >
             <div
-              class="absolute left-5 top-5 rounded-full border px-3 py-1 text-sm sm:left-7 sm:top-7"
+              class="
+                absolute top-5 left-5 rounded-full border px-3 py-1 text-sm
+                sm:top-7 sm:left-7
+              "
               :style="theme.accentStyle"
             >
               term
@@ -85,7 +106,11 @@
               class="grid h-full gap-5"
               :class="[
                 hasTermImage
-                  ? 'pt-10 pb-0 sm:pb-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]'
+                  ? `
+                    pt-10 pb-0
+                    sm:pb-10
+                    lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]
+                  `
                   : 'place-items-center text-center',
               ]"
             >
@@ -99,13 +124,20 @@
               >
                 <div>
                   <h3
-                    class="text-4xl font-semibold leading-tight text-highlighted sm:text-5xl lg:text-6xl"
+                    class="
+                      text-4xl/tight font-semibold text-highlighted
+                      sm:text-5xl
+                      lg:text-6xl
+                    "
                   >
                     {{ card.term }}
                   </h3>
                   <p
                     v-if="card.termDescription"
-                    class="mt-2 text-base leading-7 opacity-85 sm:text-lg"
+                    class="
+                      mt-2 text-base/7 opacity-85
+                      sm:text-lg
+                    "
                   >
                     {{ card.termDescription }}
                   </p>
@@ -120,18 +152,28 @@
                 <img
                   :src="card.termImage!.src"
                   :alt="card.termImage!.name || card.term"
-                  class="h-full max-h-[18rem] w-full rounded-[1.25rem] object-cover sm:max-h-[22rem]"
-                />
+                  class="
+                    size-full max-h-72 rounded-[1.25rem] object-cover
+                    sm:max-h-88
+                  "
+                >
               </div>
             </div>
           </article>
 
           <article
-            class="absolute inset-0 overflow-hidden rounded-[2rem] border p-5 [backface-visibility:hidden] [transform:rotateY(180deg)] sm:p-7"
+            class="
+              absolute inset-0 transform-[rotateY(180deg)] overflow-hidden
+              rounded-4xl border p-5 backface-hidden
+              sm:p-7
+            "
             :style="theme.cardStyle"
           >
             <div
-              class="absolute left-5 top-5 rounded-full border px-3 py-1 text-sm sm:left-7 sm:top-7"
+              class="
+                absolute top-5 left-5 rounded-full border px-3 py-1 text-sm
+                sm:top-7 sm:left-7
+              "
               :style="theme.accentStyle"
             >
               definition
@@ -141,7 +183,11 @@
               class="grid h-full gap-5"
               :class="[
                 hasDefinitionImage
-                  ? 'pt-10 pb-0 sm:pb-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]'
+                  ? `
+                    pt-10 pb-0
+                    sm:pb-10
+                    lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]
+                  `
                   : 'place-items-center text-center',
               ]"
             >
@@ -155,7 +201,11 @@
               >
                 <div>
                   <h3
-                    class="text-4xl font-semibold leading-tight text-highlighted sm:text-5xl lg:text-6xl"
+                    class="
+                      text-4xl/tight font-semibold text-highlighted
+                      sm:text-5xl
+                      lg:text-6xl
+                    "
                   >
                     {{ card.definition }}
                   </h3>
@@ -170,8 +220,11 @@
                 <img
                   :src="card.definitionImage!.src"
                   :alt="card.definitionImage!.name || card.definition"
-                  class="h-full max-h-[18rem] w-full rounded-[1.25rem] object-cover sm:max-h-[22rem]"
-                />
+                  class="
+                    size-full max-h-72 rounded-[1.25rem] object-cover
+                    sm:max-h-88
+                  "
+                >
               </div>
             </div>
           </article>

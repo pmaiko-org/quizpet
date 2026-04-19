@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import path from 'path';
-import fs, { promises as fsAsync } from 'fs';
-import { FsException } from '../../../common/exceptions/fs.exception';
-import { CHARSET, STORAGE_PATH } from '../../../config/constants';
+import { Injectable } from "@nestjs/common";
+import path from "path";
+import fs, { promises as fsAsync } from "fs";
+import { FsException } from "../../../common/exceptions/fs.exception";
+import { CHARSET, STORAGE_PATH } from "../../../config/constants";
 
 @Injectable()
 export class StorageFsService {
@@ -35,7 +35,7 @@ export class StorageFsService {
       const filePath = path.join(this.storageBasePath, key);
       await this.ensureDir(path.dirname(filePath));
 
-      if (typeof data === 'string') {
+      if (typeof data === "string") {
         await fsAsync.writeFile(filePath, data, CHARSET);
       } else {
         await fsAsync.writeFile(filePath, data as unknown as Uint8Array);

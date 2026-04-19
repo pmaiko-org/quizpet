@@ -7,27 +7,40 @@
     @error="onError"
   >
     <section
-      class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8"
+      class="
+        rounded-4xl border border-default bg-default/80 p-6 shadow-sm
+        sm:p-8
+      "
     >
       <div
-        class="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]"
+        class="
+          grid gap-6
+          xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]
+        "
       >
         <div class="space-y-5">
           <div class="space-y-2">
             <p
-              class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+              class="
+                text-sm font-medium tracking-[0.24em] text-primary uppercase
+              "
             >
               {{ formEyebrow }}
             </p>
             <h2 class="text-3xl font-semibold text-highlighted">
               {{ formTitle }}
             </h2>
-            <p class="max-w-2xl text-sm leading-6 text-toned">
+            <p class="max-w-2xl text-sm/6 text-toned">
               {{ formDescription }}
             </p>
           </div>
 
-          <div class="grid gap-5 md:grid-cols-2">
+          <div
+            class="
+              grid gap-5
+              md:grid-cols-2
+            "
+          >
             <UFormField
               label="Назва модуля"
               name="name"
@@ -89,23 +102,29 @@
         </div>
 
         <div
-          class="rounded-[1.75rem] border border-default bg-gradient-to-br from-primary/10 via-transparent to-success/10 p-6"
+          class="
+            rounded-[1.75rem] border border-default bg-linear-to-br
+            from-primary/10 via-transparent to-success/10 p-6
+          "
         >
           <p
-            class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
             Порада
           </p>
           <h3 class="mt-3 text-xl font-semibold text-highlighted">
             Краще робити картки короткими
           </h3>
-          <p class="mt-3 text-sm leading-6 text-toned">
+          <p class="mt-3 text-sm/6 text-toned">
             Один термін, одна думка, один візуальний акцент. Так набір читається
             швидше і краще працює на повторення.
           </p>
 
           <div
-            class="mt-5 rounded-2xl border border-default bg-default/80 p-4 text-sm text-toned"
+            class="
+              mt-5 rounded-2xl border border-default bg-default/80 p-4 text-sm
+              text-toned
+            "
           >
             Для кольорів і зображень нижче використані базові компоненти з
             підтримкою помилок, світлої та темної теми.
@@ -115,7 +134,10 @@
     </section>
 
     <section
-      class="rounded-[2rem] border border-default bg-default/80 p-6 shadow-sm sm:p-8"
+      class="
+        rounded-4xl border border-default bg-default/80 p-6 shadow-sm
+        sm:p-8
+      "
     >
       <SetCsvTransfer
         :cards="state.cards"
@@ -124,11 +146,14 @@
       />
 
       <div
-        class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        class="
+          mb-6 flex flex-col gap-4
+          sm:flex-row sm:items-center sm:justify-between
+        "
       >
         <div>
           <p
-            class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
             Картки
           </p>
@@ -166,7 +191,12 @@
       </div>
     </section>
 
-    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <div
+      class="
+        flex flex-col-reverse gap-3
+        sm:flex-row sm:justify-end
+      "
+    >
       <UButton
         type="button"
         size="xl"
@@ -228,7 +258,7 @@ const optionalHexColor = z.preprocess(
   z
     .string()
     .regex(/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/)
-    .optional()
+    .optional(),
 );
 
 const cardSchema = z.object({
@@ -253,28 +283,28 @@ const state = reactive<SetFormData>(initialSet(props.set));
 
 watch(
   () => props.set,
-  nextSet => {
+  (nextSet) => {
     Object.assign(state, initialSet(nextSet));
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const isEditMode = computed(() => Boolean(state.id));
 const formEyebrow = computed(() =>
-  isEditMode.value ? "Редагування набору" : "Новий набір"
+  isEditMode.value ? "Редагування набору" : "Новий набір",
 );
 const formTitle = computed(() =>
   isEditMode.value
     ? "Оновіть набір карток без втрати структури"
-    : "Створіть набір карток з чистою структурою"
+    : "Створіть набір карток з чистою структурою",
 );
 const formDescription = computed(() =>
   isEditMode.value
     ? "Оновіть назву, опис, тематики й картки. Існуючі картки збережуться та оновляться по id."
-    : "Дайте модулю зрозумілу назву, коротко опишіть тему й додайте картки. Форма підтримує світлу та темну тему через стандартні токени Nuxt UI."
+    : "Дайте модулю зрозумілу назву, коротко опишіть тему й додайте картки. Форма підтримує світлу та темну тему через стандартні токени Nuxt UI.",
 );
 const submitLabel = computed(() =>
-  isEditMode.value ? "Зберегти зміни" : "Створити набір"
+  isEditMode.value ? "Зберегти зміни" : "Створити набір",
 );
 
 const syncCardPositions = () => {
@@ -400,8 +430,8 @@ const onError = async (event: FormErrorEvent) => {
   });
 
   if (
-    element instanceof HTMLInputElement ||
-    element instanceof HTMLTextAreaElement
+    element instanceof HTMLInputElement
+    || element instanceof HTMLTextAreaElement
   ) {
     element.focus();
   }

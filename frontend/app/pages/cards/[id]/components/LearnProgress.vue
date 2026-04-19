@@ -1,26 +1,44 @@
 <template>
-  <section class="rounded-[2rem] border border-default bg-default/85 p-5 shadow-sm sm:p-6">
+  <section
+    class="
+      rounded-4xl border border-default bg-default/85 p-5 shadow-sm
+      sm:p-6
+    "
+  >
     <div class="flex flex-col gap-5">
-      <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div
+        class="
+          flex flex-col gap-3
+          lg:flex-row lg:items-start lg:justify-between
+        "
+      >
         <div class="space-y-2">
-          <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
+          <p
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
+          >
             Прогрес навчання
           </p>
           <h2 class="text-2xl font-semibold text-highlighted">
             {{ title }}
           </h2>
-          <p class="max-w-2xl text-sm leading-6 text-toned">
+          <p class="max-w-2xl text-sm/6 text-toned">
             {{ description }}
           </p>
         </div>
 
-        <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+        <div
+          class="
+            grid gap-2
+            sm:grid-cols-2
+            xl:grid-cols-4
+          "
+        >
           <div
             v-for="stat in stats"
             :key="stat.label"
             class="rounded-2xl border border-default bg-default/70 px-4 py-3"
           >
-            <p class="text-xs uppercase tracking-[0.18em] text-toned">
+            <p class="text-xs tracking-[0.18em] text-toned uppercase">
               {{ stat.label }}
             </p>
             <p class="mt-1 text-lg font-semibold text-highlighted">
@@ -101,7 +119,10 @@ const learnedPercent = computed(() => {
     return 0;
   }
 
-  return Math.min(100, Math.round((props.learnedCount / props.totalCards) * 100));
+  return Math.min(
+    100,
+    Math.round((props.learnedCount / props.totalCards) * 100),
+  );
 });
 
 const mistakesPercent = computed(() => {
@@ -109,7 +130,10 @@ const mistakesPercent = computed(() => {
     return 0;
   }
 
-  return Math.min(100, Math.round((props.mistakesCount / props.totalCards) * 100));
+  return Math.min(
+    100,
+    Math.round((props.mistakesCount / props.totalCards) * 100),
+  );
 });
 
 const stats = computed(() => {

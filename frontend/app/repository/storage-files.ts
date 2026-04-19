@@ -11,7 +11,7 @@ export const storageFileSchema = z.object({
 });
 
 export const storageFilesRepository = <T>(
-  fetch: $Fetch<T, NitroFetchRequest>
+  fetch: $Fetch<T, NitroFetchRequest>,
 ) => {
   return {
     upload: (file: File) => {

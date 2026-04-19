@@ -1,6 +1,6 @@
-import { IsInt, Min, Max, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
-import { PaginationQueryInterface } from '../interface/pagination.query.interface';
+import { IsInt, Min, Max, IsOptional } from "class-validator";
+import { Type } from "class-transformer";
+import { PaginationQueryInterface } from "../interface/pagination.query.interface";
 
 export class PaginationQueryDto implements PaginationQueryInterface {
   @IsOptional()

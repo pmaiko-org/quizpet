@@ -11,20 +11,29 @@
     <div class="space-y-3">
       <button
         type="button"
-        class="w-full overflow-hidden rounded-2xl border border-default bg-default text-left transition hover:border-primary/60 hover:bg-elevated/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        class="
+          w-full overflow-hidden rounded-2xl border border-default bg-default
+          text-left transition
+          hover:border-primary/60 hover:bg-elevated/80
+          focus:outline-none
+          focus-visible:ring-2 focus-visible:ring-primary
+        "
         @click="isOpen = true"
       >
-        <div class="flex aspect-[16/9] items-center justify-center bg-muted/50">
+        <div class="flex aspect-video items-center justify-center bg-muted/50">
           <img
             v-if="currentPreview"
             :src="currentPreview.src"
             alt="Preview"
-            class="h-full w-full object-cover"
-          />
+            class="size-full object-cover"
+          >
 
           <div
             v-else
-            class="flex flex-col items-center gap-2 px-4 text-center text-sm text-toned"
+            class="
+              flex flex-col items-center gap-2 px-4 text-center text-sm
+              text-toned
+            "
           >
             <UIcon
               name="i-lucide-image-plus"
@@ -35,7 +44,10 @@
         </div>
 
         <div
-          class="flex items-center justify-between gap-3 border-t border-default px-4 py-3"
+          class="
+            flex items-center justify-between gap-3 border-t border-default px-4
+            py-3
+          "
         >
           <p class="truncate text-sm text-highlighted">
             {{ modelValue?.name || "Зображення не вибране" }}
@@ -83,7 +95,10 @@
       <template #body>
         <div class="space-y-4">
           <div
-            class="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]"
+            class="
+              grid gap-4
+              xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]
+            "
           >
             <div class="space-y-4">
               <div class="rounded-2xl border border-default bg-default/80 p-4">
@@ -145,12 +160,19 @@
 
                 <div
                   v-if="isLoading"
-                  class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
+                  class="
+                    grid gap-3
+                    sm:grid-cols-2
+                    xl:grid-cols-3
+                  "
                 >
                   <div
                     v-for="index in 6"
                     :key="index"
-                    class="overflow-hidden rounded-2xl border border-default bg-default/70"
+                    class="
+                      overflow-hidden rounded-2xl border border-default
+                      bg-default/70
+                    "
                   >
                     <div class="aspect-square animate-pulse bg-muted/60" />
                     <div class="space-y-2 p-3">
@@ -162,10 +184,16 @@
 
                 <div
                   v-else-if="!remoteItems.length"
-                  class="rounded-2xl border border-dashed border-default bg-muted/20 px-4 py-10 text-center"
+                  class="
+                    rounded-2xl border border-dashed border-default bg-muted/20
+                    px-4 py-10 text-center
+                  "
                 >
                   <div
-                    class="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+                    class="
+                      mx-auto flex size-12 items-center justify-center
+                      rounded-2xl bg-primary/10 text-primary
+                    "
                   >
                     <UIcon
                       name="i-lucide-images"
@@ -175,19 +203,26 @@
                   <p class="mt-4 text-sm font-medium text-highlighted">
                     Бібліотека порожня
                   </p>
-                  <p class="mt-2 text-xs leading-5 text-toned">
+                  <p class="mt-2 text-xs/5 text-toned">
                     Завантажте перше зображення, і воно одразу з’явиться тут.
                   </p>
                 </div>
 
                 <div
                   v-else
-                  class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
+                  class="
+                    grid gap-3
+                    sm:grid-cols-2
+                    xl:grid-cols-3
+                  "
                 >
                   <article
                     v-for="item in remoteItems"
                     :key="item.id"
-                    class="overflow-hidden rounded-2xl border bg-default/70 transition"
+                    class="
+                      overflow-hidden rounded-2xl border bg-default/70
+                      transition
+                    "
                     :class="itemCardClass(item)"
                   >
                     <button
@@ -196,15 +231,20 @@
                       @click="setImageValue(item)"
                     >
                       <div
-                        class="relative aspect-square overflow-hidden bg-muted/50"
+                        class="
+                          relative aspect-square overflow-hidden bg-muted/50
+                        "
                       >
                         <img
                           :src="item.src"
                           :alt="item.name"
-                          class="h-full w-full object-cover transition duration-200 hover:scale-[1.02]"
-                        />
+                          class="
+                            size-full object-cover transition duration-200
+                            hover:scale-[1.02]
+                          "
+                        >
 
-                        <div class="absolute left-3 top-3">
+                        <div class="absolute top-3 left-3">
                           <UBadge
                             v-if="isSelected(item)"
                             color="primary"
@@ -218,7 +258,9 @@
                       <div class="space-y-3 p-3">
                         <div>
                           <p
-                            class="line-clamp-1 text-sm font-medium text-highlighted"
+                            class="
+                              line-clamp-1 text-sm font-medium text-highlighted
+                            "
                           >
                             {{ item.name }}
                           </p>
@@ -230,7 +272,10 @@
                     </button>
 
                     <div
-                      class="flex items-center justify-between gap-2 border-t border-default px-3 py-3"
+                      class="
+                        flex items-center justify-between gap-2 border-t
+                        border-default p-3
+                      "
                     >
                       <UButton
                         size="sm"
@@ -258,21 +303,26 @@
             </div>
 
             <div
-              class="overflow-hidden rounded-2xl border border-default bg-elevated/70"
+              class="
+                overflow-hidden rounded-2xl border border-default bg-elevated/70
+              "
             >
               <div
-                class="flex aspect-[4/3] items-center justify-center bg-muted/50"
+                class="flex aspect-4/3 items-center justify-center bg-muted/50"
               >
                 <img
                   v-if="currentPreview"
                   :src="currentPreview.src"
                   alt="Preview"
-                  class="h-full w-full object-cover"
-                />
+                  class="size-full object-cover"
+                >
 
                 <div
                   v-else
-                  class="flex flex-col items-center gap-2 px-4 text-center text-sm text-toned"
+                  class="
+                    flex flex-col items-center gap-2 px-4 text-center text-sm
+                    text-toned
+                  "
                 >
                   <UIcon
                     name="i-lucide-image"
@@ -282,27 +332,33 @@
                 </div>
               </div>
 
-              <div class="space-y-4 border-t border-default px-4 py-4">
+              <div class="space-y-4 border-t border-default p-4">
                 <div>
                   <p
-                    class="text-xs font-medium uppercase tracking-[0.2em] text-primary"
+                    class="
+                      text-xs font-medium tracking-[0.2em] text-primary
+                      uppercase
+                    "
                   >
                     Активний файл
                   </p>
                   <p class="mt-2 text-base font-semibold text-highlighted">
                     {{ currentPreview?.name || "Файл ще не вибраний" }}
                   </p>
-                  <p class="mt-1 break-all text-xs leading-5 text-toned">
+                  <p class="mt-1 text-xs/5 break-all text-toned">
                     {{
-                      currentPreview?.src ||
-                      "Після вибору тут з’явиться шлях до файлу."
+                      currentPreview?.src
+                        || "Після вибору тут з’явиться шлях до файлу."
                     }}
                   </p>
                 </div>
 
                 <div
                   v-if="currentPreview"
-                  class="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-toned"
+                  class="
+                    rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3
+                    text-sm text-toned
+                  "
                 >
                   Це зображення буде використане для поточного поля форми.
                 </div>
@@ -387,7 +443,7 @@ const uploadFile = async (file: File) => {
 
 const handleDeleteFile = async (item: IFileResponse) => {
   const shouldDelete = window.confirm(
-    `Видалити файл "${item.name}" з бібліотеки?`
+    `Видалити файл "${item.name}" з бібліотеки?`,
   );
 
   if (!shouldDelete) {
@@ -412,7 +468,7 @@ const handleDeleteFile = async (item: IFileResponse) => {
   }
 };
 
-watch(selectedFile, async file => {
+watch(selectedFile, async (file) => {
   if (!file) {
     return;
   }
@@ -420,7 +476,7 @@ watch(selectedFile, async file => {
   await uploadFile(file);
 });
 
-watch(isOpen, async value => {
+watch(isOpen, async (value) => {
   if (!value) {
     return;
   }

@@ -1,13 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../users/user.entity';
-import { RefreshTokenPayload } from './interfaces/jwt-payload.interface';
-import { StorageService } from '../storage/services/storage.service';
-import { RequestService } from '../../common/request/request.service';
-import { StorageFileEntity } from '../storage/storage-file.entity';
-import { FileResponseDto } from '../storage/dto/file.response.dto';
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { UserEntity } from "../users/user.entity";
+import { RefreshTokenPayload } from "./interfaces/jwt-payload.interface";
+import { StorageService } from "../storage/services/storage.service";
+import { RequestService } from "../../common/request/request.service";
+import { FileResponseDto } from "../storage/dto/file.response.dto";
 
 @Injectable()
 export class AuthService {
@@ -30,12 +29,12 @@ export class AuthService {
 
       if (picture) {
         const response = await this.requestService.get<ArrayBuffer>(picture, {
-          responseType: 'arraybuffer',
+          responseType: "arraybuffer",
         });
         storageFile = await this.storageService.uploadFile({
           originalname: `user-${googleId}`,
-          mimetype: response.headers['content-type'],
-          size: Number(response.headers['content-length'] ?? 0),
+          mimetype: response.headers["content-type"],
+          size: Number(response.headers["content-length"] ?? 0),
           buffer: Buffer.from(response.data),
         });
       }
@@ -60,14 +59,14 @@ export class AuthService {
   generateAccessToken(user: UserEntity) {
     return this.jwtService.sign(
       { sub: user.id, email: user.email },
-      { secret: process.env.JWT_SECRET, expiresIn: '5d' },
+      { secret: process.env.JWT_SECRET, expiresIn: "5d" },
     );
   }
 
   generateRefreshToken(user: UserEntity) {
     return this.jwtService.sign(
-      { sub: user.id, tokenVersion: 'user.tokenVersion' },
-      { secret: process.env.JWT_REFRESH_SECRET, expiresIn: '90d' },
+      { sub: user.id, tokenVersion: "user.tokenVersion" },
+      { secret: process.env.JWT_REFRESH_SECRET, expiresIn: "90d" },
     );
   }
 

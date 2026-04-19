@@ -1,11 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { SetEntity } from '../sets/entity/set.entity';
-import { StorageFileEntity } from '../storage/storage-file.entity';
-import { AbstractEntity } from '../../common/abstract.entity';
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
+import { SetEntity } from "../sets/entity/set.entity";
+import { StorageFileEntity } from "../storage/storage-file.entity";
+import { AbstractEntity } from "../../common/abstract.entity";
 
-@Entity('cards')
+@Entity("cards")
 export class CardEntity extends AbstractEntity<CardEntity> {
-  @Column({ type: 'int' })
+  @Column({ type: "int" })
   position: number;
 
   @Column()
@@ -17,9 +17,9 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @ManyToOne(() => StorageFileEntity, {
     nullable: true,
     eager: true,
-    onDelete: 'SET NULL',
+    onDelete: "SET NULL",
   })
-  @JoinColumn({ name: 'termImageId' })
+  @JoinColumn({ name: "termImageId" })
   termImage?: StorageFileEntity;
 
   @Column()
@@ -28,9 +28,9 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @ManyToOne(() => StorageFileEntity, {
     nullable: true,
     eager: true,
-    onDelete: 'SET NULL',
+    onDelete: "SET NULL",
   })
-  @JoinColumn({ name: 'definitionImageId' })
+  @JoinColumn({ name: "definitionImageId" })
   definitionImage?: StorageFileEntity;
 
   @Column({ nullable: true })
@@ -39,7 +39,7 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @Column({ nullable: true })
   backgroundColor?: string;
 
-  @ManyToOne(() => SetEntity, (set) => set.cards, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'setId' })
+  @ManyToOne(() => SetEntity, set => set.cards, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "setId" })
   set: SetEntity;
 }

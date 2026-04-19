@@ -8,7 +8,7 @@ export const useRequestStore = () => {
   };
 
   const executeAllAbortControllers = () => {
-    state.value.abortControllers.forEach(abortController => {
+    state.value.abortControllers.forEach((abortController) => {
       abortController.abort();
     });
 

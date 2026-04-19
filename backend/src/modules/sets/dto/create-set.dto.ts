@@ -1,12 +1,12 @@
-import { CreateCardDto } from '../../cards/dto/create-card.dto';
-import { Type } from 'class-transformer';
+import { CreateCardDto } from "../../cards/dto/create-card.dto";
+import { Type } from "class-transformer";
 import {
   IsString,
   IsArray,
   ValidateNested,
   ArrayNotEmpty,
   IsUUID,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateSetDto {
   @IsString()
@@ -17,7 +17,7 @@ export class CreateSetDto {
 
   @IsArray()
   @ArrayNotEmpty()
-  @IsUUID('4', { each: true })
+  @IsUUID("4", { each: true })
   topicIds: string[];
 
   @IsArray()

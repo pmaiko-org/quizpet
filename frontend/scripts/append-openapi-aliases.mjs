@@ -6,13 +6,13 @@ const generatedFilePath = path.join(
   frontendRoot,
   "app",
   "types",
-  "api.generated.ts"
+  "api.generated.ts",
 );
 const openApiFilePath = path.resolve(
   frontendRoot,
   "..",
   "backend",
-  "openapi.json"
+  "openapi.json",
 );
 
 const openApiDocument = JSON.parse(readFileSync(openApiFilePath, "utf8"));
@@ -26,18 +26,18 @@ const aliases = schemaNames
 const aliasBlock = [
   "",
   "",
-  'type ApiSchemas = components["schemas"];',
+  "type ApiSchemas = components[\"schemas\"];",
   "",
   ...aliases.map(
     ([aliasName, schemaName]) =>
-      `export type ${aliasName} = ApiSchemas["${schemaName}"];`
+      `export type ${aliasName} = ApiSchemas["${schemaName}"];`,
   ),
   "",
 ].join("\n");
 
 const generatedContents = readFileSync(generatedFilePath, "utf8").replace(
   /\n*type ApiSchemas = components\["schemas"\][\s\S]*$/,
-  ""
+  "",
 );
 
 writeFileSync(generatedFilePath, `${generatedContents}${aliasBlock}`);

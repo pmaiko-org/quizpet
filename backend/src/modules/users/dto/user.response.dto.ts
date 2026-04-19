@@ -1,5 +1,5 @@
-import { UserEntity } from '../user.entity';
-import { FileResponseDto } from '../../storage/dto/file.response.dto';
+import { UserEntity } from "../user.entity";
+import { FileResponseDto } from "../../storage/dto/file.response.dto";
 
 export class UserResponseDto {
   firstName: string;

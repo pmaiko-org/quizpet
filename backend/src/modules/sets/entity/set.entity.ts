@@ -6,13 +6,13 @@ import {
   OneToMany,
   JoinColumn,
   JoinTable,
-} from 'typeorm';
-import { UserEntity } from '../../users/user.entity';
-import { CardEntity } from '../../cards/card.entity';
-import { TopicEntity } from './topic.entity';
-import { AbstractEntity } from '../../../common/abstract.entity';
+} from "typeorm";
+import { UserEntity } from "../../users/user.entity";
+import { CardEntity } from "../../cards/card.entity";
+import { TopicEntity } from "./topic.entity";
+import { AbstractEntity } from "../../../common/abstract.entity";
 
-@Entity('sets')
+@Entity("sets")
 export class SetEntity extends AbstractEntity<SetEntity> {
   @Column()
   name: string;
@@ -22,20 +22,20 @@ export class SetEntity extends AbstractEntity<SetEntity> {
 
   @ManyToMany(() => TopicEntity, { eager: true })
   @JoinTable({
-    name: 'sets_topics',
-    joinColumn: { name: 'setId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'topicId', referencedColumnName: 'id' },
+    name: "sets_topics",
+    joinColumn: { name: "setId", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "topicId", referencedColumnName: "id" },
   })
   topics: TopicEntity[];
 
-  @ManyToOne(() => UserEntity, (user) => user.sets, {
-    onDelete: 'CASCADE',
+  @ManyToOne(() => UserEntity, user => user.sets, {
+    onDelete: "CASCADE",
     eager: true,
   })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: "userId" })
   user: UserEntity;
 
-  @OneToMany(() => CardEntity, (card) => card.set, {
+  @OneToMany(() => CardEntity, card => card.set, {
     cascade: true,
     eager: true,
   })

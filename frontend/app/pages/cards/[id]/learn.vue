@@ -1,25 +1,47 @@
 <template>
   <div class="space-y-6">
     <section
-      class="overflow-hidden rounded-[2rem] border border-default bg-gradient-to-br from-primary/12 via-default to-success/10 p-6 shadow-sm sm:p-8"
+      class="
+        overflow-hidden rounded-4xl border border-default bg-linear-to-br
+        from-primary/12 via-default to-success/10 p-6 shadow-sm
+        sm:p-8
+      "
     >
       <div
-        class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]"
+        class="
+          grid gap-6
+          xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]
+        "
       >
         <div class="space-y-4">
           <p
-            class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
             Режим навчання
           </p>
-          <h1 class="text-3xl font-semibold text-highlighted sm:text-4xl">
+          <h1
+            class="
+              text-3xl font-semibold text-highlighted
+              sm:text-4xl
+            "
+          >
             {{ setName }}
           </h1>
-          <p class="max-w-2xl text-sm leading-6 text-toned sm:text-base">
+          <p
+            class="
+              max-w-2xl text-sm/6 text-toned
+              sm:text-base
+            "
+          >
             {{ setDescription }}
           </p>
 
-          <div class="flex flex-col gap-3 sm:flex-row">
+          <div
+            class="
+              flex flex-col gap-3
+              sm:flex-row
+            "
+          >
             <UButton
               to="/cards"
               icon="i-lucide-arrow-left"
@@ -42,19 +64,25 @@
           </div>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+        <div
+          class="
+            grid gap-3
+            sm:grid-cols-2
+            xl:grid-cols-1
+          "
+        >
           <div
             v-for="stat in headerStats"
             :key="stat.label"
             class="rounded-[1.5rem] border border-default bg-default/80 p-4"
           >
-            <p class="text-xs uppercase tracking-[0.18em] text-toned">
+            <p class="text-xs tracking-[0.18em] text-toned uppercase">
               {{ stat.label }}
             </p>
             <p class="mt-2 text-2xl font-semibold text-highlighted">
               {{ stat.value }}
             </p>
-            <p class="mt-2 text-sm leading-6 text-toned">
+            <p class="mt-2 text-sm/6 text-toned">
               {{ stat.description }}
             </p>
           </div>
@@ -64,32 +92,41 @@
 
     <section
       v-if="pending"
-      class="rounded-[2rem] border border-default bg-default/85 p-6 shadow-sm sm:p-8"
+      class="
+        rounded-4xl border border-default bg-default/85 p-6 shadow-sm
+        sm:p-8
+      "
     >
       <div class="animate-pulse space-y-4">
         <div class="h-5 w-40 rounded-full bg-muted/60" />
         <div class="h-8 w-3/5 rounded-full bg-muted/60" />
         <div class="h-4 rounded-full bg-muted/60" />
         <div class="h-4 w-5/6 rounded-full bg-muted/60" />
-        <div class="mt-6 h-[24rem] rounded-[2rem] bg-muted/50" />
+        <div class="mt-6 h-96 rounded-4xl bg-muted/50" />
       </div>
     </section>
 
     <section
       v-else-if="error"
-      class="rounded-[2rem] border border-error/30 bg-error/5 p-6 shadow-sm sm:p-8"
+      class="
+        rounded-4xl border border-error/30 bg-error/5 p-6 shadow-sm
+        sm:p-8
+      "
     >
       <div
-        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        class="
+          flex flex-col gap-4
+          sm:flex-row sm:items-center sm:justify-between
+        "
       >
         <div class="space-y-2">
-          <p class="text-sm font-medium uppercase tracking-[0.2em] text-error">
+          <p class="text-sm font-medium tracking-[0.2em] text-error uppercase">
             Помилка
           </p>
           <h2 class="text-2xl font-semibold text-highlighted">
             Не вдалося завантажити набір
           </h2>
-          <p class="max-w-2xl text-sm leading-6 text-toned">
+          <p class="max-w-2xl text-sm/6 text-toned">
             Спробуйте оновити сторінку або повторно звернутися до сервера.
           </p>
         </div>
@@ -99,7 +136,7 @@
           color="error"
           variant="soft"
           icon="i-lucide-refresh-cw"
-          @click="refresh"
+          @click="refreshSet"
         >
           Спробувати ще раз
         </UButton>
@@ -108,10 +145,16 @@
 
     <section
       v-else-if="!cards.length"
-      class="rounded-[2rem] border border-dashed border-default bg-default/70 p-8 text-center shadow-sm"
+      class="
+        rounded-4xl border border-dashed border-default bg-default/70 p-8
+        text-center shadow-sm
+      "
     >
       <div
-        class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+        class="
+          mx-auto flex size-14 items-center justify-center rounded-2xl
+          bg-primary/10 text-primary
+        "
       >
         <UIcon
           name="i-lucide-layers-3"
@@ -121,7 +164,7 @@
       <h2 class="mt-5 text-2xl font-semibold text-highlighted">
         У наборі поки немає карток
       </h2>
-      <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-toned">
+      <p class="mx-auto mt-3 max-w-xl text-sm/6 text-toned">
         Додайте кілька карток у редакторі, і тут одразу з’явиться повноцінний
         режим навчання з повторенням та статистикою.
       </p>
@@ -212,8 +255,10 @@ const {
   {
     server: false,
     default: () => null,
-  }
+  },
 );
+
+const refreshSet = () => refresh();
 
 const now = useNow({ interval: 250 });
 
@@ -246,8 +291,8 @@ const setName = computed(() => {
 
 const setDescription = computed(() => {
   return (
-    setData.value?.description?.trim() ||
-    "Перевертайте картки, відмічайте складні місця і проходьте повторення, доки весь набір не стане впевненим."
+    setData.value?.description?.trim()
+    || "Перевертайте картки, відмічайте складні місця і проходьте повторення, доки весь набір не стане впевненим."
   );
 });
 
@@ -328,7 +373,7 @@ const totalStopwatch = computed(() => {
 
 const reports = computed<LearningCardReport[]>(() => {
   return activeCardIds.value
-    .map(cardId => {
+    .map((cardId) => {
       const card = cardMap.value.get(cardId);
       const state = cardStates[cardId];
 
@@ -372,11 +417,7 @@ const clearAdvanceTimeout = () => {
 };
 
 const resetCardStates = (cardIds: string[]) => {
-  Object.keys(cardStates).forEach(key => {
-    delete cardStates[key];
-  });
-
-  cardIds.forEach(cardId => {
+  cardIds.forEach((cardId) => {
     cardStates[cardId] = {
       attempts: [],
       mistakes: 0,
@@ -385,6 +426,16 @@ const resetCardStates = (cardIds: string[]) => {
       totalDurationMs: 0,
     };
   });
+};
+
+const getCardState = (cardId: string) => {
+  const state = cardStates[cardId];
+
+  if (!state) {
+    throw new Error(`Missing learning state for card ${cardId}`);
+  }
+
+  return state;
 };
 
 const startSession = (cardIds: string[]) => {
@@ -440,7 +491,7 @@ const toggleFlip = () => {
   }
 
   if (!flipped.value) {
-    cardStates[currentCard.value.id].revealCount += 1;
+    getCardState(currentCard.value.id).revealCount += 1;
   }
 
   flipped.value = !flipped.value;
@@ -455,7 +506,7 @@ const recordAnswer = (outcome: LearningAttempt["outcome"]) => {
 
   isAnswering.value = true;
 
-  const state = cardStates[card.id];
+  const state = getCardState(card.id);
   const durationMs = Math.max(250, Date.now() - cardStartedAt.value);
 
   state.attempts.push({
@@ -514,7 +565,7 @@ const restartMistakes = () => {
 
 watch(
   cards,
-  nextCards => {
+  (nextCards) => {
     if (initialized.value || !nextCards.length) {
       return;
     }
@@ -522,7 +573,7 @@ watch(
     startSession(nextCards.map(card => card.id));
     initialized.value = true;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -534,10 +585,10 @@ watch(
     currentStep.value = 0;
     sessionFinishedAt.value = null;
     await refresh();
-  }
+  },
 );
 
-watch(currentCardId, cardId => {
+watch(currentCardId, (cardId) => {
   if (!cardId || isShowingResults.value) {
     return;
   }

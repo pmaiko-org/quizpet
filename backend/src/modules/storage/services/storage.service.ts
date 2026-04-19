@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { EntityManager, Repository } from 'typeorm';
-import { StorageFileEntity } from '../storage-file.entity';
-import { StorageFsService } from './storage-fs.service';
-import * as mime from 'mime-types';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FileResponseDto } from '../dto/file.response.dto';
-import { SuccessResponseDto } from '../../../common/dto/success.response.dto';
+import { Injectable } from "@nestjs/common";
+import { EntityManager, Repository } from "typeorm";
+import { StorageFileEntity } from "../storage-file.entity";
+import { StorageFsService } from "./storage-fs.service";
+import * as mime from "mime-types";
+import { InjectRepository } from "@nestjs/typeorm";
+import { FileResponseDto } from "../dto/file.response.dto";
+import { SuccessResponseDto } from "../../../common/dto/success.response.dto";
 
 @Injectable()
 export class StorageService {
@@ -19,7 +19,7 @@ export class StorageService {
   async uploadFile(
     file: Pick<
       Express.Multer.File,
-      'originalname' | 'mimetype' | 'size' | 'buffer'
+      "originalname" | "mimetype" | "size" | "buffer"
     >,
   ) {
     const queryRunner = this.entityManager.connection.createQueryRunner();
@@ -38,7 +38,7 @@ export class StorageService {
 
       const ext = mime.extension(storageFile.mimetype);
 
-      if (!ext) throw new Error('File extension is not allowed');
+      if (!ext) throw new Error("File extension is not allowed");
 
       await this.fsService.set(`${savedFile.id}.${ext}`, file.buffer);
 
@@ -54,7 +54,7 @@ export class StorageService {
 
   async getFiles() {
     const storageFiles = await this.storageFileRepository.find();
-    return storageFiles.map((file) => new FileResponseDto(file));
+    return storageFiles.map(file => new FileResponseDto(file));
   }
 
   async deleteFile(id: string) {

@@ -1,7 +1,7 @@
-import { Column, Entity } from 'typeorm';
-import { AbstractEntity } from '../../../common/abstract.entity';
+import { Column, Entity } from "typeorm";
+import { AbstractEntity } from "../../../common/abstract.entity";
 
-@Entity('topics')
+@Entity("topics")
 export class TopicEntity extends AbstractEntity<TopicEntity> {
   @Column()
   label: string;
@@ -12,6 +12,6 @@ export class TopicEntity extends AbstractEntity<TopicEntity> {
   @Column()
   icon: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: "text" })
   description: string;
 }

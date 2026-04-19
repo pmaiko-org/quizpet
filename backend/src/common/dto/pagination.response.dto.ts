@@ -1,7 +1,7 @@
 import {
   PaginationResponseInterface,
   PaginationMetaInterface,
-} from '../interface/pagination.response.interface';
+} from "../interface/pagination.response.interface";
 
 export class PaginationResponseDto<
   T,

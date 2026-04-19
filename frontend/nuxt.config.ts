@@ -1,9 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
   modules: ["@nuxt/ui", "@nuxt/image", "@nuxt/eslint"],
-  css: ["~/assets/css/main.css"],
   pages: {
     pattern: ["**/*.vue", "!**/components/**"],
   },
@@ -18,6 +15,14 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["~/store"],
   },
+  devtools: { enabled: true },
+  css: ["~/assets/css/main.css"],
+
+  runtimeConfig: {
+    public: {
+      apiUrl: "/backend",
+    },
+  },
   routeRules: {
     "/**": {
       headers: {
@@ -29,13 +34,19 @@ export default defineNuxtConfig({
   features: {
     inlineStyles: true,
   },
-
-  runtimeConfig: {
-    public: {
-      apiUrl: '/backend',
+  compatibilityDate: "2025-07-15",
+  eslint: {
+    config: {
+      stylistic: {
+        indent: 2,
+        semi: true,
+        quotes: "double",
+        commaDangle: "always-multiline",
+        braceStyle: "1tbs",
+      },
     },
   },
   image: {
-    provider: 'none'
-  }
+    provider: "none",
+  },
 });

@@ -9,22 +9,22 @@ import {
   UseGuards,
   ValidationPipe,
   UsePipes,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { RefreshTokenResponseDto } from './dto/refresh-token.response.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { AuthService } from "./auth.service";
+import { RefreshTokenResponseDto } from "./dto/refresh-token.response.dto";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
+  @Get("google")
+  @UseGuards(AuthGuard("google"))
   googleAuth() {}
 
-  @Get('google/redirect')
-  @UseGuards(AuthGuard('google'))
+  @Get("google/redirect")
+  @UseGuards(AuthGuard("google"))
   googleAuthRedirect(@Req() req, @Res() res) {
     const { accessToken, refreshToken } = req.user;
 
@@ -33,14 +33,14 @@ export class AuthController {
     );
   }
 
-  @Post('refresh')
+  @Post("refresh")
   @UsePipes(
     new ValidationPipe({
       transform: true,
-      exceptionFactory: (errors) => {
+      exceptionFactory: errors => {
         return new UnauthorizedException({
-          message: 'Validation failed',
-          errors: errors.map((error) => ({
+          message: "Validation failed",
+          errors: errors.map(error => ({
             field: error.property,
             constraints: error.constraints,
           })),
@@ -55,12 +55,12 @@ export class AuthController {
       refreshTokenDto.refreshToken,
     );
     if (!payload) {
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new UnauthorizedException("Invalid refresh token");
     }
 
     const accessToken = this.authService.generateAccessToken({
       id: payload.sub,
-      email: '',
+      email: "",
     } as any);
 
     return new RefreshTokenResponseDto(accessToken);

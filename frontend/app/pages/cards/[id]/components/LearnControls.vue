@@ -1,5 +1,10 @@
 <template>
-  <section class="rounded-[2rem] border border-default bg-default/85 p-5 shadow-sm sm:p-6">
+  <section
+    class="
+      rounded-4xl border border-default bg-default/85 p-5 shadow-sm
+      sm:p-6
+    "
+  >
     <div class="flex flex-col gap-4">
       <div class="flex flex-wrap items-center gap-2">
         <UBadge
@@ -21,7 +26,12 @@
         </UBadge>
       </div>
 
-      <div class="grid gap-3 sm:grid-cols-2">
+      <div
+        class="
+          grid gap-3
+          sm:grid-cols-2
+        "
+      >
         <UButton
           size="xl"
           color="error"
@@ -45,7 +55,7 @@
         </UButton>
       </div>
 
-      <p class="text-sm leading-6 text-toned">
+      <p class="text-sm/6 text-toned">
         {{ helperText }}
       </p>
     </div>
@@ -64,7 +74,9 @@ defineEmits<{
 }>();
 
 const helperBadge = computed(() => {
-  return props.flipped ? "Помилка поверне картку в чергу" : "Клік по картці відкриває визначення";
+  return props.flipped
+    ? "Помилка поверне картку в чергу"
+    : "Клік по картці відкриває визначення";
 });
 
 const helperText = computed(() => {

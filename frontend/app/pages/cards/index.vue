@@ -1,23 +1,42 @@
 <template>
   <div class="space-y-8">
     <section
-      class="overflow-hidden rounded-[2rem] border border-default bg-gradient-to-br from-primary/12 via-default to-success/10 p-6 shadow-sm sm:p-8"
+      class="
+        overflow-hidden rounded-4xl border border-default bg-linear-to-br
+        from-primary/12 via-default to-success/10 p-6 shadow-sm
+        sm:p-8
+      "
     >
       <div
-        class="grid gap-8 xl:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)] xl:items-start"
+        class="
+          grid gap-8
+          xl:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)] xl:items-start
+        "
       >
         <div class="space-y-5">
           <div class="space-y-3">
             <p
-              class="text-sm font-medium uppercase tracking-[0.24em] text-primary"
+              class="
+                text-sm font-medium tracking-[0.24em] text-primary uppercase
+              "
             >
               Бібліотека карток
             </p>
             <div class="space-y-3">
-              <h1 class="text-3xl font-semibold text-highlighted sm:text-4xl">
+              <h1
+                class="
+                  text-3xl font-semibold text-highlighted
+                  sm:text-4xl
+                "
+              >
                 Зберігайте набори в одному охайному просторі
               </h1>
-              <p class="max-w-2xl text-sm leading-6 text-toned sm:text-base">
+              <p
+                class="
+                  max-w-2xl text-sm/6 text-toned
+                  sm:text-base
+                "
+              >
                 Тут зібрані всі ваші модулі для навчання. Переглядайте тематики,
                 швидко оцінюйте наповнення та додавайте нові набори без зайвого
                 шуму.
@@ -25,7 +44,12 @@
             </div>
           </div>
 
-          <div class="flex flex-col gap-3 sm:flex-row">
+          <div
+            class="
+              flex flex-col gap-3
+              sm:flex-row
+            "
+          >
             <UButton
               to="/cards/create"
               icon="i-lucide-plus"
@@ -51,18 +75,27 @@
               color="neutral"
               size="xl"
               class="justify-center"
-              @click="refresh"
+              @click="refreshSets"
             >
               Оновити список
             </UButton>
           </div>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
+        <div
+          class="
+            grid gap-4
+            sm:grid-cols-3
+            xl:grid-cols-1
+          "
+        >
           <div
             v-for="stat in stats"
             :key="stat.label"
-            class="rounded-[1.5rem] border border-default bg-default/80 p-5 backdrop-blur-sm"
+            class="
+              rounded-[1.5rem] border border-default bg-default/80 p-5
+              backdrop-blur-sm
+            "
           >
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -75,7 +108,10 @@
               </div>
 
               <div
-                class="flex size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+                class="
+                  flex size-10 items-center justify-center rounded-2xl
+                  bg-primary/10 text-primary
+                "
               >
                 <UIcon
                   :name="stat.icon"
@@ -90,11 +126,14 @@
 
     <section class="space-y-4">
       <div
-        class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"
+        class="
+          flex flex-col gap-2
+          sm:flex-row sm:items-end sm:justify-between
+        "
       >
         <div>
           <p
-            class="text-sm font-medium uppercase tracking-[0.2em] text-primary"
+            class="text-sm font-medium tracking-[0.2em] text-primary uppercase"
           >
             Набори
           </p>
@@ -110,12 +149,17 @@
 
       <div
         v-if="pending"
-        class="grid gap-4 lg:grid-cols-2"
+        class="
+          grid gap-4
+          lg:grid-cols-2
+        "
       >
         <div
           v-for="index in 4"
           :key="index"
-          class="rounded-[1.75rem] border border-default bg-default/80 p-6 shadow-sm"
+          class="
+            rounded-[1.75rem] border border-default bg-default/80 p-6 shadow-sm
+          "
         >
           <div class="animate-pulse space-y-4">
             <div class="h-4 w-24 rounded-full bg-default" />
@@ -137,18 +181,21 @@
         class="rounded-[1.75rem] border border-error/30 bg-error/5 p-6"
       >
         <div
-          class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+          class="
+            flex flex-col gap-4
+            sm:flex-row sm:items-center sm:justify-between
+          "
         >
           <div class="space-y-2">
             <p
-              class="text-sm font-medium uppercase tracking-[0.2em] text-error"
+              class="text-sm font-medium tracking-[0.2em] text-error uppercase"
             >
               Помилка
             </p>
             <h3 class="text-xl font-semibold text-highlighted">
               Не вдалося завантажити набори
             </h3>
-            <p class="max-w-2xl text-sm leading-6 text-toned">
+            <p class="max-w-2xl text-sm/6 text-toned">
               Спробуйте ще раз. Якщо проблема повторюється, варто перевірити
               доступність бекенду.
             </p>
@@ -159,7 +206,7 @@
             color="error"
             variant="soft"
             size="lg"
-            @click="refresh"
+            @click="refreshSets"
           >
             Спробувати знову
           </UButton>
@@ -168,10 +215,16 @@
 
       <div
         v-else-if="!sets.length"
-        class="rounded-[1.75rem] border border-dashed border-default bg-default/60 p-8 text-center shadow-sm"
+        class="
+          rounded-[1.75rem] border border-dashed border-default bg-default/60
+          p-8 text-center shadow-sm
+        "
       >
         <div
-          class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+          class="
+            mx-auto flex size-14 items-center justify-center rounded-2xl
+            bg-primary/10 text-primary
+          "
         >
           <UIcon
             name="i-lucide-library"
@@ -181,7 +234,7 @@
         <h3 class="mt-5 text-2xl font-semibold text-highlighted">
           Поки що тут немає наборів
         </h3>
-        <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-toned">
+        <p class="mx-auto mt-3 max-w-xl text-sm/6 text-toned">
           Почніть з першого набору: додайте тему, короткий опис і кілька карток,
           щоб бібліотека одразу виглядала живою.
         </p>
@@ -197,17 +250,26 @@
 
       <div
         v-else
-        class="grid gap-4 lg:grid-cols-2"
+        class="
+          grid gap-4
+          lg:grid-cols-2
+        "
       >
         <article
           v-for="set in sets"
           :key="set.id"
-          class="group rounded-[1.75rem] border border-default bg-default/80 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+          class="
+            group rounded-[1.75rem] border border-default bg-default/80 p-6
+            shadow-sm transition-all duration-200
+            hover:-translate-y-0.5 hover:shadow-md
+          "
         >
           <div class="flex items-start justify-between gap-4">
             <div class="space-y-3">
               <p
-                class="text-sm font-medium uppercase tracking-[0.2em] text-primary"
+                class="
+                  text-sm font-medium tracking-[0.2em] text-primary uppercase
+                "
               >
                 Набір карток
               </p>
@@ -217,7 +279,11 @@
             </div>
 
             <div
-              class="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-inverted"
+              class="
+                flex size-11 items-center justify-center rounded-2xl
+                bg-primary/10 text-primary transition-colors
+                group-hover:bg-primary group-hover:text-inverted
+              "
             >
               <UIcon
                 name="i-lucide-layers-3"
@@ -226,12 +292,10 @@
             </div>
           </div>
 
-          <p
-            class="mt-4 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-toned"
-          >
+          <p class="mt-4 line-clamp-3 min-h-18 text-sm/6 text-toned">
             {{
-              set.description ||
-              "Опис ще не доданий, але набір уже готовий до наповнення."
+              set.description
+                || "Опис ще не доданий, але набір уже готовий до наповнення."
             }}
           </p>
 
@@ -264,26 +328,35 @@
             </UBadge>
           </div>
 
-          <div
-            class="mt-6 rounded-2xl border border-default bg-default/70 px-4 py-4"
-          >
-            <div class="grid gap-4 sm:grid-cols-3 sm:gap-6">
+          <div class="mt-6 rounded-2xl border border-default bg-default/70 p-4">
+            <div
+              class="
+                grid gap-4
+                sm:grid-cols-3 sm:gap-6
+              "
+            >
               <div>
-                <p class="text-sm text-toned">Карток у наборі</p>
+                <p class="text-sm text-toned">
+                  Карток у наборі
+                </p>
                 <p class="text-lg font-semibold text-highlighted">
                   {{ set.cardsCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-toned">Тем у наборі</p>
+                <p class="text-sm text-toned">
+                  Тем у наборі
+                </p>
                 <p class="text-lg font-semibold text-highlighted">
                   {{ set.topics.length }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-toned">Створив</p>
+                <p class="text-sm text-toned">
+                  Створив
+                </p>
                 <p class="text-lg font-semibold text-highlighted">
                   {{ getAuthorName(set) }}
                 </p>
@@ -291,7 +364,12 @@
             </div>
           </div>
 
-          <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-between">
+          <div
+            class="
+              mt-4 flex flex-col gap-3
+              sm:flex-row sm:justify-between
+            "
+          >
             <div class="flex flex-wrap gap-2">
               <UButton
                 :to="`/cards/${set.id}/learn`"
@@ -357,19 +435,21 @@ const { data, pending, error, refresh } = await useAsyncData(
   {
     default: () => [],
     server: false,
-  }
+  },
 );
+
+const refreshSets = () => refresh();
 
 const deletingSetId = ref<string | null>(null);
 const sets = computed<ISetListItemResponse[]>(() => data.value ?? []);
 
 const stats = computed(() => {
   const topicsCount = new Set(
-    sets.value.flatMap(set => set.topics.map(topic => topic.id))
+    sets.value.flatMap(set => set.topics.map(topic => topic.id)),
   ).size;
 
   const describedSets = sets.value.filter(set =>
-    set.description?.trim()
+    set.description?.trim(),
   ).length;
 
   return [
@@ -413,7 +493,7 @@ const getAuthorName = (set: ISetListItemResponse) => {
 
 const canDeleteSet = (set: ISetListItemResponse) => {
   return Boolean(
-    profile.value?.email && profile.value.email === set.user.email
+    profile.value?.email && profile.value.email === set.user.email,
   );
 };
 
@@ -423,7 +503,7 @@ const handleDeleteSet = async (set: ISetListItemResponse) => {
   }
 
   const shouldDelete = window.confirm(
-    `Видалити набір "${set.name}"? Цю дію не можна скасувати.`
+    `Видалити набір "${set.name}"? Цю дію не можна скасувати.`,
   );
 
   if (!shouldDelete) {

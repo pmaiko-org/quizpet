@@ -2,20 +2,20 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, EntityManager, Repository } from 'typeorm';
-import { TopicEntity } from './entity/topic.entity';
-import { SetEntity } from './entity/set.entity';
-import { CreateSetDto } from './dto/create-set.dto';
-import { CardEntity } from '../cards/card.entity';
-import { SetListItemResponseDto } from './dto/set-list-item.response.dto';
-import { UpdateSetDto } from './dto/update-set.dto';
-import { UpdateCardDto } from '../cards/dto/update-card.dto';
-import { SetDetailsResponseDto } from './dto/set-details.response.dto';
-import { CreateCardDto } from '../cards/dto/create-card.dto';
-import { TopicResponseDto } from './dto/topic.response.dto';
-import { SuccessResponseDto } from '../../common/dto/success.response.dto';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { DeepPartial, EntityManager, Repository } from "typeorm";
+import { TopicEntity } from "./entity/topic.entity";
+import { SetEntity } from "./entity/set.entity";
+import { CreateSetDto } from "./dto/create-set.dto";
+import { CardEntity } from "../cards/card.entity";
+import { SetListItemResponseDto } from "./dto/set-list-item.response.dto";
+import { UpdateSetDto } from "./dto/update-set.dto";
+import { UpdateCardDto } from "../cards/dto/update-card.dto";
+import { SetDetailsResponseDto } from "./dto/set-details.response.dto";
+import { CreateCardDto } from "../cards/dto/create-card.dto";
+import { TopicResponseDto } from "./dto/topic.response.dto";
+import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 
 @Injectable()
 export class SetsService {
@@ -30,7 +30,7 @@ export class SetsService {
   async getSets() {
     const sets = await this.setRepository.find();
 
-    return sets.map((set) => new SetListItemResponseDto(set));
+    return sets.map(set => new SetListItemResponseDto(set));
   }
 
   async getSet(setId: string) {
@@ -40,7 +40,7 @@ export class SetsService {
         cards: true,
       },
       order: {
-        cards: { position: 'ASC' },
+        cards: { position: "ASC" },
       },
     });
     if (set) return new SetDetailsResponseDto(set);
@@ -78,25 +78,25 @@ export class SetsService {
     }
 
     const topics = await this.getValidatedTopics(updateSetDto.topicIds);
-    const existingCardIds = new Set(set.cards.map((card) => card.id));
+    const existingCardIds = new Set(set.cards.map(card => card.id));
     const incomingCardIds = updateSetDto.cards
-      .map((card) => card.id)
+      .map(card => card.id)
       .filter((cardId): cardId is string => Boolean(cardId));
 
     const invalidCardIds = incomingCardIds.filter(
-      (cardId) => !existingCardIds.has(cardId),
+      cardId => !existingCardIds.has(cardId),
     );
 
     if (invalidCardIds.length) {
       throw new BadRequestException(
-        `Cards do not belong to set "${setId}": ${invalidCardIds.join(', ')}`,
+        `Cards do not belong to set "${setId}": ${invalidCardIds.join(", ")}`,
       );
     }
 
-    return this.entityManager.transaction(async (manager) => {
+    return this.entityManager.transaction(async manager => {
       const cardIdsToDelete = set.cards
-        .filter((card) => !incomingCardIds.includes(card.id))
-        .map((card) => card.id);
+        .filter(card => !incomingCardIds.includes(card.id))
+        .map(card => card.id);
 
       if (cardIdsToDelete.length) {
         await manager.delete(CardEntity, cardIdsToDelete);
@@ -124,7 +124,7 @@ export class SetsService {
           cards: true,
         },
         order: {
-          cards: { position: 'ASC' },
+          cards: { position: "ASC" },
         },
       });
 
@@ -152,27 +152,27 @@ export class SetsService {
   getTopics() {
     return this.topicRepository
       .find()
-      .then((topics) => topics.map((topic) => new TopicResponseDto(topic)));
+      .then(topics => topics.map(topic => new TopicResponseDto(topic)));
   }
 
   private async getValidatedTopics(topicIds: string[]) {
     const topics = await this.topicRepository.findByIds(topicIds);
 
     if (topics.length !== topicIds.length) {
-      const existingTopicIds = new Set(topics.map((topic) => topic.id));
+      const existingTopicIds = new Set(topics.map(topic => topic.id));
       const missingTopicIds = topicIds.filter(
-        (topicId) => !existingTopicIds.has(topicId),
+        topicId => !existingTopicIds.has(topicId),
       );
 
       throw new NotFoundException(
-        `Topics not found: ${missingTopicIds.join(', ')}`,
+        `Topics not found: ${missingTopicIds.join(", ")}`,
       );
     }
 
     return topics.filter(
       (topic, index, allTopics) =>
         index ===
-        allTopics.findIndex((currentTopic) => currentTopic.id === topic.id),
+        allTopics.findIndex(currentTopic => currentTopic.id === topic.id),
     );
   }
 
@@ -180,21 +180,21 @@ export class SetsService {
     cards: Array<CreateCardDto | UpdateCardDto>,
     setId?: string,
   ): DeepPartial<CardEntity>[] {
-    return cards.map((card) => {
+    return cards.map(card => {
       const mappedCard: DeepPartial<CardEntity> = {
-        id: ('id' in card && card.id) || undefined,
+        id: ("id" in card && card.id) || undefined,
         position: card.position,
         term: card.term,
         termDescription: card.termDescription ?? undefined,
         termImage: card.termImageId
-          ? ({ id: card.termImageId } as DeepPartial<CardEntity['termImage']>)
-          : (null as unknown as DeepPartial<CardEntity['termImage']>),
+          ? ({ id: card.termImageId } as DeepPartial<CardEntity["termImage"]>)
+          : (null as unknown as DeepPartial<CardEntity["termImage"]>),
         definition: card.definition,
         definitionImage: card.definitionImageId
           ? ({
               id: card.definitionImageId,
-            } as DeepPartial<CardEntity['definitionImage']>)
-          : (null as unknown as DeepPartial<CardEntity['definitionImage']>),
+            } as DeepPartial<CardEntity["definitionImage"]>)
+          : (null as unknown as DeepPartial<CardEntity["definitionImage"]>),
         textColor: card.textColor ?? undefined,
         backgroundColor: card.backgroundColor ?? undefined,
         set: setId ? ({ id: setId } as SetEntity) : undefined,

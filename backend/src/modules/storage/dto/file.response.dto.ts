@@ -1,6 +1,6 @@
-import { StorageFileEntity } from '../storage-file.entity';
-import * as mime from 'mime-types';
-import { GLOBAL_PREFIX, STORAGE_PATH } from '../../../config/constants';
+import { StorageFileEntity } from "../storage-file.entity";
+import * as mime from "mime-types";
+import { GLOBAL_PREFIX, STORAGE_PATH } from "../../../config/constants";
 
 export class FileResponseDto {
   id: string;

@@ -1,4 +1,4 @@
-import { TopicEntity } from '../entity/topic.entity';
+import { TopicEntity } from "../entity/topic.entity";
 
 export class TopicResponseDto {
   id: string;

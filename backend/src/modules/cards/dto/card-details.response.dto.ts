@@ -1,5 +1,5 @@
-import { CardEntity } from '../card.entity';
-import { FileResponseDto } from '../../storage/dto/file.response.dto';
+import { CardEntity } from "../card.entity";
+import { FileResponseDto } from "../../storage/dto/file.response.dto";
 
 export class CardDetailsResponseDto {
   id: string;

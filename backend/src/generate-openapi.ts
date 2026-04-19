@@ -1,9 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { OpenApiModule } from './openapi.module';
-import { createOpenApiDocument } from './openapi';
-import { GLOBAL_PREFIX } from './config/constants';
+import { NestFactory } from "@nestjs/core";
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { OpenApiModule } from "./openapi.module";
+import { createOpenApiDocument } from "./openapi";
+import { GLOBAL_PREFIX } from "./config/constants";
 
 async function generate() {
   const app = await NestFactory.create(OpenApiModule, {
@@ -12,7 +12,7 @@ async function generate() {
   app.setGlobalPrefix(GLOBAL_PREFIX);
 
   const document = createOpenApiDocument(app);
-  const outputPath = join(process.cwd(), 'openapi.json');
+  const outputPath = join(process.cwd(), "openapi.json");
 
   writeFileSync(outputPath, JSON.stringify(document, null, 2));
 
@@ -21,9 +21,9 @@ async function generate() {
 
 generate()
   .then(() => {
-    console.log('OpenAPI schema generated at backend/openapi.json');
+    console.log("OpenAPI schema generated at backend/openapi.json");
   })
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     process.exit(1);
   });
