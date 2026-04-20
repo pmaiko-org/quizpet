@@ -42,8 +42,8 @@ export class AuthService {
       user = this.userRepository.create({
         googleId,
         email: emails[0].value,
-        firstName: name.givenName,
-        lastName: name.familyName,
+        firstName: name.givenName || "unknown",
+        lastName: name.familyName || "unknown",
         picture: storageFile?.id ? { id: storageFile?.id } : undefined,
       });
 
