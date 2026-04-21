@@ -34,4 +34,18 @@ export default withNuxt()
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-dynamic-delete": "off",
     },
+  })
+  .append({
+    files: ["**/*.vue"],
+    rules: {
+      "vue/attribute-hyphenation": [
+        "error",
+        "never",
+        {
+          ignore: [],
+        },
+      ],
+
+      "vue/prop-name-casing": ["error", "camelCase"],
+    },
   });

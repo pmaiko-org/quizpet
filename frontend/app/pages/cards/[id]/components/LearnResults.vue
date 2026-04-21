@@ -2,9 +2,9 @@
   <section class="space-y-6">
     <section
       class="
-        overflow-hidden rounded-4xl border border-default bg-linear-to-br
+        overflow-hidden rounded-2xl border border-default bg-linear-to-br
         from-primary/12 via-default to-success/10 p-6 shadow-sm
-        sm:p-8
+        md:p-8
       "
     >
       <div
@@ -22,7 +22,7 @@
           <h2
             class="
               text-3xl font-semibold text-highlighted
-              sm:text-4xl
+              md:text-4xl
             "
           >
             {{ heading }}
@@ -30,7 +30,7 @@
           <p
             class="
               max-w-2xl text-sm/6 text-toned
-              sm:text-base
+              md:text-base
             "
           >
             {{ summary }}
@@ -39,7 +39,7 @@
           <div
             class="
               flex flex-col gap-3
-              sm:flex-row
+              md:flex-row
             "
           >
             <UButton
@@ -68,7 +68,7 @@
         <div
           class="
             grid gap-3
-            sm:grid-cols-2
+            md:grid-cols-2
             xl:grid-cols-2
           "
         >
@@ -93,14 +93,14 @@
 
     <section
       class="
-        rounded-4xl border border-default bg-default/85 p-5 shadow-sm
-        sm:p-6
+        rounded-2xl border border-default bg-default/85 p-5 shadow-sm
+        md:p-6
       "
     >
       <div
         class="
           flex flex-col gap-2
-          sm:flex-row sm:items-end sm:justify-between
+          md:flex-row md:items-end md:justify-between
         "
       >
         <div>
@@ -164,7 +164,7 @@
             <div
               class="
                 grid gap-2
-                sm:grid-cols-3
+                md:grid-cols-3
                 lg:min-w-88
               "
             >

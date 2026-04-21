@@ -137,7 +137,7 @@ export const formatDuration = (value: number) => {
   return `${seconds}с`;
 };
 
-export const formatStopwatch = (value: number) => {
+export const formatTime = (value: number) => {
   const totalSeconds = Math.max(0, Math.round(value / 1000));
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);

@@ -1,97 +1,7 @@
 <template>
   <div class="space-y-6">
     <section
-      class="
-        overflow-hidden rounded-4xl border border-default bg-linear-to-br
-        from-primary/12 via-default to-success/10 p-6 shadow-sm
-        sm:p-8
-      "
-    >
-      <div
-        class="
-          grid gap-6
-          xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]
-        "
-      >
-        <div class="space-y-4">
-          <p
-            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
-          >
-            Режим навчання
-          </p>
-          <h1
-            class="
-              text-3xl font-semibold text-highlighted
-              sm:text-4xl
-            "
-          >
-            {{ setName }}
-          </h1>
-          <p
-            class="
-              max-w-2xl text-sm/6 text-toned
-              sm:text-base
-            "
-          >
-            {{ setDescription }}
-          </p>
-
-          <div
-            class="
-              flex flex-col gap-3
-              sm:flex-row
-            "
-          >
-            <UButton
-              to="/cards"
-              icon="i-lucide-arrow-left"
-              variant="outline"
-              color="neutral"
-              size="xl"
-            >
-              Назад до наборів
-            </UButton>
-
-            <UButton
-              :to="editSetLink"
-              icon="i-lucide-pencil"
-              variant="outline"
-              color="neutral"
-              size="xl"
-            >
-              Редагувати набір
-            </UButton>
-          </div>
-        </div>
-
-        <div
-          class="
-            grid gap-3
-            sm:grid-cols-2
-            xl:grid-cols-1
-          "
-        >
-          <div
-            v-for="stat in headerStats"
-            :key="stat.label"
-            class="rounded-[1.5rem] border border-default bg-default/80 p-4"
-          >
-            <p class="text-xs tracking-[0.18em] text-toned uppercase">
-              {{ stat.label }}
-            </p>
-            <p class="mt-2 text-2xl font-semibold text-highlighted">
-              {{ stat.value }}
-            </p>
-            <p class="mt-2 text-sm/6 text-toned">
-              {{ stat.description }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section
-      v-if="pending"
+      v-if="loading"
       class="
         rounded-4xl border border-default bg-default/85 p-6 shadow-sm
         sm:p-8
@@ -181,23 +91,13 @@
     <template v-else-if="isShowingResults">
       <LearnResults
         :reports="reports"
-        :total-duration-ms="totalElapsedMs"
+        :totalDurationMs="totalElapsedMs"
         @restart="restartSession"
         @retry-mistakes="restartMistakes"
       />
     </template>
 
     <template v-else-if="currentCard">
-      <LearnProgress
-        :learned-count="learnedCount"
-        :total-cards="activeCardIds.length"
-        :current-step="currentStep"
-        :queue-length="queue.length"
-        :mistakes-count="mistakeCardCount"
-        :current-card-time="currentCardStopwatch"
-        :total-time="totalStopwatch"
-      />
-
       <Transition
         name="slide-left"
         mode="out-in"
@@ -205,19 +105,28 @@
         <LearnFlashcard
           :key="currentCard.id"
           :card="currentCard"
-          :current-position="currentCardPosition"
-          :current-card-time="currentCardStopwatch"
+          :currentStep="currentStep + 1"
+          :currentCardTime="currentCardTime"
           :flipped="flipped"
-          :edit-link="currentCardEditLink"
+          :editLink="currentCardEditLink"
           @flip="toggleFlip"
         />
       </Transition>
 
       <LearnControls
-        :flipped="flipped"
         :locked="isAnswering"
         @known="markKnown"
         @missed="markMissed"
+      />
+
+      <LearnProgress
+        :learnedCount="learnedCount"
+        :totalCards="activeCardIds.length"
+        :currentStep="currentStep"
+        :queueLength="queue.length"
+        :mistakesCount="mistakeCardCount"
+        :currentCardTime="currentCardTime"
+        :totalTime="totalTime"
       />
     </template>
   </div>
@@ -226,8 +135,12 @@
 <script setup lang="ts">
 import { useNow } from "@vueuse/core";
 import type { LearningAttempt, LearningCardReport } from "~/utils/cardLearning";
-import { formatStopwatch } from "~/utils/cardLearning";
+import { formatTime } from "~/utils/cardLearning";
 import type { ICardDetailsResponse } from "~/types/api.generated";
+
+definePageMeta({
+  layout: "cabinet",
+});
 
 interface CardSessionState {
   attempts: LearningAttempt[];
@@ -237,26 +150,38 @@ interface CardSessionState {
   totalDurationMs: number;
 }
 
-definePageMeta({
-  layout: "cabinet",
-});
-
 const route = useRoute();
 const { $repository } = useNuxtApp();
 
 const {
-  data: setData,
-  pending,
+  data: cards,
+  status,
   error,
   refresh,
 } = await useAsyncData(
-  `card-learning-set-${route.params.id as string}`,
-  () => $repository.sets.getSet(route.params.id as string),
+  `cards-learning-${route.params.id as string}`,
+  () => $repository.cards.getCards(route.params.id as string),
   {
     server: false,
-    default: () => null,
+    default: () => [],
   },
 );
+
+const loading = computed(
+  () => status.value === "pending" || status.value === "idle",
+);
+
+const editSetLink = computed(() => {
+  return `/cards/${route.params.id as string}/edit`;
+});
+
+const currentCardEditLink = computed(() => {
+  if (!currentCard.value) {
+    return editSetLink.value;
+  }
+
+  return `${editSetLink.value}?card=${currentCard.value.id}`;
+});
 
 const refreshSet = () => refresh();
 
@@ -275,53 +200,15 @@ const cardStates = reactive<Record<string, CardSessionState>>({});
 
 let advanceTimeout: number | null = null;
 
-const cards = computed<ICardDetailsResponse[]>(() => {
-  return [...(setData.value?.cards ?? [])].sort((left, right) => {
-    return left.position - right.position;
-  });
-});
-
-const cardMap = computed(() => {
+const cardMap = computed<Map<string, ICardDetailsResponse>>(() => {
   return new Map(cards.value.map(card => [card.id, card]));
 });
 
-const setName = computed(() => {
-  return setData.value?.name?.trim() || `Набір ${route.params.id}`;
-});
-
-const setDescription = computed(() => {
-  return (
-    setData.value?.description?.trim()
-    || "Перевертайте картки, відмічайте складні місця і проходьте повторення, доки весь набір не стане впевненим."
-  );
-});
-
-const headerStats = computed(() => {
-  return [
-    {
-      label: "Карток у наборі",
-      value: cards.value.length,
-      description:
-        "Усі картки доступні в поточному сеансі й можуть повернутися в повторення після помилок.",
-    },
-    {
-      label: "Озвучення",
-      value: "Web Speech",
-      description:
-        "Озвучення term та definition працює через системні голоси браузера без окремого бекенд-сервісу.",
-    },
-  ];
-});
-
-const editSetLink = computed(() => {
-  return `/cards/${route.params.id as string}/edit`;
-});
-
-const currentCardId = computed(() => {
+const currentCardId = computed<string | null>(() => {
   return queue.value[currentStep.value] ?? null;
 });
 
-const currentCard = computed(() => {
+const currentCard = computed<ICardDetailsResponse | null>(() => {
   if (!currentCardId.value) {
     return null;
   }
@@ -329,23 +216,7 @@ const currentCard = computed(() => {
   return cardMap.value.get(currentCardId.value) ?? null;
 });
 
-const currentCardPosition = computed(() => {
-  if (!currentCardId.value) {
-    return 0;
-  }
-
-  return Math.max(1, activeCardIds.value.indexOf(currentCardId.value) + 1);
-});
-
-const currentCardEditLink = computed(() => {
-  if (!currentCard.value) {
-    return editSetLink.value;
-  }
-
-  return `${editSetLink.value}?card=${currentCard.value.id}`;
-});
-
-const currentCardElapsedMs = computed(() => {
+const currentCardElapsedMs = computed<number>(() => {
   if (!currentCard.value || !cardStartedAt.value || isShowingResults.value) {
     return 0;
   }
@@ -353,7 +224,7 @@ const currentCardElapsedMs = computed(() => {
   return Math.max(0, Number(now.value) - cardStartedAt.value);
 });
 
-const totalElapsedMs = computed(() => {
+const totalElapsedMs = computed<number>(() => {
   if (!sessionStartedAt.value) {
     return 0;
   }
@@ -363,12 +234,12 @@ const totalElapsedMs = computed(() => {
   return Math.max(0, finishAt - sessionStartedAt.value);
 });
 
-const currentCardStopwatch = computed(() => {
-  return formatStopwatch(currentCardElapsedMs.value);
+const currentCardTime = computed<string>(() => {
+  return formatTime(currentCardElapsedMs.value);
 });
 
-const totalStopwatch = computed(() => {
-  return formatStopwatch(totalElapsedMs.value);
+const totalTime = computed<string>(() => {
+  return formatTime(totalElapsedMs.value);
 });
 
 const reports = computed<LearningCardReport[]>(() => {

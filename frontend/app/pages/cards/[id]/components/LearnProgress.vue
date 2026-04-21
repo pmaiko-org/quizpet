@@ -1,8 +1,8 @@
 <template>
   <section
     class="
-      rounded-4xl border border-default bg-default/85 p-5 shadow-sm
-      sm:p-6
+      rounded-2xl border border-default bg-default/85 p-2 shadow-sm
+      md:p-4
     "
   >
     <div class="flex flex-col gap-5">
@@ -14,7 +14,7 @@
       >
         <div class="space-y-2">
           <p
-            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
+            class="text-xs font-medium tracking-[0.24em] text-primary uppercase"
           >
             Прогрес навчання
           </p>
@@ -29,7 +29,7 @@
         <div
           class="
             grid gap-2
-            sm:grid-cols-2
+            md:grid-cols-2
             xl:grid-cols-4
           "
         >
