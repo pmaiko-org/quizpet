@@ -6,9 +6,7 @@
     "
   >
     <div class="flex flex-col gap-4">
-      <div
-        class="grid grid-cols-2 gap-3"
-      >
+      <div class="grid grid-cols-2 gap-3">
         <UButton
           size="xl"
           color="error"
