@@ -32,8 +32,8 @@
       >
         <h3
           class="
-            line-clamp-6 overflow-hidden text-2xl/tight font-semibold
-            wrap-break-word text-highlighted
+            line-clamp-6 py-3 text-2xl/tight font-semibold wrap-break-word
+            text-highlighted
             md:text-5xl
           "
         >
@@ -42,7 +42,7 @@
         <p
           v-if="description"
           class="
-            mt-2 line-clamp-3 overflow-hidden text-xs/tight opacity-75
+            line-clamp-3 text-xs/tight opacity-75
             md:text-sm
           "
         >
