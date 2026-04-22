@@ -15,7 +15,7 @@ COPY package*.json ./
 
 RUN npm ci
 COPY . .
-RUN NODE_OPTIONS="--max-old-space-size=3072" npm run build
+RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 EXPOSE 4999
 
