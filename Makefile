@@ -10,6 +10,7 @@ dev:
 	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) up --build --remove-orphans --renew-anon-volumes
 
 prod: create-network
+	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -f $(COMPOSE_PROD) down
 	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_PROD) up --build -d --remove-orphans
 	@echo "⚡ Cleaning old build cache (only unused layers older than 24h)..."
 	docker builder prune -f --filter "until=24h"
