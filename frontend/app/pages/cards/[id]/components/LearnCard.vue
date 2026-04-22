@@ -53,7 +53,7 @@
       <div
         v-if="image"
         class="
-          flex-1 overflow-hidden rounded-xl border border-default
+          flex-1 rounded-xl border border-default
           md:ml-auto md:max-w-5/12 md:flex-5/12 md:shrink-0
         "
       >
