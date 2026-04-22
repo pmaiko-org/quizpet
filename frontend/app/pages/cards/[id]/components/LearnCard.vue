@@ -32,10 +32,10 @@
       >
         <h3
           class="
-            line-clamp-6 py-3 text-2xl/tight font-semibold wrap-break-word
-            text-highlighted
+            line-clamp-6 py-3 font-semibold wrap-break-word text-highlighted
             md:text-5xl
           "
+          :class="image ? 'text-2xl/tight' : 'text-3xl/tight'"
         >
           {{ title }}
         </h3>
@@ -53,7 +53,7 @@
       <div
         v-if="image"
         class="
-          flex-1 rounded-xl border border-default
+          flex-1 overflow-hidden rounded-xl border border-default
           md:ml-auto md:max-w-5/12 md:flex-5/12 md:shrink-0
         "
       >
