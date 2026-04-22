@@ -1,5 +1,16 @@
 FROM node:22-alpine AS node
 
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
+
+
 FROM nginx:stable-alpine
 
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
@@ -11,11 +22,8 @@ RUN ln -s /usr/local/bin/node /usr/bin/node
 
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm ci
-COPY . .
-RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
+COPY --from=node /app/.output ./.output
+COPY --from=node /app/package*.json ./
 
 EXPOSE 4999
 
