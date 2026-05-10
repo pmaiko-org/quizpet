@@ -222,7 +222,6 @@
 </template>
 
 <script setup lang="ts">
-import { z } from "zod";
 import { FetchError } from "ofetch";
 import type { FormErrorEvent } from "#ui/types/form";
 import type {
@@ -231,13 +230,13 @@ import type {
   ITopicResponse,
   IUpdateSet,
 } from "~/types/api.generated";
-import { fileSchema } from "~/validation";
+import { setSchema } from "~/features/cards/validation";
 import {
   type ICardFormData,
   initialCard,
   initialSet,
   type SetFormData,
-} from "~/pages/cards/components/types";
+} from "~/features/cards/types";
 
 const props = defineProps<{
   set?: ISetDetailsResponse;
@@ -251,32 +250,6 @@ const topics = ref<ITopicResponse[] | null>(null);
 
 onMounted(async () => {
   topics.value = await $repository.sets.getTopics();
-});
-
-const optionalHexColor = z.preprocess(
-  value => (typeof value === "string" && !value.trim() ? undefined : value),
-  z
-    .string()
-    .regex(/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/)
-    .optional(),
-);
-
-const cardSchema = z.object({
-  position: z.number(),
-  term: z.string().trim().min(1),
-  termDescription: z.string().trim().min(1).or(z.literal("")).optional(),
-  termImage: fileSchema.optional(),
-  definition: z.string().trim().min(1),
-  definitionImage: fileSchema.optional(),
-  textColor: optionalHexColor,
-  backgroundColor: optionalHexColor,
-});
-
-const setSchema = z.object({
-  name: z.string().trim().min(2),
-  topicIds: z.array(z.string().trim().min(1)).min(1),
-  description: z.string().trim().max(280),
-  cards: z.array(cardSchema).min(2),
 });
 
 const state = reactive<SetFormData>(initialSet(props.set));
@@ -354,7 +327,9 @@ const toast = useToast();
 
 const router = useRouter();
 
-const onSubmit = async (event: { data: z.output<typeof setSchema> }) => {
+const onSubmit = async (event: {
+  data: ReturnType<typeof setSchema.parse>;
+}) => {
   const basePayload: ICreateSet = {
     name: event.data.name,
     description: event.data.description,

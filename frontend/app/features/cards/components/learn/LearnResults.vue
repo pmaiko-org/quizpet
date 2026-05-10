@@ -207,7 +207,7 @@ import {
   formatDuration,
   getAccuracy,
   type LearningCardReport,
-} from "~/utils/cardLearning";
+} from "~/features/cards/utils";
 
 const props = defineProps<{
   reports: LearningCardReport[];

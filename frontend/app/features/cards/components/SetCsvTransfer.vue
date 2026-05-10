@@ -67,10 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  type ICardFormData,
-  initialCard,
-} from "~/pages/cards/components/types";
+import { type ICardFormData, initialCard } from "~/features/cards/types";
 
 interface CsvRow {
   term: string;

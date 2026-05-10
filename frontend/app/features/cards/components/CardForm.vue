@@ -132,14 +132,14 @@
         v-model="modelValue.backgroundColor"
         :name="fieldName('backgroundColor')"
         label="Колір фону"
-        description="Фон картки краще робити м’яким, щоб текст залишався помітним."
+        description="Фон картки краще робити м'яким, щоб текст залишався помітним."
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ICardFormData } from "~/pages/cards/components/types";
+import type { ICardFormData } from "~/features/cards/types";
 
 const { index } = defineProps<{
   index: number;

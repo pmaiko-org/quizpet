@@ -134,8 +134,11 @@
 
 <script setup lang="ts">
 import { useNow } from "@vueuse/core";
-import type { LearningAttempt, LearningCardReport } from "~/utils/cardLearning";
-import { formatTime } from "~/utils/cardLearning";
+import type {
+  LearningAttempt,
+  LearningCardReport,
+} from "~/features/cards/utils";
+import { formatTime } from "~/features/cards/utils";
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
 definePageMeta({

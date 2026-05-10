@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { buildFlashcardTheme } from "~/utils/cardLearning";
+import { buildFlashcardTheme } from "~/features/cards/utils";
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
 const props = defineProps<{

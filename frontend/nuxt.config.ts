@@ -11,9 +11,18 @@ export default defineNuxtConfig({
       pattern: "**/components/**",
       pathPrefix: false,
     },
+    {
+      path: "~/features",
+      pattern: "*/components/**/*.vue",
+      pathPrefix: false,
+    },
   ],
   imports: {
-    dirs: ["~/store"],
+    dirs: [
+      "~/store",
+      "~/features/*/store/**/*",
+      "~/features/*/composables/**/*",
+    ],
   },
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
