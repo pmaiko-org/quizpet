@@ -2,18 +2,19 @@ import type { $Fetch, NitroFetchRequest } from "nitropack";
 import type {
   ICreateSet,
   ISetDetailsResponse,
-  ISetListItemResponse,
   ITopicResponse,
   IUpdateSet,
   ISuccessResponse,
+  ISetListResponse,
 } from "~/types/api.generated";
 
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
-    getSets: () => {
-      return fetch<ISetListItemResponse[]>("/backend/sets", {
+    getSets: async () => {
+      const res = await fetch<ISetListResponse>("/backend/sets", {
         method: "GET",
       });
+      return res.data;
     },
 
     getSet: (setId: string) => {

@@ -9,16 +9,20 @@ import {
   Post,
   Req,
   UseGuards,
+  Query,
 } from "@nestjs/common";
+import { ApiExtraModels } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { SetsService } from "./sets.service";
 import { CreateSetDto } from "./dto/create-set.dto";
 import { UpdateSetDto } from "./dto/update-set.dto";
 import { TopicResponseDto } from "./dto/topic.response.dto";
-import { SetListItemResponseDto } from "./dto/set-list-item.response.dto";
 import { SetDetailsResponseDto } from "./dto/set-details.response.dto";
 import { SuccessResponseDto } from "../../common/dto/success.response.dto";
+import { SetListQueryDto } from "./dto/set-list.query.dto";
+import { SetListResponseDto } from "./dto/set-list.response.dto";
 
+@ApiExtraModels(SetListQueryDto)
 @Controller("sets")
 export class SetsController {
   constructor(private readonly setsService: SetsService) {}
@@ -31,8 +35,8 @@ export class SetsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getSets(): Promise<SetListItemResponseDto[]> {
-    return this.setsService.getSets();
+  getSets(@Query() query: SetListQueryDto): Promise<SetListResponseDto> {
+    return this.setsService.getSets(query);
   }
 
   @UseGuards(JwtAuthGuard)

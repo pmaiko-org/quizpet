@@ -16,6 +16,9 @@ import { SetDetailsResponseDto } from "./dto/set-details.response.dto";
 import { CreateCardDto } from "../cards/dto/create-card.dto";
 import { TopicResponseDto } from "./dto/topic.response.dto";
 import { SuccessResponseDto } from "../../common/dto/success.response.dto";
+import { AbstractService } from "../../common/abstract.service";
+import { SetListQueryDto } from "./dto/set-list.query.dto";
+import { SetListResponseDto } from "./dto/set-list.response.dto";
 
 @Injectable()
 export class SetsService {
@@ -27,10 +30,11 @@ export class SetsService {
     private readonly setRepository: Repository<SetEntity>,
   ) {}
 
-  async getSets() {
-    const sets = await this.setRepository.find();
-
-    return sets.map(set => new SetListItemResponseDto(set));
+  async getSets(query: SetListQueryDto): Promise<SetListResponseDto> {
+    return new AbstractService(
+      this.setRepository,
+      SetListItemResponseDto,
+    ).paginate(query);
   }
 
   async getSet(setId: string) {

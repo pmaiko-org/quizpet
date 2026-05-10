@@ -244,6 +244,12 @@ export interface components {
       textColor: string | null;
       backgroundColor: string | null;
     };
+    SetListQueryDto: {
+      /** @default 1 */
+      page: number;
+      /** @default 20 */
+      perPage: number;
+    };
     TopicResponseDto: {
       id: string;
       label: string;
@@ -258,6 +264,16 @@ export interface components {
       topics: components["schemas"]["TopicResponseDto"][];
       user: components["schemas"]["UserResponseDto"];
       cardsCount: number;
+    };
+    PaginationMetaDto: {
+      page: number;
+      perPage: number;
+      total: number;
+      pages: number;
+    };
+    SetListResponseDto: {
+      data: components["schemas"]["SetListItemResponseDto"][];
+      meta: components["schemas"]["PaginationMetaDto"];
     };
     SetDetailsResponseDto: {
       id: string;
@@ -452,7 +468,10 @@ export interface operations {
   };
   SetsController_getSets: {
     parameters: {
-      query?: never;
+      query?: {
+        page?: number;
+        perPage?: number;
+      };
       header?: never;
       path?: never;
       cookie?: never;
@@ -464,7 +483,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SetListItemResponseDto"][];
+          "application/json": components["schemas"]["SetListResponseDto"];
         };
       };
     };
@@ -643,10 +662,13 @@ export type ICardDetailsResponse = ApiSchemas["CardDetailsResponseDto"];
 export type ICreateCard = ApiSchemas["CreateCardDto"];
 export type ICreateSet = ApiSchemas["CreateSetDto"];
 export type IFileResponse = ApiSchemas["FileResponseDto"];
+export type IPaginationMeta = ApiSchemas["PaginationMetaDto"];
 export type IRefreshToken = ApiSchemas["RefreshTokenDto"];
 export type IRefreshTokenResponse = ApiSchemas["RefreshTokenResponseDto"];
 export type ISetDetailsResponse = ApiSchemas["SetDetailsResponseDto"];
 export type ISetListItemResponse = ApiSchemas["SetListItemResponseDto"];
+export type ISetListQuery = ApiSchemas["SetListQueryDto"];
+export type ISetListResponse = ApiSchemas["SetListResponseDto"];
 export type ISuccessResponse = ApiSchemas["SuccessResponseDto"];
 export type ITopicResponse = ApiSchemas["TopicResponseDto"];
 export type IUpdateCard = ApiSchemas["UpdateCardDto"];

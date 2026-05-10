@@ -18,7 +18,10 @@ const openApiFilePath = path.resolve(
 const openApiDocument = JSON.parse(readFileSync(openApiFilePath, "utf8"));
 const schemaNames = Object.keys(openApiDocument.components?.schemas ?? {});
 
+const SCHEMA_BLOCKLIST = new Set(["Object"]);
+
 const aliases = schemaNames
+  .filter(schemaName => !SCHEMA_BLOCKLIST.has(schemaName))
   .map(schemaName => [toAliasName(schemaName), schemaName])
   .filter(([aliasName]) => aliasName)
   .sort((left, right) => left[0].localeCompare(right[0]));

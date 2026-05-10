@@ -430,7 +430,7 @@ const { $repository } = useNuxtApp();
 const { profile } = useProfileStore();
 
 const { data, pending, error, refresh } = await useAsyncData(
-  "card-sets",
+  "sets",
   () => $repository.sets.getSets(),
   {
     default: () => [],
