@@ -222,11 +222,28 @@ export interface components {
     RefreshTokenResponseDto: {
       accessToken: string;
     };
+    UserListQueryDto: {
+      /** @default 1 */
+      page: number;
+      /** @default 20 */
+      perPage: number;
+    };
     UserResponseDto: {
+      id: string;
       firstName: string;
       lastName: string;
       email: string;
       avatar?: string;
+    };
+    PaginationMetaDto: {
+      page: number;
+      perPage: number;
+      total: number;
+      pages: number;
+    };
+    UserListResponseDto: {
+      data: components["schemas"]["UserResponseDto"][];
+      meta: components["schemas"]["PaginationMetaDto"];
     };
     FileResponseDto: {
       id: string;
@@ -264,12 +281,6 @@ export interface components {
       topics: components["schemas"]["TopicResponseDto"][];
       user: components["schemas"]["UserResponseDto"];
       cardsCount: number;
-    };
-    PaginationMetaDto: {
-      page: number;
-      perPage: number;
-      total: number;
-      pages: number;
     };
     SetListResponseDto: {
       data: components["schemas"]["SetListItemResponseDto"][];
@@ -409,7 +420,10 @@ export interface operations {
   };
   UsersController_getUsers: {
     parameters: {
-      query?: never;
+      query?: {
+        page?: number;
+        perPage?: number;
+      };
       header?: never;
       path?: never;
       cookie?: never;
@@ -421,7 +435,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": string;
+          "application/json": components["schemas"]["UserListResponseDto"];
         };
       };
     };
@@ -673,4 +687,6 @@ export type ISuccessResponse = ApiSchemas["SuccessResponseDto"];
 export type ITopicResponse = ApiSchemas["TopicResponseDto"];
 export type IUpdateCard = ApiSchemas["UpdateCardDto"];
 export type IUpdateSet = ApiSchemas["UpdateSetDto"];
+export type IUserListQuery = ApiSchemas["UserListQueryDto"];
+export type IUserListResponse = ApiSchemas["UserListResponseDto"];
 export type IUserResponse = ApiSchemas["UserResponseDto"];

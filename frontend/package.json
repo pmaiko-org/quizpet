@@ -19,7 +19,7 @@
   "dependencies": {
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/image": "^2.0.0",
-    "@nuxt/ui": "^4.5.1",
+    "@nuxt/ui": "^4.7.1",
     "@vueuse/core": "^14.2.1",
     "nuxt": "^4.4.2",
     "tailwindcss": "^4.2.2",

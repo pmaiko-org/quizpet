@@ -3,6 +3,7 @@ import { profileRepository } from "~/repository/profile";
 import { setsRepository } from "~/repository/sets";
 import { cardsRepository } from "~/repository/cards";
 import { storageFilesRepository } from "~/repository/storage-files";
+import { usersRepository } from "~/repository/users";
 
 export const createRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
@@ -10,5 +11,6 @@ export const createRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     sets: setsRepository(fetch),
     cards: cardsRepository(fetch),
     storageFiles: storageFilesRepository(fetch),
+    users: usersRepository(fetch),
   };
 };
