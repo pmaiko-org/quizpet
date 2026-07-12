@@ -2,7 +2,7 @@
   <div class="flex flex-1">
     <AppSidebar v-model="open" />
 
-    <div class="flex flex-1 flex-col overflow-hidden bg-default">
+    <div class="flex flex-1 flex-col bg-default">
       <AppHeader v-model="open" />
 
       <UContainer class="py-4">

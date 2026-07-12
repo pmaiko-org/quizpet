@@ -7,12 +7,9 @@
   >
     <div class="mb-5 flex items-start justify-between gap-4">
       <div>
-        <p class="text-xs font-medium tracking-[0.24em] text-primary uppercase">
+        <p class="text-sm font-medium tracking-[0.24em] text-primary uppercase">
           Картка {{ index + 1 }}
         </p>
-        <h3 class="mt-1 text-lg font-semibold text-highlighted">
-          Заповніть термін, визначення та оформлення
-        </h3>
       </div>
 
       <UButton

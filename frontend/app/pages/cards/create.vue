@@ -9,7 +9,10 @@
 </template>
 
 <script setup lang="ts">
+import { PageName } from "~/constants";
+
 definePageMeta({
+  name: PageName.CARDS_CREATE,
   layout: "cabinet",
 });
 </script>

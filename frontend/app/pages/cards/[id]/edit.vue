@@ -74,9 +74,12 @@
 </template>
 
 <script setup lang="ts">
+import { PageName } from "~/constants";
+
 const route = useRoute();
 
 definePageMeta({
+  name: PageName.CARDS_ID_EDIT,
   layout: "cabinet",
 });
 

@@ -6,6 +6,11 @@
       bg-[radial-gradient(circle_at_top,color-mix(in_oklab,var(--ui-primary)_10%,transparent),transparent_26%),linear-gradient(180deg,color-mix(in_oklab,var(--ui-bg)_92%,white_8%),var(--ui-bg))]
       shadow-[0_24px_80px_color-mix(in_oklab,var(--ui-text-muted)_12%,transparent)]
     "
+    :class="
+      [PageName.CARDS_CREATE, PageName.CARDS_ID_EDIT].includes(
+        $route.name as any,
+      ) && 'relative!'
+    "
   >
     <template #left>
       <div class="flex items-center gap-3">
@@ -67,5 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import { PageName } from "~/constants";
+
 const open = defineModel<boolean>({ required: false });
 </script>

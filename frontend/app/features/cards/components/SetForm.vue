@@ -2,7 +2,7 @@
   <UForm
     :schema="setSchema"
     :state="state"
-    class="space-y-8"
+    class="space-y-8 pb-32"
     @submit="onSubmit"
     @error="onError"
   >
@@ -145,36 +145,7 @@
         @import-cards="replaceCards"
       />
 
-      <div
-        class="
-          mb-6 flex flex-col gap-4
-          sm:flex-row sm:items-center sm:justify-between
-        "
-      >
-        <div>
-          <p
-            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
-          >
-            Картки
-          </p>
-          <h2 class="mt-1 text-2xl font-semibold text-highlighted">
-            Наповніть набір контентом
-          </h2>
-        </div>
-
-        <UButton
-          type="button"
-          size="xl"
-          variant="outline"
-          icon="i-lucide-plus"
-          class="justify-center"
-          @click="addCard"
-        >
-          Додати картку
-        </UButton>
-      </div>
-
-      <div class="space-y-4">
+      <div class="space-y-10">
         <CardForm
           v-for="(card, index) in state.cards"
           :key="card.position"
@@ -193,8 +164,8 @@
 
     <div
       class="
-        flex flex-col-reverse gap-3
-        sm:flex-row sm:justify-end
+        sticky bottom-0 z-20 mt-4 flex w-full justify-end gap-2 rounded-xl
+        border border-default p-1 shadow-lg backdrop-blur-sm
       "
     >
       <UButton
@@ -204,6 +175,7 @@
         color="neutral"
         icon="i-lucide-plus"
         :disabled="submitting"
+        :class="!submitting && 'cursor-pointer'"
         @click="addCard"
       >
         Ще одна картка
@@ -214,6 +186,7 @@
         size="xl"
         :loading="submitting"
         class="justify-center"
+        :class="!submitting && 'cursor-pointer'"
       >
         {{ submitLabel }}
       </UButton>
@@ -242,25 +215,50 @@ const props = defineProps<{
   set?: ISetDetailsResponse;
 }>();
 
+const SET_FORM_DRAFT_STORAGE_KEY = "cards:set-form-draft";
+
 const { $repository } = useNuxtApp();
 
 const submitting = ref(false);
 
 const topics = ref<ITopicResponse[] | null>(null);
 
+const draft = useLocalStorage<string | null>(SET_FORM_DRAFT_STORAGE_KEY, null);
+
+const isMounted = useMounted();
+
+const createDraftSnapshot = (value: SetFormData): string =>
+  JSON.stringify(toRaw(value));
+
+const getDraftSnapshot = (value: string): SetFormData => {
+  if (!isMounted.value) {
+    return initialSet();
+  }
+  try {
+    return JSON.parse(value) as SetFormData;
+  } catch {
+    return initialSet();
+  }
+};
+
+const getInitialState = () => {
+  if (props.set) {
+    return initialSet(props.set);
+  }
+
+  return draft.value ? getDraftSnapshot(draft.value) : initialSet();
+};
+
+const state = reactive<SetFormData>(getInitialState());
+
 onMounted(async () => {
+  Object.assign(state, {
+    ...state,
+    ...getInitialState(),
+  });
+
   topics.value = await $repository.sets.getTopics();
 });
-
-const state = reactive<SetFormData>(initialSet(props.set));
-
-watch(
-  () => props.set,
-  (nextSet) => {
-    Object.assign(state, initialSet(nextSet));
-  },
-  { immediate: true },
-);
 
 const isEditMode = computed(() => Boolean(state.id));
 const formEyebrow = computed(() =>
@@ -278,6 +276,18 @@ const formDescription = computed(() =>
 );
 const submitLabel = computed(() =>
   isEditMode.value ? "Зберегти зміни" : "Створити набір",
+);
+
+watch(
+  state,
+  (nextState) => {
+    if (isEditMode.value) {
+      return;
+    }
+
+    draft.value = createDraftSnapshot(nextState as SetFormData);
+  },
+  { deep: true },
 );
 
 const syncCardPositions = () => {
@@ -368,6 +378,7 @@ const onSubmit = async (event: {
       await $repository.sets.updateSet(state.id, payload);
     } else {
       await $repository.sets.createSet(basePayload);
+      draft.value = null;
     }
 
     await router.push("/cards");
