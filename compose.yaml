@@ -12,6 +12,7 @@ volumes:
 services:
   frontend:
     container_name: "${PROJECT_PREFIX}-frontend"
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
@@ -23,6 +24,7 @@ services:
 
   backend:
     container_name: "${PROJECT_PREFIX}-backend"
+    restart: unless-stopped
     networks:
       - internal_network
     depends_on:
@@ -51,8 +53,8 @@ services:
   db:
     image: postgres:17-alpine
     container_name: "${PROJECT_PREFIX}-db"
+    restart: unless-stopped
     shm_size: 128mb
-    restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
