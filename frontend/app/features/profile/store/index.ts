@@ -1,4 +1,4 @@
-import type { IUserResponse } from "~/types/api.generated";
+import type { IUpdateProfile, IUserResponse } from "~/types/api.generated";
 
 export const useProfileStore = () => {
   const { $repository } = useNuxtApp();
@@ -11,8 +11,16 @@ export const useProfileStore = () => {
     state.value.profile = response;
   };
 
+  const updateProfile = async (body: IUpdateProfile) => {
+    const response = await $repository.profile.updateProfile(body);
+    state.value.profile = response;
+
+    return response;
+  };
+
   return {
     ...toComputedStateRefs(state),
     getProfile,
+    updateProfile,
   } as const;
 };

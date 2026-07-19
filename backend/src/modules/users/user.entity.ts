@@ -23,7 +23,7 @@ export class UserEntity extends AbstractEntity<UserEntity> {
     eager: true,
   })
   @JoinColumn({ name: "pictureId" })
-  picture?: StorageFileEntity;
+  picture?: StorageFileEntity | null;
 
   @OneToMany(() => SetEntity, set => set.user)
   sets: SetEntity[];

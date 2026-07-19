@@ -7,6 +7,7 @@ export class UserResponseDto {
   lastName: string;
   email: string;
   avatar?: string;
+  avatarFileId?: string;
 
   constructor(entity: UserEntity) {
     this.id = entity.id;
@@ -16,6 +17,7 @@ export class UserResponseDto {
 
     if (entity.picture) {
       const file = new FileResponseDto(entity.picture);
+      this.avatarFileId = file.id;
       this.avatar = file.src;
     }
   }

@@ -65,7 +65,7 @@ export interface paths {
     delete?: never;
     options?: never;
     head?: never;
-    patch?: never;
+    patch: operations["UsersController_updateMe"];
     trace?: never;
   };
   "/backend/users": {
@@ -228,12 +228,19 @@ export interface components {
       /** @default 20 */
       perPage: number;
     };
+    UpdateProfileDto: {
+      firstName: string;
+      lastName: string;
+      /** Format: uuid */
+      avatarFileId?: string | null;
+    };
     UserResponseDto: {
       id: string;
       firstName: string;
       lastName: string;
       email: string;
       avatar?: string;
+      avatarFileId?: string;
     };
     PaginationMetaDto: {
       page: number;
@@ -407,6 +414,29 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserResponseDto"];
+        };
+      };
+    };
+  };
+  UsersController_updateMe: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateProfileDto"];
+      };
+    };
     responses: {
       200: {
         headers: {
@@ -686,6 +716,7 @@ export type ISetListResponse = ApiSchemas["SetListResponseDto"];
 export type ISuccessResponse = ApiSchemas["SuccessResponseDto"];
 export type ITopicResponse = ApiSchemas["TopicResponseDto"];
 export type IUpdateCard = ApiSchemas["UpdateCardDto"];
+export type IUpdateProfile = ApiSchemas["UpdateProfileDto"];
 export type IUpdateSet = ApiSchemas["UpdateSetDto"];
 export type IUserListQuery = ApiSchemas["UserListQueryDto"];
 export type IUserListResponse = ApiSchemas["UserListResponseDto"];
