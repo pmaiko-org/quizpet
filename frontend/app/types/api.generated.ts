@@ -68,6 +68,22 @@ export interface paths {
     patch: operations["UsersController_updateMe"];
     trace?: never;
   };
+  "/backend/users/me/stats": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["UsersController_getMyStats"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/backend/users": {
     parameters: {
       query?: never;
@@ -227,6 +243,11 @@ export interface components {
       page: number;
       /** @default 20 */
       perPage: number;
+    };
+    ProfileStatsResponseDto: {
+      peopleCount: number;
+      mySetsCount: number;
+      myTopicsCount: number;
     };
     UpdateProfileDto: {
       firstName: string;
@@ -444,6 +465,25 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UserResponseDto"];
+        };
+      };
+    };
+  };
+  UsersController_getMyStats: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProfileStatsResponseDto"];
         };
       };
     };
@@ -707,6 +747,7 @@ export type ICreateCard = ApiSchemas["CreateCardDto"];
 export type ICreateSet = ApiSchemas["CreateSetDto"];
 export type IFileResponse = ApiSchemas["FileResponseDto"];
 export type IPaginationMeta = ApiSchemas["PaginationMetaDto"];
+export type IProfileStatsResponse = ApiSchemas["ProfileStatsResponseDto"];
 export type IRefreshToken = ApiSchemas["RefreshTokenDto"];
 export type IRefreshTokenResponse = ApiSchemas["RefreshTokenResponseDto"];
 export type ISetDetailsResponse = ApiSchemas["SetDetailsResponseDto"];

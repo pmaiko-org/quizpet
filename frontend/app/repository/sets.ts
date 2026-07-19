@@ -2,6 +2,7 @@ import type { $Fetch, NitroFetchRequest } from "nitropack";
 import type {
   ICreateSet,
   ISetDetailsResponse,
+  ISetListQuery,
   ITopicResponse,
   IUpdateSet,
   ISuccessResponse,
@@ -10,11 +11,11 @@ import type {
 
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
-    getSets: async () => {
-      const res = await fetch<ISetListResponse>("/backend/sets", {
+    getSets: (query?: Partial<ISetListQuery>) => {
+      return fetch<ISetListResponse>("/backend/sets", {
         method: "GET",
+        query,
       });
-      return res.data;
     },
 
     getSet: (setId: string) => {

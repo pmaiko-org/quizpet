@@ -433,7 +433,7 @@ const { data, pending, error, refresh } = await useAsyncData(
   "sets",
   () => $repository.sets.getSets(),
   {
-    default: () => [],
+    default: () => null,
     server: false,
   },
 );
@@ -441,7 +441,7 @@ const { data, pending, error, refresh } = await useAsyncData(
 const refreshSets = () => refresh();
 
 const deletingSetId = ref<string | null>(null);
-const sets = computed<ISetListItemResponse[]>(() => data.value ?? []);
+const sets = computed<ISetListItemResponse[]>(() => data.value?.data ?? []);
 
 const stats = computed(() => {
   const topicsCount = new Set(

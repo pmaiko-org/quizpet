@@ -12,6 +12,8 @@ import { UserListQueryDto } from "./dto/user-list.query.dto";
 import { UserListResponseDto } from "./dto/user-list.response.dto";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { StorageFileEntity } from "../storage/storage-file.entity";
+import { SetEntity } from "../sets/entity/set.entity";
+import { ProfileStatsResponseDto } from "./dto/profile-stats.response.dto";
 
 @Injectable()
 export class UsersService {
@@ -20,6 +22,8 @@ export class UsersService {
     private userRepository: Repository<UserEntity>,
     @InjectRepository(StorageFileEntity)
     private storageFileRepository: Repository<StorageFileEntity>,
+    @InjectRepository(SetEntity)
+    private setRepository: Repository<SetEntity>,
   ) {}
 
   async getMe(userId: string) {
@@ -31,6 +35,27 @@ export class UsersService {
     return new AbstractService(this.userRepository, UserResponseDto).paginate(
       query,
     );
+  }
+
+  async getMyStats(userId: string): Promise<ProfileStatsResponseDto> {
+    const [peopleCount, mySetsCount, rawTopicsCount] = await Promise.all([
+      this.userRepository.count(),
+      this.setRepository.count({
+        where: { user: { id: userId } },
+      }),
+      this.setRepository
+        .createQueryBuilder("set")
+        .leftJoin("set.topics", "topic")
+        .where("set.userId = :userId", { userId })
+        .select("COUNT(DISTINCT topic.id)", "count")
+        .getRawOne<{ count: string }>(),
+    ]);
+
+    return new ProfileStatsResponseDto({
+      peopleCount,
+      mySetsCount,
+      myTopicsCount: Number(rawTopicsCount?.count ?? 0),
+    });
   }
 
   async updateMe(

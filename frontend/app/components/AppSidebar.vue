@@ -16,16 +16,26 @@
           backdrop-blur-sm
         "
       >
-        <UUser
-          :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
-          :description="profile?.email || ''"
-          :avatar="{
-            src: profile?.avatar,
-            loading: 'lazy',
-            icon: 'i-lucide-image',
-          }"
-          size="xl"
-        />
+        <div class="flex items-start justify-between gap-3">
+          <UUser
+            :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
+            :description="profile?.email || ''"
+            :avatar="{
+              src: profile?.avatar,
+              loading: 'lazy',
+              icon: 'i-lucide-image',
+            }"
+            size="xl"
+          />
+
+          <UButton
+            to="/profile"
+            color="neutral"
+            variant="ghost"
+            icon="i-lucide-user-round-pen"
+            aria-label="Редагувати профіль"
+          />
+        </div>
 
         <div class="mt-4 grid grid-cols-3 gap-2">
           <div
@@ -110,13 +120,9 @@
 import type { NavigationMenuItem } from "#ui/components/NavigationMenu.vue";
 
 const open = defineModel<boolean>({ required: true });
+const { $repository } = useNuxtApp();
 
 const items = ref<NavigationMenuItem[]>([
-  {
-    label: "Профіль",
-    to: "/profile",
-    icon: "i-lucide-user-round-pen",
-  },
   {
     label: "Головна",
     to: "/",
@@ -144,11 +150,24 @@ const items = ref<NavigationMenuItem[]>([
   },
 ]);
 
-const metrics = [
-  { value: "12", label: "Теми" },
-  { value: "48", label: "Картки" },
-  { value: "92%", label: "Фокус" },
-];
-
 const { profile } = useProfileStore();
+
+const { data: stats } = await useAsyncData(
+  "sidebar-stats",
+  () => $repository.users.getMyStats(),
+  {
+    default: () => ({
+      peopleCount: 0,
+      mySetsCount: 0,
+      myTopicsCount: 0,
+    }),
+    server: false,
+  },
+);
+
+const metrics = computed(() => [
+  { value: stats.value.peopleCount, label: "Люди" },
+  { value: stats.value.mySetsCount, label: "Набори" },
+  { value: stats.value.myTopicsCount, label: "Теми" },
+]);
 </script>
