@@ -11,7 +11,10 @@
   >
     <client-only>
       <section
-        class="rounded-[28px] border border-default bg-elevated/70 p-4 shadow-lg backdrop-blur-sm"
+        class="
+          rounded-[28px] border border-default bg-elevated/70 p-4 shadow-lg
+          backdrop-blur-sm
+        "
       >
         <UUser
           :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
@@ -34,19 +37,26 @@
               metric.value
             }}</span>
             <span
-              class="mt-1 block text-[11px] tracking-[0.18em] text-muted uppercase"
-              >{{ metric.label }}</span
-            >
+              class="
+                mt-1 block text-[11px] tracking-[0.18em] text-muted uppercase
+              "
+            >{{ metric.label }}</span>
           </div>
         </div>
       </section>
     </client-only>
 
     <section
-      class="rounded-[28px] border border-default bg-elevated/75 p-3 shadow-lg backdrop-blur-sm"
+      class="
+        rounded-[28px] border border-default bg-elevated/75 p-3 shadow-lg
+        backdrop-blur-sm
+      "
     >
       <div
-        class="mb-2 flex items-center justify-between px-2 text-[11px] font-semibold tracking-[0.2em] text-muted uppercase"
+        class="
+          mb-2 flex items-center justify-between px-2 text-[11px] font-semibold
+          tracking-[0.2em] text-muted uppercase
+        "
       >
         <span>Навігація</span>
       </div>
@@ -72,10 +82,17 @@
     </section>
 
     <section
-      class="mt-auto flex items-start justify-between gap-3 rounded-[28px] border border-primary/20 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--ui-primary)_14%,var(--ui-bg-elevated)),var(--ui-bg-elevated))] p-4 text-default shadow-lg"
+      class="
+        mt-auto flex items-start justify-between gap-3 rounded-[28px] border
+        border-primary/20
+        bg-[linear-gradient(135deg,color-mix(in_oklab,var(--ui-primary)_14%,var(--ui-bg-elevated)),var(--ui-bg-elevated))]
+        p-4 text-default shadow-lg
+      "
     >
       <div>
-        <p class="text-sm font-semibold">Ритм дня</p>
+        <p class="text-sm font-semibold">
+          Ритм дня
+        </p>
         <p class="mt-1 text-sm/6 text-toned">
           Почни з карток, а потім перевір прогрес у статистиці.
         </p>

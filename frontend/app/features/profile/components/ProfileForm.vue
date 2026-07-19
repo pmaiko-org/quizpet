@@ -6,13 +6,23 @@
     @submit="onSubmit"
   >
     <section
-      class="rounded-4xl border border-default bg-default/85 p-6 shadow-sm sm:p-8"
+      class="
+        rounded-4xl border border-default bg-default/85 p-6 shadow-sm
+        sm:p-8
+      "
     >
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.8fr)]">
+      <div
+        class="
+          grid gap-6
+          xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.8fr)]
+        "
+      >
         <div class="space-y-6">
           <div class="space-y-2">
             <p
-              class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
+              class="
+                text-sm font-medium tracking-[0.24em] text-primary uppercase
+              "
             >
               Профіль
             </p>
@@ -25,7 +35,12 @@
             </p>
           </div>
 
-          <div class="grid gap-5 md:grid-cols-2">
+          <div
+            class="
+              grid gap-5
+              md:grid-cols-2
+            "
+          >
             <UFormField
               label="Ім'я"
               name="firstName"
@@ -64,7 +79,7 @@
             size="xl"
           >
             <UInput
-              :model-value="state.email"
+              :modelValue="state.email"
               size="xl"
               class="w-full"
               readonly
@@ -74,7 +89,10 @@
         </div>
 
         <div
-          class="rounded-[1.75rem] border border-default bg-linear-to-br from-primary/10 via-transparent to-success/10 p-6"
+          class="
+            rounded-[1.75rem] border border-default bg-linear-to-br
+            from-primary/10 via-transparent to-success/10 p-6
+          "
         >
           <BaseFilePicker
             v-model="state.avatar"
