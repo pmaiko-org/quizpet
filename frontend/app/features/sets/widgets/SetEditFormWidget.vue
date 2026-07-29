@@ -1,21 +1,23 @@
 <template>
-  <SetForm
-    v-if="set"
-    :set="set"
-  />
-
-  <section
-    v-else-if="status === 'pending'"
-    class="
-      rounded-4xl border border-default bg-default/80 p-6 text-sm text-toned
-      shadow-sm
-      sm:p-8
-    "
+  <BaseDataBoundary
+    :pending="status === 'pending' || status === 'idle'"
+    :error="error"
+    errorTitle="Не вдалося завантажити набір"
+    errorDescription="Спробуйте повторно відкрити редактор набору."
+    @retry="refresh"
   >
-    Завантажуємо набір для редагування...
-  </section>
+    <template #loading>
+      <SetFormSkeleton />
+    </template>
+
+    <SetForm
+      v-if="set"
+      :key="set.id"
+      :set="set"
+    />
+  </BaseDataBoundary>
 </template>
 
 <script setup lang="ts">
-const { set, status } = useSetEdit();
+const { set, status, error, refresh } = useSetEdit();
 </script>

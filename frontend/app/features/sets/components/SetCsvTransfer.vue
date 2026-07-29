@@ -1,57 +1,63 @@
 <template>
   <div
-    class="
-      rounded-3xl border border-default bg-default/80 p-5 shadow-sm
-      sm:p-6
-    "
+    class="app-surface-subtle app-radius-surface p-3"
   >
     <div
       class="
-        flex flex-col gap-4
-        lg:flex-row lg:items-start lg:justify-between
+        flex flex-col gap-3
+        md:flex-row md:items-center md:justify-between
       "
     >
-      <div class="space-y-2">
-        <p class="text-xs font-medium tracking-[0.24em] text-primary uppercase">
-          CSV
-        </p>
-        <h3 class="text-lg font-semibold text-highlighted">
-          Імпорт і експорт карток
-        </h3>
-        <p class="max-w-2xl text-sm/6 text-toned">
-          CSV працює з колонками <code>term</code>,
-          <code>termDescription</code> і <code>definition</code>. Імпорт
-          повністю замінює поточний список карток у формі.
-        </p>
+      <div class="flex items-start gap-3">
+        <span
+          class="
+            app-radius-surface flex size-9 shrink-0 items-center justify-center
+            bg-primary/10 text-primary
+          "
+        >
+          <UIcon
+            name="i-lucide-file-spreadsheet"
+            class="size-4"
+          />
+        </span>
+        <div>
+          <h3 class="text-sm font-semibold text-highlighted">
+            Робота з CSV
+          </h3>
+          <p class="mt-0.5 max-w-xl text-xs/5 text-toned">
+            Колонки: <code>term</code>, <code>termDescription</code> і
+            <code>definition</code>. Імпорт замінює поточні картки.
+          </p>
+        </div>
       </div>
 
       <div
         class="
-          flex flex-col gap-3
+          flex gap-2
           sm:flex-row
         "
       >
         <UButton
           type="button"
-          size="lg"
+          size="sm"
           variant="outline"
           color="neutral"
           icon="i-lucide-download"
           :disabled="!cards.length"
           @click="exportCsv"
         >
-          Експортувати CSV
+          Експорт
         </UButton>
 
         <UButton
           type="button"
-          size="lg"
+          size="sm"
           variant="soft"
           color="primary"
           icon="i-lucide-upload"
           @click="openFilePicker"
         >
-          Імпортувати CSV
+          Імпорт
         </UButton>
       </div>
     </div>
@@ -67,20 +73,20 @@
 </template>
 
 <script setup lang="ts">
-import { type ICardFormData, initialCard } from "../types";
+import { initialCard, type TCardFormData } from "../types";
 
-interface CsvRow {
+interface ICsvRow {
   term: string;
   termDescription: string;
   definition: string;
 }
 
-const props = defineProps<{
-  cards: ICardFormData[];
+const { cards } = defineProps<{
+  cards: TCardFormData[];
 }>();
 
 const emit = defineEmits<{
-  importCards: [cards: ICardFormData[]];
+  importCards: [cards: TCardFormData[]];
 }>();
 
 const toast = useToast();
@@ -93,7 +99,7 @@ const openFilePicker = () => {
 const exportCsv = () => {
   const rows = [
     ["term", "termDescription", "definition"],
-    ...props.cards.map(card => [
+    ...cards.map(card => [
       card.term ?? "",
       card.termDescription ?? "",
       card.definition ?? "",
@@ -169,7 +175,7 @@ const escapeCsvValue = (value: string) => {
   return `"${escapedValue}"`;
 };
 
-const parseCsv = (input: string): CsvRow[] => {
+const parseCsv = (input: string): ICsvRow[] => {
   const normalizedInput = input.replace(/^\uFEFF/, "");
   const rows = parseCsvRows(normalizedInput).filter(row =>
     row.some(cell => cell.trim().length),

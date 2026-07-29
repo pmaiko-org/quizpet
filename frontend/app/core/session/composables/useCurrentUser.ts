@@ -6,7 +6,8 @@ export const useCurrentUser = () => {
 
   const {
     data: user,
-    pending,
+    pending: requestPending,
+    status,
     error,
     refresh,
   } = useAsyncData(
@@ -23,6 +24,9 @@ export const useCurrentUser = () => {
   );
 
   const email = computed(() => user.value?.email);
+  const pending = computed(
+    () => requestPending.value || status.value === "idle",
+  );
 
   return { user, email, pending, error, refresh };
 };

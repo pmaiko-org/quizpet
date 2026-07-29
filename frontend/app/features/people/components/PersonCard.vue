@@ -1,12 +1,12 @@
 <template>
   <article
     class="
-      rounded-[1.75rem] border border-default bg-default/80 p-6 shadow-sm
-      transition-all duration-200
-      hover:-translate-y-0.5 hover:shadow-md
+      app-surface app-radius-surface p-4 transition-all duration-200
+      hover:-translate-y-0.5 hover:border-primary/25
+      hover:shadow-(--app-shadow-md)
     "
   >
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3">
       <UAvatar
         :src="user.avatar"
         :alt="`${user.firstName} ${user.lastName}`"

@@ -1,55 +1,57 @@
 <template>
   <article
     class="
-      group rounded-[1.75rem] border border-default bg-default/80 p-6 shadow-sm
+      app-surface group app-radius-surface flex min-h-0 flex-col p-4
       transition-all duration-200
-      hover:-translate-y-0.5 hover:shadow-md
+      hover:-translate-y-0.5 hover:border-primary/25
+      hover:shadow-(--app-shadow-md)
+      sm:p-5
     "
   >
-    <div class="flex items-start justify-between gap-4">
-      <div class="space-y-3">
-        <p class="text-sm font-medium tracking-[0.2em] text-primary uppercase">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0 space-y-1.5">
+        <p class="app-eyebrow">
           Набір карток
         </p>
-        <h3 class="text-2xl font-semibold text-highlighted">
+        <h3 class="truncate text-xl font-semibold text-highlighted">
           {{ set.name }}
         </h3>
       </div>
 
       <div
         class="
-          flex size-11 items-center justify-center rounded-2xl bg-primary/10
-          text-primary transition-colors
+          app-radius-surface flex size-9 shrink-0 items-center justify-center
+          bg-primary/10 text-primary transition-colors
           group-hover:bg-primary group-hover:text-inverted
         "
       >
         <UIcon
           name="i-lucide-layers-3"
-          class="size-5"
+          class="size-4.5"
         />
       </div>
     </div>
 
-    <p class="mt-4 line-clamp-3 min-h-18 text-sm/6 text-toned">
+    <p class="mt-3 line-clamp-2 min-h-10 text-sm/5 text-toned">
       {{
         set.description
           || "Опис ще не доданий, але набір уже готовий до наповнення."
       }}
     </p>
 
-    <div class="mt-5 flex flex-wrap gap-2">
+    <div class="mt-3 flex flex-wrap gap-1.5">
       <UBadge
         v-for="topic in set.topics"
         :key="topic.id"
         variant="soft"
         color="primary"
-        size="lg"
-        class="rounded-full px-3 py-1"
+        size="md"
+        class="rounded-full px-2.5 py-0.5"
       >
-        <span class="flex items-center gap-2">
+        <span class="flex items-center gap-1.5">
           <UIcon
             :name="topic.icon"
-            class="size-4"
+            class="size-3.5"
           />
           {{ topic.label }}
         </span>
@@ -59,97 +61,88 @@
         v-if="!set.topics.length"
         variant="outline"
         color="neutral"
-        size="lg"
-        class="rounded-full px-3 py-1"
+        size="md"
+        class="rounded-full px-2.5 py-0.5"
       >
         Без тематики
       </UBadge>
     </div>
 
-    <div class="mt-6 rounded-2xl border border-default bg-default/70 p-4">
-      <div
-        class="
-          grid gap-4
-          sm:grid-cols-3 sm:gap-6
-        "
-      >
+    <div class="app-radius-surface mt-4 border border-default bg-muted/45 p-3">
+      <div class="grid grid-cols-3 gap-3">
         <div>
-          <p class="text-sm text-toned">
-            Карток у наборі
+          <p
+            class="
+              text-[10px] font-semibold tracking-widest text-muted uppercase
+            "
+          >
+            Карток
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <p class="mt-0.5 text-base font-semibold text-highlighted">
             {{ set.cardsCount }}
           </p>
         </div>
 
         <div>
-          <p class="text-sm text-toned">
-            Тем у наборі
+          <p
+            class="
+              text-[10px] font-semibold tracking-widest text-muted uppercase
+            "
+          >
+            Тем
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <p class="mt-0.5 text-base font-semibold text-highlighted">
             {{ set.topics.length }}
           </p>
         </div>
 
-        <div>
-          <p class="text-sm text-toned">
+        <div class="min-w-0">
+          <p
+            class="
+              text-[10px] font-semibold tracking-widest text-muted uppercase
+            "
+          >
             Створив
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <p class="mt-0.5 truncate text-sm font-semibold text-highlighted">
             {{ getAuthorName(set) }}
           </p>
         </div>
       </div>
     </div>
 
-    <div
-      class="
-        mt-4 flex flex-col gap-3
-        sm:flex-row sm:justify-between
-      "
-    >
-      <div class="flex flex-wrap gap-2">
-        <UButton
-          :to="`/sets/${set.id}/learn`"
-          icon="i-lucide-graduation-cap"
-          size="lg"
-        >
-          Вчитись
-        </UButton>
+    <div class="mt-4 flex items-center justify-between gap-2">
+      <UButton
+        :to="`/sets/${set.id}/learn`"
+        icon="i-lucide-play"
+        size="lg"
+        class="min-w-32 justify-center"
+      >
+        Вчитись
+      </UButton>
 
+      <div
+        v-if="canDelete"
+        class="flex items-center gap-1"
+      >
         <UButton
-          to="/sets/create"
-          variant="outline"
-          color="neutral"
-          icon="i-lucide-plus"
-          size="lg"
-        >
-          Новий набір
-        </UButton>
-
-        <UButton
-          v-if="canDelete"
           :to="`/sets/${set.id}/edit`"
-          variant="outline"
-          color="primary"
+          variant="ghost"
+          color="neutral"
           icon="i-lucide-pencil"
           size="lg"
-        >
-          Редагувати
-        </UButton>
+          aria-label="Редагувати набір"
+        />
+        <UButton
+          :loading="deleting"
+          color="error"
+          variant="ghost"
+          icon="i-lucide-trash-2"
+          size="lg"
+          aria-label="Видалити набір"
+          @click="emit('delete', set)"
+        />
       </div>
-
-      <UButton
-        v-if="canDelete"
-        :loading="deleting"
-        color="error"
-        variant="ghost"
-        icon="i-lucide-trash-2"
-        size="lg"
-        @click="emit('delete', set)"
-      >
-        Видалити
-      </UButton>
     </div>
   </article>
 </template>

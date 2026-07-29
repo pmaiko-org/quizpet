@@ -6,21 +6,26 @@
     :hint="hint"
     :required="required"
     :error="error"
-    size="xl"
+    size="lg"
   >
     <div class="space-y-3">
       <button
         type="button"
         class="
-          w-full overflow-hidden rounded-2xl border border-default bg-default
-          text-left transition
+          app-radius-surface w-full overflow-hidden border border-default
+          bg-default text-left transition
           hover:border-primary/60 hover:bg-elevated/80
           focus:outline-none
           focus-visible:ring-2 focus-visible:ring-primary
         "
         @click="isOpen = true"
       >
-        <div class="flex aspect-video items-center justify-center bg-muted/50">
+        <div
+          class="
+            flex h-36 items-center justify-center bg-muted/50
+            sm:h-40
+          "
+        >
           <img
             v-if="currentPreview"
             :src="currentPreview.src"
@@ -45,11 +50,11 @@
 
         <div
           class="
-            flex items-center justify-between gap-3 border-t border-default px-4
-            py-3
+            flex min-w-0 items-center justify-between gap-3 border-t
+            border-default px-4 py-3
           "
         >
-          <p class="truncate text-sm text-highlighted">
+          <p class="min-w-0 truncate text-sm text-highlighted">
             {{ modelValue?.name || "Зображення не вибране" }}
           </p>
 
@@ -101,7 +106,11 @@
             "
           >
             <div class="space-y-4">
-              <div class="rounded-2xl border border-default bg-default/80 p-4">
+              <div
+                class="
+                  app-radius-surface border border-default bg-default/80 p-4
+                "
+              >
                 <div class="mb-3 flex items-start justify-between gap-3">
                   <div>
                     <p class="text-sm font-medium text-highlighted">
@@ -134,7 +143,11 @@
                 />
               </div>
 
-              <div class="rounded-2xl border border-default bg-default/80 p-4">
+              <div
+                class="
+                  app-radius-surface border border-default bg-default/80 p-4
+                "
+              >
                 <div class="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <p class="text-sm font-medium text-highlighted">
@@ -170,7 +183,7 @@
                     v-for="index in 6"
                     :key="index"
                     class="
-                      overflow-hidden rounded-2xl border border-default
+                      app-radius-surface overflow-hidden border border-default
                       bg-default/70
                     "
                   >
@@ -185,14 +198,14 @@
                 <div
                   v-else-if="!remoteItems.length"
                   class="
-                    rounded-2xl border border-dashed border-default bg-muted/20
-                    px-4 py-10 text-center
+                    app-radius-surface border border-dashed border-default
+                    bg-muted/20 px-4 py-10 text-center
                   "
                 >
                   <div
                     class="
-                      mx-auto flex size-12 items-center justify-center
-                      rounded-2xl bg-primary/10 text-primary
+                      app-radius-surface mx-auto flex size-12 items-center
+                      justify-center bg-primary/10 text-primary
                     "
                   >
                     <UIcon
@@ -220,7 +233,7 @@
                     v-for="item in remoteItems"
                     :key="item.id"
                     class="
-                      overflow-hidden rounded-2xl border bg-default/70
+                      app-radius-surface overflow-hidden border bg-default/70
                       transition
                     "
                     :class="itemCardClass(item)"
@@ -304,7 +317,8 @@
 
             <div
               class="
-                overflow-hidden rounded-2xl border border-default bg-elevated/70
+                app-radius-surface overflow-hidden border border-default
+                bg-elevated/70
               "
             >
               <div
@@ -342,7 +356,11 @@
                   >
                     Активний файл
                   </p>
-                  <p class="mt-2 text-base font-semibold text-highlighted">
+                  <p
+                    class="
+                      mt-2 text-base font-semibold break-all text-highlighted
+                    "
+                  >
                     {{ currentPreview?.name || "Файл ще не вибраний" }}
                   </p>
                   <p class="mt-1 text-xs/5 break-all text-toned">
@@ -356,8 +374,8 @@
                 <div
                   v-if="currentPreview"
                   class="
-                    rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3
-                    text-sm text-toned
+                    app-radius-surface border border-primary/20 bg-primary/5
+                    px-4 py-3 text-sm text-toned
                   "
                 >
                   Це зображення буде використане для поточного поля форми.

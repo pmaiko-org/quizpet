@@ -1,159 +1,100 @@
 <template>
-  <section
-    class="
-      rounded-2xl border border-default bg-default/85 p-2 shadow-sm
-      md:p-4
-    "
-  >
-    <div class="flex flex-col gap-5">
+  <section class="app-surface p-3">
+    <div
+      class="
+        flex flex-col gap-2.5
+        sm:flex-row sm:items-center sm:justify-between
+      "
+    >
+      <div class="min-w-0">
+        <p class="text-xs font-medium text-muted">
+          Навчальний сеанс
+        </p>
+        <h1 class="mt-0.5 text-lg font-semibold text-highlighted">
+          {{ title }}
+        </h1>
+      </div>
+
       <div
         class="
-          flex flex-col gap-3
-          lg:flex-row lg:items-start lg:justify-between
+          app-radius-control grid shrink-0 grid-cols-3 divide-x divide-default
+          overflow-hidden border border-default bg-muted/35
         "
       >
-        <div class="space-y-2">
-          <p
-            class="text-xs font-medium tracking-[0.24em] text-primary uppercase"
-          >
-            Прогрес навчання
-          </p>
-          <h2 class="text-2xl font-semibold text-highlighted">
-            {{ title }}
-          </h2>
-          <p class="max-w-2xl text-sm/6 text-toned">
-            {{ description }}
-          </p>
-        </div>
-
         <div
-          class="
-            grid gap-2
-            md:grid-cols-2
-            xl:grid-cols-4
-          "
+          v-for="stat in stats"
+          :key="stat.label"
+          class="min-w-20 px-2.5 py-1.5"
         >
-          <div
-            v-for="stat in stats"
-            :key="stat.label"
-            class="rounded-2xl border border-default bg-default/70 px-4 py-3"
+          <p
+            class="
+              truncate text-[9px] font-semibold tracking-normal text-muted
+              uppercase
+            "
           >
-            <p class="text-xs tracking-[0.18em] text-toned uppercase">
-              {{ stat.label }}
-            </p>
-            <p class="mt-1 text-lg font-semibold text-highlighted">
-              {{ stat.value }}
-            </p>
-          </div>
+            {{ stat.label }}
+          </p>
+          <p class="mt-0.5 text-sm font-semibold text-highlighted">
+            {{ stat.value }}
+          </p>
         </div>
       </div>
+    </div>
 
-      <div class="space-y-3">
-        <div class="flex items-center justify-between gap-3 text-sm">
-          <span class="text-toned">Засвоєно</span>
-          <span class="font-medium text-highlighted">
-            {{ learnedCount }} / {{ totalCards }}
-          </span>
-        </div>
-
-        <div class="h-3 overflow-hidden rounded-full bg-muted/60">
-          <div
-            class="h-full rounded-full bg-primary transition-all duration-300"
-            :style="{ width: `${learnedPercent}%` }"
-          />
-        </div>
-      </div>
-
-      <div class="space-y-3">
-        <div class="flex items-center justify-between gap-3 text-sm">
-          <span class="text-toned">Повторення після помилок</span>
-          <span class="font-medium text-highlighted">
-            {{ mistakesCount }}
-          </span>
-        </div>
-
-        <div class="h-3 overflow-hidden rounded-full bg-muted/60">
-          <div
-            class="h-full rounded-full bg-error/70 transition-all duration-300"
-            :style="{ width: `${mistakesPercent}%` }"
-          />
-        </div>
-      </div>
+    <div class="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+      <div
+        class="h-full rounded-full bg-primary transition-[width] duration-300"
+        :style="{ width: `${learnedPercent}%` }"
+      />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+const {
+  learnedCount,
+  totalCards,
+  currentStep,
+  queueLength,
+  mistakesCount,
+  totalTime,
+} = defineProps<{
   learnedCount: number;
   totalCards: number;
   currentStep: number;
   queueLength: number;
   mistakesCount: number;
-  currentCardTime: string;
   totalTime: string;
 }>();
 
 const title = computed(() => {
-  if (!props.totalCards) {
+  if (!totalCards) {
     return "Немає карток для проходження";
   }
 
-  return `Крок ${Math.min(props.currentStep + 1, props.queueLength)} з ${props.queueLength}`;
-});
-
-const description = computed(() => {
-  if (!props.totalCards) {
-    return "Додайте щонайменше дві картки в набір, щоб почати навчання.";
-  }
-
-  if (!props.mistakesCount) {
-    return "Поки йдете без помилок. За потреби перевертайте картку, щоб звірити відповідь.";
-  }
-
-  return `${props.mistakesCount} картки вже повернуться в повторення. Це нормально: так набір краще закріплюється.`;
+  return `Крок ${Math.min(currentStep + 1, queueLength)} з ${queueLength}`;
 });
 
 const learnedPercent = computed(() => {
-  if (!props.totalCards) {
+  if (!totalCards) {
     return 0;
   }
 
-  return Math.min(
-    100,
-    Math.round((props.learnedCount / props.totalCards) * 100),
-  );
+  return Math.min(100, Math.round((learnedCount / totalCards) * 100));
 });
 
-const mistakesPercent = computed(() => {
-  if (!props.totalCards) {
-    return 0;
-  }
-
-  return Math.min(
-    100,
-    Math.round((props.mistakesCount / props.totalCards) * 100),
-  );
-});
-
-const stats = computed(() => {
-  return [
-    {
-      label: "У черзі",
-      value: props.queueLength,
-    },
-    {
-      label: "Помилок",
-      value: props.mistakesCount,
-    },
-    {
-      label: "Ця картка",
-      value: props.currentCardTime,
-    },
-    {
-      label: "Весь сеанс",
-      value: props.totalTime,
-    },
-  ];
-});
+const stats = computed(() => [
+  {
+    label: "Засвоєно",
+    value: `${learnedCount}/${totalCards}`,
+  },
+  {
+    label: "Повтори",
+    value: mistakesCount,
+  },
+  {
+    label: "Сеанс",
+    value: totalTime,
+  },
+]);
 </script>

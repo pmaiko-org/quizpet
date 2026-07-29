@@ -16,21 +16,18 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     error,
     refresh,
     status,
-  } = useAsyncData(
-    "sets",
-    () => $repository.sets.getSets(),
-    {
-      default: () => null as ISetListResponse | null,
-      server: false,
-      dedupe: "defer",
-    },
-  );
+  } = useAsyncData("sets", () => $repository.sets.getSets(), {
+    default: () => null as ISetListResponse | null,
+    server: false,
+    dedupe: "defer",
+  });
 
   const pending = computed(() => {
     return status.value === "idle" || requestPending.value;
   });
 
   const sets = computed<ISetListItemResponse[]>(() => data.value?.data ?? []);
+  const totalSets = computed(() => data.value?.meta.total ?? sets.value.length);
 
   const stats = computed(() => {
     const topicsCount = new Set(
@@ -44,16 +41,16 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     return [
       {
         label: "Усього наборів",
-        value: sets.value.length,
+        value: totalSets.value,
         icon: "i-lucide-library",
       },
       {
-        label: "Унікальних тематик",
+        label: "Тем на сторінці",
         value: topicsCount,
         icon: "i-lucide-tags",
       },
       {
-        label: "З описом",
+        label: "З описом на сторінці",
         value: describedSets,
         icon: "i-lucide-file-text",
       },
@@ -61,7 +58,7 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   });
 
   const summaryText = computed(() => {
-    const total = sets.value.length;
+    const total = totalSets.value;
 
     if (!total) {
       return "Почніть з першого набору та зберіть власну навчальну полицю.";
@@ -71,7 +68,17 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
       return "1 набір уже готовий для повторення та подальшого наповнення.";
     }
 
-    return `${total} набори зібрано в одній бібліотеці для швидкого доступу.`;
+    const lastDigit = total % 10;
+    const lastTwoDigits = total % 100;
+    const noun =
+      lastDigit === 1 && lastTwoDigits !== 11
+        ? "набір"
+        : [2, 3, 4].includes(lastDigit) &&
+          (lastTwoDigits < 12 || lastTwoDigits > 14)
+            ? "набори"
+            : "наборів";
+
+    return `${total} ${noun} зібрано в одній бібліотеці для швидкого доступу.`;
   });
 
   const canDelete = (set: ISetListItemResponse) => {

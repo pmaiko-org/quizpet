@@ -1,27 +1,10 @@
 <template>
-  <section class="space-y-4">
-    <div
-      class="
-        flex flex-col gap-2
-        sm:flex-row sm:items-end sm:justify-between
-      "
-    >
-      <div>
-        <p class="text-sm font-medium tracking-[0.2em] text-primary uppercase">
-          Користувачі
-        </p>
-        <h2 class="mt-1 text-2xl font-semibold text-highlighted">
-          Усі учасники
-        </h2>
-      </div>
-
-      <p
-        v-if="meta"
-        class="text-sm text-toned"
-      >
-        {{ meta.total }} {{ pluralUsers(meta.total) }}
-      </p>
-    </div>
+  <section class="space-y-3">
+    <AppSectionHeader
+      eyebrow="Користувачі"
+      title="Усі учасники"
+      :summary="meta ? `${meta.total} ${pluralUsers(meta.total)}` : ''"
+    />
 
     <BaseDataBoundary
       :pending="pending"
@@ -33,26 +16,21 @@
       <template #loading>
         <div
           class="
-            grid gap-4
+            grid gap-3
             sm:grid-cols-2
-            lg:grid-cols-3
+            xl:grid-cols-3
           "
         >
           <div
             v-for="i in perPage"
             :key="i"
-            class="
-              rounded-[1.75rem] border border-default bg-default/80 p-6
-              shadow-sm
-            "
+            class="app-surface app-radius-surface p-4"
           >
-            <div class="animate-pulse space-y-3">
-              <div class="flex items-center gap-4">
-                <div class="size-12 rounded-full bg-default" />
-                <div class="flex-1 space-y-2">
-                  <div class="h-4 w-2/3 rounded-full bg-default" />
-                  <div class="h-3 w-1/2 rounded-full bg-default" />
-                </div>
+            <div class="flex items-center gap-3">
+              <USkeleton class="size-12 shrink-0 rounded-full" />
+              <div class="min-w-0 flex-1 space-y-2">
+                <USkeleton class="h-4 w-2/3" />
+                <USkeleton class="h-3 w-4/5" />
               </div>
             </div>
           </div>
@@ -62,22 +40,22 @@
       <template #empty>
         <div
           class="
-            rounded-[1.75rem] border border-dashed border-default bg-default/60
-            p-8 text-center shadow-sm
+            app-radius-surface border border-dashed border-default
+            bg-elevated/55 p-6 text-center
           "
         >
           <div
             class="
-              mx-auto flex size-14 items-center justify-center rounded-2xl
-              bg-primary/10 text-primary
+              app-radius-surface mx-auto flex size-11 items-center
+              justify-center bg-primary/10 text-primary
             "
           >
             <UIcon
               name="i-lucide-users"
-              class="size-7"
+              class="size-5"
             />
           </div>
-          <h3 class="mt-5 text-2xl font-semibold text-highlighted">
+          <h3 class="mt-4 text-xl font-semibold text-highlighted">
             Користувачів поки немає
           </h3>
         </div>
@@ -85,9 +63,9 @@
 
       <div
         class="
-          grid gap-4
+          grid gap-3
           sm:grid-cols-2
-          lg:grid-cols-3
+          xl:grid-cols-3
         "
       >
         <PersonCard

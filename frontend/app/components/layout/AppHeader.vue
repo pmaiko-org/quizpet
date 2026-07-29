@@ -2,25 +2,21 @@
   <UHeader
     :toggle="false"
     class="
-      backdrop-blur-xl; sticky top-0 z-40 border-b border-default
-      bg-[radial-gradient(circle_at_top,color-mix(in_oklab,var(--ui-primary)_10%,transparent),transparent_26%),linear-gradient(180deg,color-mix(in_oklab,var(--ui-bg)_92%,white_8%),var(--ui-bg))]
-      shadow-[0_24px_80px_color-mix(in_oklab,var(--ui-text-muted)_12%,transparent)]
-    "
-    :class="
-      [PageName.SETS_CREATE, PageName.SETS_ID_EDIT].includes(
-        $route.name as any,
-      ) && 'relative!'
+      sticky top-0 z-40 border-b border-default bg-default/88 backdrop-blur-xl
     "
   >
     <template #left>
-      <div class="flex items-center gap-3">
+      <div class="flex min-w-0 items-center gap-2">
         <UButton
+          v-if="showSidebarToggle"
           icon="i-lucide-panel-left"
           variant="ghost"
           color="neutral"
+          size="sm"
+          aria-label="Відкрити або закрити бокову панель"
           class="
-            cursor-pointer rounded-2xl border border-default bg-elevated/70
-            shadow-sm
+            app-radius-surface cursor-pointer border border-default
+            bg-elevated/70
           "
           @click="open = !open"
         />
@@ -28,41 +24,46 @@
         <NuxtLink
           to="/"
           class="
-            inline-flex items-center gap-3 rounded-2xl px-2 py-1.5
-            transition-colors
+            app-radius-surface inline-flex min-w-0 items-center gap-2 px-1.5
+            py-1 transition-colors
             hover:bg-elevated/70
           "
         >
           <span
             class="
-              flex size-10 items-center justify-center rounded-2xl bg-primary
-              text-sm font-semibold text-inverted shadow-lg
+              app-radius-surface flex size-8 items-center justify-center
+              bg-primary text-xs font-bold text-inverted
             "
           >Q</span>
-          <span>
-            <span class="block text-sm font-semibold text-highlighted">QuizPet</span>
-            <span class="block text-xs text-muted">Панель навчання</span>
+          <span class="min-w-0">
+            <span class="block truncate text-sm font-semibold text-highlighted">QuizPet</span>
+            <span class="block truncate text-[11px] text-muted">{{
+              sectionLabel
+            }}</span>
           </span>
         </NuxtLink>
       </div>
     </template>
 
     <template #right>
-      <div class="flex items-center gap-3">
+      <div
+        class="
+          flex shrink-0 items-center gap-2
+          sm:gap-3
+        "
+      >
         <div
           class="
-            hidden items-center gap-2 rounded-full border border-default
-            bg-elevated/70 px-3 py-1.5 text-xs font-medium text-toned shadow-sm
+            hidden items-center gap-2 rounded-full border border-default px-3
+            py-1.5 text-xs font-medium text-toned
             sm:inline-flex
           "
         >
-          <span
-            class="
-              shadow-[0_0_0_4px_color-mix(in_oklab,var(--ui-primary)_16%,transparent)];
-              size-2 rounded-full bg-primary
-            "
+          <UIcon
+            :name="sectionIcon"
+            class="size-3.5 text-primary"
           />
-          <span>Focus mode</span>
+          <span>{{ sectionLabel }}</span>
         </div>
 
         <UColorModeSwitch />
@@ -75,4 +76,18 @@
 import { PageName } from "~/constants";
 
 const open = defineModel<boolean>({ required: false });
+
+const { showSidebarToggle = true } = defineProps<{
+  showSidebarToggle?: boolean;
+}>();
+
+const route = useRoute();
+
+const isLearning = computed(() => route.name === PageName.SETS_ID_LEARN);
+const sectionLabel = computed(() =>
+  isLearning.value ? "Режим навчання" : "Навчальний простір",
+);
+const sectionIcon = computed(() =>
+  isLearning.value ? "i-lucide-focus" : "i-lucide-sparkles",
+);
 </script>

@@ -5,114 +5,131 @@
     collapsible="offcanvas"
     side="left"
     :ui="{
-      container: 'h-full',
+      container: 'h-full p-0',
     }"
-    class="[--sidebar-width:var(--container-xs)]"
+    class="border-r border-default bg-elevated/95 [--sidebar-width:18rem]"
   >
-    <client-only>
-      <section
-        class="
-          rounded-[28px] border border-default bg-elevated/70 p-4 shadow-lg
-          backdrop-blur-sm
-        "
-      >
-        <div class="flex items-start justify-between gap-3">
-          <UUser
-            :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
-            :description="profile?.email || ''"
-            :avatar="{
-              src: profile?.avatar,
-              loading: 'lazy',
-              icon: 'i-lucide-image',
-            }"
-            size="xl"
-          />
-
-          <UButton
-            to="/profile"
-            color="neutral"
-            variant="ghost"
-            icon="i-lucide-user-round-pen"
-            aria-label="Редагувати профіль"
-          />
+    <div class="flex h-full min-h-0 flex-col px-5 py-4">
+      <section class="min-h-0 flex-1">
+        <div
+          class="
+            mb-2 px-3 text-[10px] font-semibold tracking-[0.16em] text-muted
+            uppercase
+          "
+        >
+          <span>Основне</span>
         </div>
 
-        <div class="mt-4 grid grid-cols-3 gap-2">
-          <div
-            v-for="metric in metrics"
-            :key="metric.label"
-            class="rounded-2xl bg-default/80 px-3 py-2 text-center"
-          >
-            <span class="block text-sm font-semibold text-highlighted">{{
-              metric.value
-            }}</span>
-            <span
-              class="
-                mt-1 block text-[11px] tracking-[0.18em] text-muted uppercase
-              "
-            >{{ metric.label }}</span>
-          </div>
-        </div>
+        <UNavigationMenu
+          :items="items"
+          orientation="vertical"
+          :ui="{
+            root: 'min-w-0',
+            list: 'flex flex-col gap-1',
+            item: 'min-w-0',
+            link: 'group relative overflow-hidden app-radius-control border border-transparent px-3 py-2.5 transition-colors duration-150 hover:bg-muted data-[active=true]:border-primary/15 data-[active=true]:bg-primary/10',
+            linkLeadingIcon:
+              'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
+            linkLabel:
+              'truncate text-sm font-medium text-toned transition-colors duration-200 group-hover:text-highlighted group-data-[active=true]:text-highlighted',
+            linkLabelExternalIcon: 'hidden',
+            linkTrailingIcon:
+              'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
+          }"
+          @click="closeOnMobile"
+        />
+
+        <UButton
+          to="/sets/create"
+          color="primary"
+          variant="soft"
+          icon="i-lucide-plus"
+          block
+          class="mt-3 justify-start"
+          @click="closeOnMobile"
+        >
+          Новий набір
+        </UButton>
       </section>
-    </client-only>
 
-    <section
-      class="
-        rounded-[28px] border border-default bg-elevated/75 p-3 shadow-lg
-        backdrop-blur-sm
-      "
-    >
-      <div
-        class="
-          mb-2 flex items-center justify-between px-2 text-[11px] font-semibold
-          tracking-[0.2em] text-muted uppercase
-        "
-      >
-        <span>Навігація</span>
-      </div>
+      <client-only>
+        <AppSidebarProfileSkeleton v-if="profilePending || statsPending" />
 
-      <UNavigationMenu
-        :items="items"
-        orientation="vertical"
-        class="rounded-2xl"
-        :ui="{
-          root: 'min-w-0',
-          list: 'flex flex-col gap-2',
-          item: 'min-w-0',
-          link: 'group relative overflow-hidden rounded-2xl border border-transparent bg-default/40 px-3 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-default hover:bg-elevated/90 hover:shadow-lg data-[active=true]:border-primary/30 data-[active=true]:bg-primary/10 data-[active=true]:shadow-[0_12px_30px_color-mix(in_oklab,var(--ui-primary)_18%,transparent)]',
-          linkLeadingIcon:
-            'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
-          linkLabel:
-            'truncate text-sm font-medium text-toned transition-colors duration-200 group-hover:text-highlighted group-data-[active=true]:text-highlighted',
-          linkLabelExternalIcon: 'hidden',
-          linkTrailingIcon:
-            'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
-        }"
-      />
-    </section>
+        <section
+          v-else
+          class="mt-3 border-t border-default pt-3"
+        >
+          <div
+            class="app-radius-surface border border-default bg-muted/45 p-3"
+          >
+            <div class="mb-2 flex items-center justify-between gap-2">
+              <p class="text-xs font-medium text-muted">
+                Профіль
+              </p>
+              <UButton
+                to="/profile"
+                color="neutral"
+                variant="ghost"
+                icon="i-lucide-settings-2"
+                size="sm"
+                aria-label="Редагувати профіль"
+                @click="closeOnMobile"
+              />
+            </div>
 
-    <section
-      class="
-        mt-auto flex items-start justify-between gap-3 rounded-[28px] border
-        border-primary/20
-        bg-[linear-gradient(135deg,color-mix(in_oklab,var(--ui-primary)_14%,var(--ui-bg-elevated)),var(--ui-bg-elevated))]
-        p-4 text-default shadow-lg
-      "
-    >
-      <div>
-        <p class="text-sm font-semibold">
-          Ритм дня
-        </p>
-        <p class="mt-1 text-sm/6 text-toned">
-          Почни з карток, а потім перевір прогрес у статистиці.
-        </p>
-      </div>
+            <UUser
+              :name="`${profile?.firstName || ''} ${profile?.lastName || ''}`"
+              :description="profile?.email || ''"
+              :avatar="{
+                src: profile?.avatar,
+                loading: 'lazy',
+                icon: 'i-lucide-image',
+              }"
+              size="md"
+              class="min-w-0"
+              :ui="{
+                root: 'min-w-0',
+                wrapper: 'min-w-0',
+                name: 'truncate',
+                description: 'truncate',
+              }"
+            />
 
-      <UIcon
-        name="i-lucide-sparkles"
-        class="mt-0.5 size-5 shrink-0 text-primary"
-      />
-    </section>
+            <div class="mt-3 flex items-center gap-3 text-xs text-muted">
+              <span
+                v-for="metric in metrics"
+                :key="metric.label"
+                class="min-w-0"
+              >
+                <strong class="font-semibold text-highlighted">
+                  {{ metric.value }}
+                </strong>
+                {{ metric.label.toLowerCase() }}
+              </span>
+            </div>
+
+            <div class="mt-3 border-t border-default pt-2">
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-lucide-log-out"
+                size="sm"
+                block
+                class="justify-start"
+                :loading="isLoggingOut"
+                @click="doLogout"
+              >
+                Вийти
+              </UButton>
+            </div>
+          </div>
+        </section>
+
+        <template #fallback>
+          <AppSidebarProfileSkeleton />
+        </template>
+      </client-only>
+    </div>
   </USidebar>
 </template>
 
@@ -120,6 +137,15 @@
 import type { NavigationMenuItem } from "#ui/components/NavigationMenu.vue";
 
 const open = defineModel<boolean>({ required: true });
+const authStore = useAuthStore();
+const { isLoggingOut } = storeToRefs(authStore);
+const { doLogout } = authStore;
+
+const closeOnMobile = () => {
+  if (import.meta.client && window.matchMedia("(max-width: 1023px)").matches) {
+    open.value = false;
+  }
+};
 
 const items = ref<NavigationMenuItem[]>([
   {
@@ -149,9 +175,15 @@ const items = ref<NavigationMenuItem[]>([
   },
 ]);
 
-const { user: profile } = useCurrentUser();
+const {
+  user: profile,
+  pending: profilePending,
+} = useCurrentUser();
 
-const { stats } = useMyStats();
+const {
+  stats,
+  pending: statsPending,
+} = useMyStats();
 
 const metrics = computed(() => [
   { value: stats.value.peopleCount, label: "Люди" },

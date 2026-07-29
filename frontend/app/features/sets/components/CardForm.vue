@@ -1,71 +1,80 @@
 <template>
-  <div
+  <article
     class="
-      rounded-3xl border border-default bg-default/80 p-5 shadow-sm
-      sm:p-6
+      app-surface app-radius-surface p-4
+      sm:p-5
     "
   >
-    <div class="mb-5 flex items-start justify-between gap-4">
-      <div>
-        <p class="text-sm font-medium tracking-[0.24em] text-primary uppercase">
-          Картка {{ index + 1 }}
-        </p>
+    <div class="mb-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span
+          class="
+            app-radius-control flex size-8 items-center justify-center
+            bg-primary/10 text-sm font-bold text-primary
+          "
+        >
+          {{ index + 1 }}
+        </span>
+        <div>
+          <p class="text-sm font-semibold text-highlighted">
+            Картка {{ index + 1 }}
+          </p>
+          <p class="text-xs text-muted">
+            Термін і правильна відповідь
+          </p>
+        </div>
       </div>
 
-      <UButton
-        v-if="canRemove"
-        color="error"
-        variant="ghost"
-        size="sm"
-        icon="i-lucide-trash-2"
-        @click="$emit('remove')"
-      >
-        Видалити
-      </UButton>
-    </div>
-
-    <div class="mb-5 flex flex-wrap gap-2">
-      <UButton
-        type="button"
-        color="neutral"
-        variant="outline"
-        size="sm"
-        icon="i-lucide-arrow-up"
-        :disabled="isFirst"
-        @click="$emit('moveUp')"
-      >
-        Вище
-      </UButton>
-
-      <UButton
-        type="button"
-        color="neutral"
-        variant="outline"
-        size="sm"
-        icon="i-lucide-arrow-down"
-        :disabled="isLast"
-        @click="$emit('moveDown')"
-      >
-        Нижче
-      </UButton>
+      <div class="flex items-center gap-1">
+        <UButton
+          type="button"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          icon="i-lucide-arrow-up"
+          :disabled="isFirst"
+          aria-label="Перемістити картку вище"
+          @click="$emit('moveUp')"
+        />
+        <UButton
+          type="button"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          icon="i-lucide-arrow-down"
+          :disabled="isLast"
+          aria-label="Перемістити картку нижче"
+          @click="$emit('moveDown')"
+        />
+        <UButton
+          v-if="canRemove"
+          type="button"
+          color="error"
+          variant="ghost"
+          size="sm"
+          icon="i-lucide-trash-2"
+          aria-label="Видалити картку"
+          @click="$emit('remove')"
+        />
+      </div>
     </div>
 
     <div
       class="
-        grid gap-5
-        xl:grid-cols-2
+        grid gap-4
+        md:grid-cols-2
       "
     >
       <UFormField
         :name="fieldName('term')"
         label="Термін"
-        description="Коротке слово, поняття або питання."
+        description="Слово, поняття або питання."
         required
-        size="xl"
+        size="lg"
       >
         <UInput
           v-model="modelValue.term"
-          size="xl"
+          size="lg"
           class="w-full"
           placeholder="Наприклад, Photosynthesis"
         />
@@ -73,16 +82,15 @@
 
       <UFormField
         :name="fieldName('termDescription')"
-        label="Опис терміна"
-        description="Коротке пояснення, підказка або уточнення до терміна."
-        required
-        size="xl"
+        label="Підказка"
+        description="Коротке уточнення до терміна."
+        size="lg"
       >
         <UInput
           v-model="modelValue.termDescription"
-          size="xl"
+          size="lg"
           class="w-full"
-          placeholder="Наприклад, Process plants use to convert light into energy"
+          placeholder="Необов’язковий контекст"
         />
       </UFormField>
 
@@ -91,54 +99,96 @@
         label="Визначення"
         description="Пояснення, переклад або правильна відповідь."
         required
-        size="xl"
+        size="lg"
         class="col-span-full"
       >
         <UTextarea
           v-model="modelValue.definition"
-          size="xl"
+          size="lg"
           autoresize
-          :rows="3"
+          :rows="2"
           class="w-full"
-          placeholder="Опишіть значення або дайте відповідь"
+          placeholder="Дайте коротку й точну відповідь"
         />
       </UFormField>
-
-      <BaseFilePicker
-        v-model="modelValue.termImage"
-        :name="fieldName('termImage')"
-        label="Зображення для терміна"
-        description="Додаткове зображення, якщо хочете підсилити асоціацію."
-      />
-
-      <BaseFilePicker
-        v-model="modelValue.definitionImage"
-        :name="fieldName('definitionImage')"
-        label="Зображення для визначення"
-        description="Можна використати окрему ілюстрацію для відповіді."
-      />
-
-      <BaseColorChooser
-        v-model="modelValue.textColor"
-        :name="fieldName('textColor')"
-        label="Колір тексту"
-        description="Впливає на читабельність та контраст."
-      />
-
-      <BaseColorChooser
-        v-model="modelValue.backgroundColor"
-        :name="fieldName('backgroundColor')"
-        label="Колір фону"
-        description="Фон картки краще робити м'яким, щоб текст залишався помітним."
-      />
     </div>
-  </div>
+
+    <details
+      class="
+        group app-radius-surface mt-4 overflow-hidden border border-default
+        bg-muted/35
+      "
+    >
+      <summary
+        class="
+          flex cursor-pointer list-none items-center justify-between gap-3 px-3
+          py-2.5 text-sm font-medium text-toned
+          hover:text-highlighted
+        "
+      >
+        <span class="flex items-center gap-2">
+          <UIcon
+            name="i-lucide-palette"
+            class="size-4 text-primary"
+          />
+          Зображення та оформлення
+        </span>
+        <UIcon
+          name="i-lucide-chevron-down"
+          class="
+            size-4 text-muted transition-transform
+            group-open:rotate-180
+          "
+        />
+      </summary>
+
+      <div
+        class="
+          grid gap-4 border-t border-default p-4
+          lg:grid-cols-2
+        "
+      >
+        <BaseFilePicker
+          v-model="modelValue.termImage"
+          :name="fieldName('termImage')"
+          label="Зображення терміна"
+          description="Необов’язкова візуальна підказка."
+        />
+
+        <BaseFilePicker
+          v-model="modelValue.definitionImage"
+          :name="fieldName('definitionImage')"
+          label="Зображення відповіді"
+          description="Окрема ілюстрація для визначення."
+        />
+
+        <BaseColorChooser
+          v-model="modelValue.textColor"
+          :name="fieldName('textColor')"
+          label="Колір тексту"
+          description="Залиште порожнім для кольору теми."
+        />
+
+        <BaseColorChooser
+          v-model="modelValue.backgroundColor"
+          :name="fieldName('backgroundColor')"
+          label="Колір фону"
+          description="Залиште порожнім для стандартної поверхні."
+        />
+      </div>
+    </details>
+  </article>
 </template>
 
 <script setup lang="ts">
-import type { ICardFormData } from "../types";
+import type { TCardFormData } from "../types";
 
-const { index } = defineProps<{
+const {
+  index,
+  canRemove = false,
+  isFirst = false,
+  isLast = false,
+} = defineProps<{
   index: number;
   canRemove?: boolean;
   isFirst?: boolean;
@@ -151,11 +201,11 @@ defineEmits<{
   moveDown: [];
 }>();
 
-const modelValue = defineModel<ICardFormData>({
+const modelValue = defineModel<TCardFormData>({
   required: true,
 });
 
-const fieldName = (field: keyof ICardFormData) => {
+const fieldName = (field: keyof TCardFormData) => {
   return `cards.${index}.${field}`;
 };
 </script>

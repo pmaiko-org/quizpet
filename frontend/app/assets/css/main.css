@@ -2,5 +2,127 @@
 @import "@nuxt/ui";
 
 :root {
-  --slide-left-duration: 0.3s;
+  --ui-header-height: 3.75rem;
+  --ui-radius: 0.625rem;
+  --ui-container: 78rem;
+  --app-radius-control: 0.625rem;
+  --app-radius-surface: 1rem;
+  --app-font-body:
+    "Avenir Next", "Avenir", "Segoe UI Variable", "Segoe UI", sans-serif;
+  --app-font-display:
+    "Avenir Next Rounded", "Avenir Next", "Avenir", ui-rounded, sans-serif;
+  --app-shadow-sm:
+    0 1px 2px rgb(24 31 43 / 0.05), 0 10px 30px rgb(24 31 43 / 0.05);
+  --app-shadow-md:
+    0 2px 4px rgb(24 31 43 / 0.06), 0 18px 48px rgb(24 31 43 / 0.09);
+  --ui-text-dimmed: #a0a8b5;
+  --ui-text-muted: #727b89;
+  --ui-text-toned: #505968;
+  --ui-text: #343c49;
+  --ui-text-highlighted: #171d28;
+  --ui-bg: #f5f6f8;
+  --ui-bg-muted: #eceff3;
+  --ui-bg-elevated: #ffffff;
+  --ui-bg-accented: #e1e6ed;
+  --ui-bg-inverted: #171d28;
+  --ui-border: #d9dee7;
+  --ui-border-muted: #e5e8ee;
+  --ui-border-accented: #c6cdd8;
+}
+
+.dark {
+  --app-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.16), 0 10px 28px rgb(0 0 0 / 0.12);
+  --app-shadow-md: 0 2px 4px rgb(0 0 0 / 0.22), 0 18px 48px rgb(0 0 0 / 0.2);
+  --ui-text-dimmed: #667080;
+  --ui-text-muted: #8a94a4;
+  --ui-text-toned: #b1b9c5;
+  --ui-text: #d5dbe4;
+  --ui-text-highlighted: #f5f7fa;
+  --ui-bg: #11151c;
+  --ui-bg-muted: #171c25;
+  --ui-bg-elevated: #1d232d;
+  --ui-bg-accented: #272e3a;
+  --ui-bg-inverted: #f5f7fa;
+  --ui-border: #303846;
+  --ui-border-muted: #252c37;
+  --ui-border-accented: #414b5c;
+}
+
+html {
+  font-family: var(--app-font-body);
+  background: var(--ui-bg);
+}
+
+body {
+  min-width: 320px;
+  color: var(--ui-text);
+  background:
+    radial-gradient(
+      circle at 88% -8%,
+      color-mix(in oklab, var(--ui-primary) 8%, transparent) 0,
+      transparent 24rem
+    ),
+    var(--ui-bg);
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--app-font-display);
+  letter-spacing: -0.025em;
+}
+
+::selection {
+  color: var(--ui-text-highlighted);
+  background: color-mix(in oklab, var(--ui-primary) 24%, transparent);
+}
+
+.app-surface {
+  border-radius: var(--app-radius-surface);
+  border: 1px solid var(--ui-border);
+  background: color-mix(in oklab, var(--ui-bg-elevated) 96%, transparent);
+  box-shadow: var(--app-shadow-sm);
+}
+
+.app-surface-subtle {
+  border-radius: var(--app-radius-surface);
+  border: 1px solid var(--ui-border-muted);
+  background: color-mix(in oklab, var(--ui-bg-elevated) 72%, transparent);
+}
+
+.app-radius-surface {
+  border-radius: var(--app-radius-surface);
+}
+
+.app-radius-control {
+  border-radius: var(--app-radius-control);
+}
+
+.app-eyebrow {
+  color: var(--ui-primary);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1rem;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .app-reveal {
+    animation: app-reveal 420ms ease-out both;
+  }
+}
+
+@keyframes app-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

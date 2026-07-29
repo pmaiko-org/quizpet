@@ -1,36 +1,13 @@
 <template>
-  <UFooter>
-    <template #left>
-      <p class="text-sm text-muted">
-        Copyright © {{ new Date().getFullYear() }}
-      </p>
-    </template>
-
-    <template #right>
-      <UButton
-        icon="i-simple-icons-discord"
-        color="neutral"
-        variant="ghost"
-        to="https://go.nuxt.com/discord"
-        target="_blank"
-        aria-label="Discord"
-      />
-      <UButton
-        icon="i-simple-icons-x"
-        color="neutral"
-        variant="ghost"
-        to="https://go.nuxt.com/x"
-        target="_blank"
-        aria-label="X"
-      />
-      <UButton
-        icon="i-simple-icons-github"
-        color="neutral"
-        variant="ghost"
-        to="https://github.com/nuxt/nuxt"
-        target="_blank"
-        aria-label="GitHub"
-      />
-    </template>
-  </UFooter>
+  <footer class="border-t border-default p-4 text-xs text-muted">
+    <UContainer
+      class="
+        flex flex-col gap-2
+        sm:flex-row sm:items-center sm:justify-between
+      "
+    >
+      <p>QuizPet © {{ new Date().getFullYear() }}</p>
+      <p>Маленькі кроки, сильна пам’ять.</p>
+    </UContainer>
+  </footer>
 </template>

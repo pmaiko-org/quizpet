@@ -47,8 +47,12 @@ export const useAuthStore = defineStore("auth", () => {
       clearTokens();
 
       const route = useRoute();
-      if (route.path !== "/login") {
-        await navigateTo("/login");
+      try {
+        if (route.path !== "/login") {
+          await navigateTo("/login");
+        }
+      } finally {
+        clearNuxtData();
       }
     })();
 

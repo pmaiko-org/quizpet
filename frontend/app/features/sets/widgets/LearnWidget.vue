@@ -9,32 +9,19 @@
     @retry="refreshSet"
   >
     <template #loading>
-      <section
-        class="
-          rounded-4xl border border-default bg-default/85 p-6 shadow-sm
-          sm:p-8
-        "
-      >
-        <div class="animate-pulse space-y-4">
-          <div class="h-5 w-40 rounded-full bg-muted/60" />
-          <div class="h-8 w-3/5 rounded-full bg-muted/60" />
-          <div class="h-4 rounded-full bg-muted/60" />
-          <div class="h-4 w-5/6 rounded-full bg-muted/60" />
-          <div class="mt-6 h-96 rounded-4xl bg-muted/50" />
-        </div>
-      </section>
+      <LearnSessionSkeleton />
     </template>
 
     <template #empty>
       <section
         class="
-          rounded-4xl border border-dashed border-default bg-default/70 p-8
-          text-center shadow-sm
+          app-radius-surface border border-dashed border-default bg-default/70
+          p-8 text-center shadow-sm
         "
       >
         <div
           class="
-            mx-auto flex size-14 items-center justify-center rounded-2xl
+            app-radius-surface mx-auto flex size-14 items-center justify-center
             bg-primary/10 text-primary
           "
         >
@@ -61,7 +48,10 @@
       </section>
     </template>
 
-    <div class="space-y-6">
+    <div
+      class="mx-auto space-y-3"
+      :class="isShowingResults ? 'max-w-5xl' : 'max-w-3xl'"
+    >
       <template v-if="isShowingResults">
         <LearnResults
           :reports="reports"
@@ -72,35 +62,38 @@
       </template>
 
       <template v-else-if="currentCard">
-        <Transition
-          name="slide-left"
-          mode="out-in"
-        >
-          <LearnFlashcard
-            :key="currentCard.id"
-            :card="currentCard"
-            :currentStep="currentStep + 1"
-            :currentCardTime="currentCardTime"
-            :flipped="flipped"
-            :editLink="currentCardEditLink"
-            @flip="toggleFlip"
-          />
-        </Transition>
-
-        <LearnControls
-          :locked="isAnswering"
-          @known="markKnown"
-          @missed="markMissed"
-        />
-
         <LearnProgress
           :learnedCount="learnedCount"
           :totalCards="activeCardIds.length"
           :currentStep="currentStep"
           :queueLength="queue.length"
           :mistakesCount="mistakeCardCount"
-          :currentCardTime="currentCardTime"
           :totalTime="totalTime"
+        />
+
+        <Transition
+          name="learn-card"
+          mode="out-in"
+        >
+          <div
+            :key="`${currentCard.id}-${currentStep}`"
+            aria-live="polite"
+          >
+            <LearnFlashcard
+              :card="currentCard"
+              :currentStep="currentStep + 1"
+              :currentCardTime="currentCardTime"
+              :flipped="flipped"
+              :editLink="currentCardEditLink"
+              @flip="toggleFlip"
+            />
+          </div>
+        </Transition>
+
+        <LearnControls
+          :locked="isAnswering"
+          @known="markKnown"
+          @missed="markMissed"
         />
       </template>
     </div>
@@ -135,3 +128,29 @@ const {
   restartMistakes,
 } = useLearnSession();
 </script>
+
+<style scoped>
+.learn-card-enter-active,
+.learn-card-leave-active {
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.learn-card-enter-from {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+.learn-card-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learn-card-enter-active,
+  .learn-card-leave-active {
+    transition: none;
+  }
+}
+</style>

@@ -2,11 +2,11 @@ import { useNow } from "@vueuse/core";
 
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
-import type { LearningAttempt, LearningCardReport } from "../utils";
+import type { ILearningAttempt, ILearningCardReport } from "../utils";
 import { formatTime } from "../utils";
 
-interface CardSessionState {
-  attempts: LearningAttempt[];
+interface ICardSessionState {
+  attempts: ILearningAttempt[];
   mistakes: number;
   successes: number;
   revealCount: number;
@@ -18,6 +18,7 @@ export const useLearnSession = () => {
   const { $repository } = useNuxtApp();
 
   const setId = computed(() => route.params.id as string);
+  const asyncDataKey = computed(() => `cards-learning-${setId.value}`);
 
   const {
     data: cards,
@@ -25,7 +26,7 @@ export const useLearnSession = () => {
     error,
     refresh,
   } = useAsyncData(
-    `cards-learning-${setId.value}`,
+    asyncDataKey,
     () => $repository.sets.getSetCards(setId.value),
     {
       server: false,
@@ -51,7 +52,7 @@ export const useLearnSession = () => {
   const sessionFinishedAt = ref<number | null>(null);
   const cardStartedAt = ref(0);
   const initialized = ref(false);
-  const cardStates = reactive<Record<string, CardSessionState>>({});
+  const cardStates = reactive<Record<string, ICardSessionState>>({});
 
   let advanceTimeout: number | null = null;
 
@@ -113,7 +114,7 @@ export const useLearnSession = () => {
     return formatTime(totalElapsedMs.value);
   });
 
-  const reports = computed<LearningCardReport[]>(() => {
+  const reports = computed<ILearningCardReport[]>(() => {
     return activeCardIds.value
       .map((cardId) => {
         const card = cardMap.value.get(cardId);
@@ -136,7 +137,7 @@ export const useLearnSession = () => {
           firstTryKnown: state.attempts[0]?.outcome === "known",
         };
       })
-      .filter(Boolean) as LearningCardReport[];
+      .filter((report): report is ILearningCardReport => report !== null);
   });
 
   const learnedCount = computed(() => {
@@ -154,7 +155,15 @@ export const useLearnSession = () => {
     }
   };
 
+  const clearCardStates = () => {
+    Object.keys(cardStates).forEach((cardId) => {
+      delete cardStates[cardId];
+    });
+  };
+
   const resetCardStates = (cardIds: string[]) => {
+    clearCardStates();
+
     cardIds.forEach((cardId) => {
       cardStates[cardId] = {
         attempts: [],
@@ -164,6 +173,19 @@ export const useLearnSession = () => {
         totalDurationMs: 0,
       };
     });
+  };
+
+  const resetSession = () => {
+    clearAdvanceTimeout();
+    activeCardIds.value = [];
+    queue.value = [];
+    currentStep.value = 0;
+    flipped.value = false;
+    isAnswering.value = false;
+    sessionStartedAt.value = 0;
+    sessionFinishedAt.value = null;
+    cardStartedAt.value = 0;
+    clearCardStates();
   };
 
   const getCardState = (cardId: string) => {
@@ -235,7 +257,7 @@ export const useLearnSession = () => {
     flipped.value = !flipped.value;
   };
 
-  const recordAnswer = (outcome: LearningAttempt["outcome"]) => {
+  const recordAnswer = (outcome: ILearningAttempt["outcome"]) => {
     const card = currentCard.value;
 
     if (!card || isAnswering.value) {
@@ -302,6 +324,15 @@ export const useLearnSession = () => {
   };
 
   watch(
+    setId,
+    () => {
+      initialized.value = false;
+      resetSession();
+    },
+    { flush: "sync" },
+  );
+
+  watch(
     cards,
     (nextCards) => {
       if (initialized.value || !nextCards.length) {
@@ -313,15 +344,6 @@ export const useLearnSession = () => {
     },
     { immediate: true },
   );
-
-  watch(setId, async () => {
-    initialized.value = false;
-    activeCardIds.value = [];
-    queue.value = [];
-    currentStep.value = 0;
-    sessionFinishedAt.value = null;
-    await refresh();
-  });
 
   watch(currentCardId, (cardId) => {
     if (!cardId || isShowingResults.value) {

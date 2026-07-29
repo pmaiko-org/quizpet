@@ -12,13 +12,13 @@
           v-for="i in skeletonCount"
           :key="i"
           class="
-            rounded-[1.75rem] border border-default bg-default/80 p-6 shadow-sm
+            app-radius-surface border border-default bg-default/80 p-6 shadow-sm
           "
         >
-          <div class="animate-pulse space-y-3">
-            <div class="h-4 w-24 rounded-full bg-default" />
-            <div class="h-7 w-2/3 rounded-full bg-default" />
-            <div class="h-4 w-5/6 rounded-full bg-default" />
+          <div class="space-y-3">
+            <USkeleton class="h-4 w-24" />
+            <USkeleton class="h-7 w-2/3" />
+            <USkeleton class="h-4 w-5/6" />
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
 
   <template v-else-if="error">
     <slot name="error">
-      <div class="rounded-[1.75rem] border border-error/30 bg-error/5 p-6">
+      <div class="app-radius-surface border border-error/30 bg-error/5 p-6">
         <div
           class="
             flex flex-col gap-4

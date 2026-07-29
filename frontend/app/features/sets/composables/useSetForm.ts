@@ -6,7 +6,7 @@ import type {
   ITopicResponse,
 } from "~/types/api.generated";
 
-import type { ICardFormData, SetFormData } from "../types";
+import type { TCardFormData, TSetFormData } from "../types";
 import type { setSchema } from "../validation";
 
 export const useSetForm = () => {
@@ -14,17 +14,27 @@ export const useSetForm = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const topics = ref<ITopicResponse[] | null>(null);
+  const topics = ref<ITopicResponse[]>([]);
+  const topicsPending = ref(true);
+  const topicsError = shallowRef<unknown>(null);
   const submitting = ref(false);
 
   const loadTopics = async () => {
-    topics.value = await $repository.sets.getTopics();
+    try {
+      topicsPending.value = true;
+      topicsError.value = null;
+      topics.value = await $repository.sets.getTopics();
+    } catch (error) {
+      topicsError.value = error;
+    } finally {
+      topicsPending.value = false;
+    }
   };
 
   const saveSet = async (
     data: ReturnType<typeof setSchema.parse>,
-    existingCards: ICardFormData[],
-    id?: SetFormData["id"],
+    existingCards: TCardFormData[],
+    id?: TSetFormData["id"],
   ): Promise<boolean> => {
     const basePayload: ISetCreate = {
       name: data.name,
@@ -74,11 +84,14 @@ export const useSetForm = () => {
 
       return true;
     } catch (error) {
-      if (error instanceof FetchError) {
-        console.log(error.data);
-      }
-
-      toast.add({ title: "Помилка", description: "" });
+      toast.add({
+        title: "Не вдалося зберегти набір",
+        description:
+          error instanceof FetchError
+            ? "Перевірте введені дані та спробуйте ще раз."
+            : "Спробуйте повторити дію.",
+        color: "error",
+      });
 
       return false;
     } finally {
@@ -88,6 +101,8 @@ export const useSetForm = () => {
 
   return {
     topics,
+    topicsPending,
+    topicsError,
     submitting,
     loadTopics,
     saveSet,

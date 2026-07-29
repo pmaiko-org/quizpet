@@ -18,18 +18,18 @@ export const canDeleteSet = (
   return Boolean(currentEmail && currentEmail === set.user.email);
 };
 
-export type LearningOutcome = "known" | "missed";
+export type TLearningOutcome = "known" | "missed";
 
-export interface LearningAttempt {
-  outcome: LearningOutcome;
+export interface ILearningAttempt {
+  outcome: TLearningOutcome;
   durationMs: number;
   viewedAnswer: boolean;
   answeredAt: number;
 }
 
-export interface LearningCardReport {
+export interface ILearningCardReport {
   card: ICardDetailsResponse;
-  attempts: LearningAttempt[];
+  attempts: ILearningAttempt[];
   mistakes: number;
   successes: number;
   revealCount: number;
@@ -75,7 +75,7 @@ const hexToRgb = (value: string) => {
   };
 };
 
-export const toRgba = (value?: string | null, alpha = 1) => {
+const toRgba = (value?: string | null, alpha = 1) => {
   const rgb = value ? hexToRgb(value) : null;
 
   if (!rgb) {
@@ -85,7 +85,7 @@ export const toRgba = (value?: string | null, alpha = 1) => {
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
 };
 
-export const getContrastColor = (background?: string | null) => {
+const getContrastColor = (background?: string | null) => {
   const rgb = background ? hexToRgb(background) : null;
 
   if (!rgb) {
@@ -106,14 +106,8 @@ export const buildFlashcardTheme = (card: ICardDetailsResponse) => {
 
   const cardStyle: CSSProperties = {
     color: textColor ?? undefined,
-    background: backgroundColor
-      ? `linear-gradient(160deg, ${toRgba(backgroundColor, 0.98)} 0%, ${toRgba(backgroundColor, 0.88)} 100%)`
-      : undefined,
     backgroundColor: backgroundColor ?? undefined,
-    borderColor: toRgba(accentColor, 0.28) ?? undefined,
-    boxShadow: toRgba(accentColor, 0.18)
-      ? `0 30px 80px ${toRgba(accentColor, 0.18)}`
-      : undefined,
+    borderColor: toRgba(accentColor, 0.2) ?? undefined,
   };
 
   const accentStyle: CSSProperties = {
@@ -122,18 +116,9 @@ export const buildFlashcardTheme = (card: ICardDetailsResponse) => {
     borderColor: toRgba(accentColor, 0.18) ?? undefined,
   };
 
-  const imageFrameStyle: CSSProperties = {
-    backgroundColor: toRgba(accentColor, 0.08) ?? undefined,
-    borderColor: toRgba(accentColor, 0.14) ?? undefined,
-  };
-
   return {
-    accentColor,
-    textColor,
-    backgroundColor,
     cardStyle,
     accentStyle,
-    imageFrameStyle,
   };
 };
 
@@ -167,7 +152,7 @@ export const formatTime = (value: number) => {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };
 
-export const getAccuracy = (reports: LearningCardReport[]) => {
+export const getAccuracy = (reports: ILearningCardReport[]) => {
   const attempts = reports.reduce(
     (total, report) => total + report.attempts.length,
     0,

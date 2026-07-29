@@ -19,7 +19,7 @@ export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
   };
 };
 
-export type SetFormData = ReturnType<typeof initialSet>;
+export type TSetFormData = ReturnType<typeof initialSet>;
 
 export const initialCard = (
   position: number,
@@ -39,4 +39,4 @@ export const initialCard = (
   };
 };
 
-export type ICardFormData = ReturnType<typeof initialCard>;
+export type TCardFormData = ReturnType<typeof initialCard>;

@@ -1,4 +1,8 @@
-import type { IPaginationMeta, IUserResponse } from "~/types/api.generated";
+import type {
+  IPaginationMeta,
+  IUserListResponse,
+  IUserResponse,
+} from "~/types/api.generated";
 
 export const usePeopleList = () => {
   const { $repository } = useNuxtApp();
@@ -6,11 +10,26 @@ export const usePeopleList = () => {
   const perPage = 20;
   const page = ref(1);
 
-  const { data, pending, error, refresh } = useAsyncData(
+  const {
+    data,
+    pending: requestPending,
+    error,
+    refresh,
+    status,
+  } = useAsyncData(
     "peoples",
     () => $repository.users.getUsers({ page: page.value, perPage }),
-    { server: false, watch: [page], dedupe: "defer" },
+    {
+      default: () => null as IUserListResponse | null,
+      server: false,
+      watch: [page],
+      dedupe: "defer",
+    },
   );
+
+  const pending = computed(() => {
+    return status.value === "idle" || requestPending.value;
+  });
 
   const users = computed<IUserResponse[]>(() => data.value?.data ?? []);
   const meta = computed<IPaginationMeta | null>(() => data.value?.meta ?? null);

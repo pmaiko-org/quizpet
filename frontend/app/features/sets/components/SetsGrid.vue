@@ -1,24 +1,10 @@
 <template>
-  <section class="space-y-4">
-    <div
-      class="
-        flex flex-col gap-2
-        sm:flex-row sm:items-end sm:justify-between
-      "
-    >
-      <div>
-        <p class="text-sm font-medium tracking-[0.2em] text-primary uppercase">
-          Набори
-        </p>
-        <h2 class="mt-1 text-2xl font-semibold text-highlighted">
-          Ваша колекція карток
-        </h2>
-      </div>
-
-      <p class="text-sm text-toned">
-        {{ summaryText }}
-      </p>
-    </div>
+  <section class="space-y-3">
+    <AppSectionHeader
+      eyebrow="Набори"
+      title="Ваша колекція карток"
+      :summary="summaryText"
+    />
 
     <BaseDataBoundary
       :pending="pending"
@@ -31,28 +17,56 @@
       <template #loading>
         <div
           class="
-            grid gap-4
+            grid gap-3
             lg:grid-cols-2
           "
         >
           <div
             v-for="index in 4"
             :key="index"
-            class="
-              rounded-[1.75rem] border border-default bg-default/80 p-6
-              shadow-sm
-            "
+            class="app-surface app-radius-surface p-5"
           >
-            <div class="animate-pulse space-y-4">
-              <div class="h-4 w-24 rounded-full bg-default" />
-              <div class="h-7 w-2/3 rounded-full bg-default" />
-              <div class="space-y-2">
-                <div class="h-4 rounded-full bg-default" />
-                <div class="h-4 w-5/6 rounded-full bg-default" />
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 space-y-2">
+                  <USkeleton class="h-3 w-24" />
+                  <USkeleton class="h-7 w-2/3" />
+                </div>
+                <USkeleton class="size-9 shrink-0" />
               </div>
+
+              <div class="space-y-2">
+                <USkeleton class="h-4 w-full" />
+                <USkeleton class="h-4 w-5/6" />
+              </div>
+
               <div class="flex gap-2">
-                <div class="h-8 w-24 rounded-full bg-default" />
-                <div class="h-8 w-28 rounded-full bg-default" />
+                <USkeleton class="h-6 w-20" />
+                <USkeleton class="h-6 w-24" />
+              </div>
+
+              <div
+                class="
+                  app-radius-surface grid grid-cols-3 gap-3 border
+                  border-default bg-muted/45 p-3
+                "
+              >
+                <div
+                  v-for="metric in 3"
+                  :key="metric"
+                  class="space-y-2"
+                >
+                  <USkeleton class="h-3 w-10" />
+                  <USkeleton class="h-5 w-8" />
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <USkeleton class="h-10 w-32" />
+                <div class="flex gap-2">
+                  <USkeleton class="size-10" />
+                  <USkeleton class="size-10" />
+                </div>
               </div>
             </div>
           </div>
@@ -62,22 +76,22 @@
       <template #empty>
         <div
           class="
-            rounded-[1.75rem] border border-dashed border-default bg-default/60
-            p-8 text-center shadow-sm
+            app-radius-surface border border-dashed border-default
+            bg-elevated/55 p-6 text-center
           "
         >
           <div
             class="
-              mx-auto flex size-14 items-center justify-center rounded-2xl
-              bg-primary/10 text-primary
+              app-radius-surface mx-auto flex size-11 items-center
+              justify-center bg-primary/10 text-primary
             "
           >
             <UIcon
               name="i-lucide-library"
-              class="size-7"
+              class="size-5"
             />
           </div>
-          <h3 class="mt-5 text-2xl font-semibold text-highlighted">
+          <h3 class="mt-4 text-xl font-semibold text-highlighted">
             Поки що тут немає наборів
           </h3>
           <p class="mx-auto mt-3 max-w-xl text-sm/6 text-toned">
@@ -87,8 +101,8 @@
           <UButton
             to="/sets/create"
             icon="i-lucide-plus"
-            size="xl"
-            class="mt-6 justify-center"
+            size="lg"
+            class="mt-5 justify-center"
           >
             Створити перший набір
           </UButton>
@@ -97,7 +111,7 @@
 
       <div
         class="
-          grid gap-4
+          grid gap-3
           lg:grid-cols-2
         "
       >

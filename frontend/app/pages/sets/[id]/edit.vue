@@ -1,8 +1,5 @@
 <template>
-  <div class="space-y-6">
-    <SetEditHeroWidget />
-    <SetEditFormWidget />
-  </div>
+  <SetEditFormWidget />
 </template>
 
 <script setup lang="ts">

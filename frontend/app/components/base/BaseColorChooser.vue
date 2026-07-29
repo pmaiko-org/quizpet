@@ -6,7 +6,7 @@
     :hint="hint"
     :required="required"
     :error="error"
-    size="xl"
+    size="lg"
   >
     <div class="space-y-3">
       <div class="flex flex-wrap items-center gap-2">
@@ -14,8 +14,8 @@
           <UButton
             color="neutral"
             variant="outline"
-            size="xl"
-            class="min-w-52 justify-between"
+            size="lg"
+            class="min-w-44 justify-between"
           >
             <template #leading>
               <span
@@ -58,7 +58,7 @@
           v-if="modelValue"
           color="neutral"
           variant="ghost"
-          size="xl"
+          size="lg"
           icon="i-lucide-eraser"
           @click="clearColor"
         >
@@ -68,7 +68,7 @@
 
       <div
         class="
-          grid grid-cols-5 gap-2
+          grid grid-cols-5 gap-1.5
           sm:grid-cols-10
         "
       >
@@ -77,7 +77,7 @@
           :key="preset"
           type="button"
           class="
-            group relative h-10 rounded-xl border border-default
+            group app-radius-control relative h-8 border border-default
             transition-transform
             hover:-translate-y-0.5
             focus:outline-none
@@ -114,7 +114,7 @@ const DEFAULT_PRESETS = [
   "#2563EB",
 ];
 
-const props = defineProps<{
+const { presets = [] } = defineProps<{
   label?: string;
   name?: string;
   description?: string;
@@ -139,7 +139,7 @@ watch(
 );
 
 const normalizedPresets = computed(() => {
-  return [...new Set(props.presets?.length ? props.presets : DEFAULT_PRESETS)];
+  return [...new Set(presets.length ? presets : DEFAULT_PRESETS)];
 });
 
 const chipStyle = computed(() => {

@@ -2,15 +2,15 @@
   <section class="space-y-6">
     <section
       class="
-        overflow-hidden rounded-2xl border border-default bg-linear-to-br
-        from-primary/12 via-default to-success/10 p-6 shadow-sm
+        app-radius-surface overflow-hidden border border-default bg-linear-to-br
+        from-primary/10 via-elevated to-elevated p-6 shadow-sm
         md:p-8
       "
     >
       <div
         class="
           grid gap-6
-          xl:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]
+          lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:items-center
         "
       >
         <div class="space-y-4">
@@ -39,7 +39,7 @@
           <div
             class="
               flex flex-col gap-3
-              md:flex-row
+              sm:flex-row
             "
           >
             <UButton
@@ -65,35 +65,17 @@
           </div>
         </div>
 
-        <div
-          class="
-            grid gap-3
-            md:grid-cols-2
-            xl:grid-cols-2
-          "
-        >
-          <div
-            v-for="stat in stats"
-            :key="stat.label"
-            class="rounded-[1.5rem] border border-default bg-default/80 p-4"
-          >
-            <p class="text-xs tracking-[0.2em] text-toned uppercase">
-              {{ stat.label }}
-            </p>
-            <p class="mt-2 text-2xl font-semibold text-highlighted">
-              {{ stat.value }}
-            </p>
-            <p class="mt-2 text-sm/6 text-toned">
-              {{ stat.description }}
-            </p>
-          </div>
-        </div>
+        <AppMetricGrid
+          :items="stats"
+          variant="summary"
+          columns="two"
+        />
       </div>
     </section>
 
     <section
       class="
-        rounded-2xl border border-default bg-default/85 p-5 shadow-sm
+        app-radius-surface border border-default bg-default/85 p-5 shadow-sm
         md:p-6
       "
     >
@@ -123,11 +105,11 @@
         <article
           v-for="report in orderedReports"
           :key="report.card.id"
-          class="rounded-[1.5rem] border p-4"
+          class="app-radius-surface border p-4"
           :class="
             report.mistakes
               ? 'border-error/20 bg-error/5'
-              : 'border-success/20 bg-success/5'
+              : 'border-primary/15 bg-primary/5'
           "
         >
           <div
@@ -143,10 +125,10 @@
                 </h4>
 
                 <UBadge
-                  :color="report.mistakes ? 'error' : 'success'"
+                  :color="report.mistakes ? 'error' : 'primary'"
                   variant="soft"
-                  size="lg"
-                  class="rounded-full px-3 py-1"
+                  size="md"
+                  class="app-radius-control"
                 >
                   {{
                     report.mistakes
@@ -163,12 +145,15 @@
 
             <div
               class="
-                grid gap-2
-                md:grid-cols-3
+                grid grid-cols-3 gap-2
                 lg:min-w-88
               "
             >
-              <div class="rounded-2xl border border-default bg-default/70 p-3">
+              <div
+                class="
+                  app-radius-surface border border-default bg-default/70 p-3
+                "
+              >
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Спроб
                 </p>
@@ -177,7 +162,11 @@
                 </p>
               </div>
 
-              <div class="rounded-2xl border border-default bg-default/70 p-3">
+              <div
+                class="
+                  app-radius-surface border border-default bg-default/70 p-3
+                "
+              >
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Час
                 </p>
@@ -186,7 +175,11 @@
                 </p>
               </div>
 
-              <div class="rounded-2xl border border-default bg-default/70 p-3">
+              <div
+                class="
+                  app-radius-surface border border-default bg-default/70 p-3
+                "
+              >
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Середнє
                 </p>
@@ -206,11 +199,14 @@
 import {
   formatDuration,
   getAccuracy,
-  type LearningCardReport,
+  type ILearningCardReport,
 } from "../../utils";
 
-const props = defineProps<{
-  reports: LearningCardReport[];
+const {
+  reports,
+  totalDurationMs,
+} = defineProps<{
+  reports: ILearningCardReport[];
   totalDurationMs: number;
 }>();
 
@@ -220,27 +216,27 @@ defineEmits<{
 }>();
 
 const mistakeCards = computed(() => {
-  return props.reports.filter(report => report.mistakes > 0);
+  return reports.filter(report => report.mistakes > 0);
 });
 
 const knownFirstTry = computed(() => {
-  return props.reports.filter(report => report.firstTryKnown).length;
+  return reports.filter(report => report.firstTryKnown).length;
 });
 
 const accuracy = computed(() => {
-  return getAccuracy(props.reports);
+  return getAccuracy(reports);
 });
 
 const averageTime = computed(() => {
-  if (!props.reports.length) {
+  if (!reports.length) {
     return 0;
   }
 
-  return props.totalDurationMs / props.reports.length;
+  return totalDurationMs / reports.length;
 });
 
 const heading = computed(() => {
-  if (!props.reports.length) {
+  if (!reports.length) {
     return "Підсумок з'явиться після проходження";
   }
 
@@ -252,7 +248,7 @@ const heading = computed(() => {
 });
 
 const summary = computed(() => {
-  if (!props.reports.length) {
+  if (!reports.length) {
     return "Додайте картки в набір і поверніться до режиму навчання.";
   }
 
@@ -268,29 +264,24 @@ const stats = computed(() => {
     {
       label: "Точність",
       value: `${accuracy.value}%`,
-      description:
-        "Частка вдалих відповідей серед усіх натискань на кнопки оцінки.",
     },
     {
       label: "З першого разу",
       value: knownFirstTry.value,
-      description: "Скільки карток були впізнані без повернення в повторення.",
     },
     {
       label: "Загальний час",
-      value: formatDuration(props.totalDurationMs),
-      description: "Увесь час поточного навчального сеансу.",
+      value: formatDuration(totalDurationMs),
     },
     {
       label: "Середній час",
       value: formatDuration(averageTime.value),
-      description: "Орієнтир, скільки в середньому йшло на одну картку.",
     },
   ];
 });
 
 const orderedReports = computed(() => {
-  return [...props.reports].sort((left, right) => {
+  return [...reports].sort((left, right) => {
     if (right.mistakes !== left.mistakes) {
       return right.mistakes - left.mistakes;
     }
