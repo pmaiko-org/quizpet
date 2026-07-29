@@ -30,6 +30,7 @@ export const useLearnSession = () => {
     {
       server: false,
       default: () => [] as ICardDetailsResponse[],
+      dedupe: "defer",
     },
   );
 

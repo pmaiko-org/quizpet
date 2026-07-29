@@ -18,6 +18,7 @@ export const useCurrentUser = () => {
     {
       server: false,
       default: () => null as IUserResponse | null,
+      dedupe: "defer",
     },
   );
 

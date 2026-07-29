@@ -10,14 +10,25 @@ import { canDeleteSet } from "../utils";
 export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   const { $repository } = useNuxtApp();
 
-  const { data, pending, error, refresh } = useAsyncData(
+  const {
+    data,
+    pending: requestPending,
+    error,
+    refresh,
+    status,
+  } = useAsyncData(
     "sets",
     () => $repository.sets.getSets(),
     {
       default: () => null as ISetListResponse | null,
       server: false,
+      dedupe: "defer",
     },
   );
+
+  const pending = computed(() => {
+    return status.value === "idle" || requestPending.value;
+  });
 
   const sets = computed<ISetListItemResponse[]>(() => data.value?.data ?? []);
 

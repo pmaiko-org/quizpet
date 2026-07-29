@@ -9,7 +9,7 @@ export const usePeopleList = () => {
   const { data, pending, error, refresh } = useAsyncData(
     "peoples",
     () => $repository.users.getUsers({ page: page.value, perPage }),
-    { server: false, watch: [page] },
+    { server: false, watch: [page], dedupe: "defer" },
   );
 
   const users = computed<IUserResponse[]>(() => data.value?.data ?? []);

@@ -11,6 +11,7 @@ export const useMyStats = () => {
         myTopicsCount: 0,
       }),
       server: false,
+      dedupe: "defer",
     },
   );
 

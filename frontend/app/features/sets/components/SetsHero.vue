@@ -56,26 +56,32 @@
             Створити набір
           </UButton>
 
-          <UButton
-            v-if="pending"
-            loading
-            variant="ghost"
-            color="neutral"
-            size="xl"
-          >
-            Завантажуємо набори
-          </UButton>
-          <UButton
-            v-else
-            icon="i-lucide-refresh-cw"
-            variant="outline"
-            color="neutral"
-            size="xl"
-            class="justify-center"
-            @click="emit('refresh')"
-          >
-            Оновити список
-          </UButton>
+          <ClientOnly>
+            <UButton
+              :loading="pending"
+              icon="i-lucide-refresh-cw"
+              variant="outline"
+              color="neutral"
+              size="xl"
+              class="justify-center"
+              @click="emit('refresh')"
+            >
+              Оновити список
+            </UButton>
+
+            <template #fallback>
+              <UButton
+                icon="i-lucide-refresh-cw"
+                variant="outline"
+                color="neutral"
+                size="xl"
+                class="justify-center"
+                disabled
+              >
+                Оновити список
+              </UButton>
+            </template>
+          </ClientOnly>
         </div>
       </div>
 

@@ -9,6 +9,7 @@ export const useSetEdit = () => {
     () => $repository.sets.getSet(setId.value),
     {
       server: false,
+      dedupe: "defer",
     },
   );
 
