@@ -14,15 +14,17 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "type-check": "nuxi typecheck",
-    "precommit": "npm run type-check && npm run format:fix && npm run lint:fix"
+    "precommit": "npm run generate:api-types && npm run type-check && npm run format:fix && npm run lint:fix"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.7.1",
+    "@pinia/nuxt": "^1.0.1",
     "@vueuse/core": "^14.3.0",
     "@vueuse/nuxt": "^14.3.0",
     "nuxt": "^4.4.2",
+    "pinia": "^4.0.2",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5.30",
     "vue-router": "^5.0.4",
@@ -34,6 +36,7 @@
     "@vue/language-core": "^3.1.1",
     "eslint": "^9.39.4",
     "eslint-plugin-better-tailwindcss": "^4.4.1",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.3",
     "sass": "^1.98.0",

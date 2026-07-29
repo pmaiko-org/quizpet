@@ -1,21 +1,18 @@
 import { Module } from "@nestjs/common";
-import { AuthController } from "./modules/auth/auth.controller";
-import { UsersController } from "./modules/users/users.controller";
-import { CardsController } from "./modules/cards/cards.controller";
-import { SetsController } from "./modules/sets/sets.controller";
-import { StorageController } from "./modules/storage/storage.controller";
-import { AuthService } from "./modules/auth/auth.service";
-import { UsersService } from "./modules/users/users.service";
-import { CardsService } from "./modules/cards/cards.service";
-import { SetsService } from "./modules/sets/sets.service";
-import { StorageService } from "./modules/storage/services/storage.service";
-import { StorageDbBackupsService } from "./modules/storage/services/storage-db-backups.service";
+import { AuthController } from "./features/auth/auth.controller";
+import { UsersController } from "./features/users/users.controller";
+import { SetsController } from "./features/sets/sets.controller";
+import { StorageController } from "./features/storage/storage.controller";
+import { AuthService } from "./features/auth/auth.service";
+import { UsersService } from "./features/users/users.service";
+import { SetsService } from "./features/sets/sets.service";
+import { StorageService } from "./features/storage/services/storage.service";
+import { StorageDbBackupsService } from "./features/storage/services/storage-db-backups.service";
 
 @Module({
   controllers: [
     AuthController,
     UsersController,
-    CardsController,
     SetsController,
     StorageController,
   ],
@@ -26,10 +23,6 @@ import { StorageDbBackupsService } from "./modules/storage/services/storage-db-b
     },
     {
       provide: UsersService,
-      useValue: {},
-    },
-    {
-      provide: CardsService,
       useValue: {},
     },
     {

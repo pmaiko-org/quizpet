@@ -1,18 +1,23 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/ui", "@nuxt/image", "@nuxt/eslint", "@vueuse/nuxt"],
-  pages: {
-    pattern: ["**/*.vue", "!**/components/**"],
-  },
+  modules: [
+    "@nuxt/ui",
+    "@nuxt/image",
+    "@nuxt/eslint",
+    "@vueuse/nuxt",
+    "@pinia/nuxt",
+  ],
   components: [
-    "~/components",
     {
-      path: "~/pages",
-      pattern: "**/components/**",
+      path: "~/components",
       pathPrefix: false,
     },
     {
       path: "~/features",
+      pattern: "*/{components,widgets}/**/*.vue",
+      pathPrefix: false,
+    },
+    {
+      path: "~/core",
       pattern: "*/components/**/*.vue",
       pathPrefix: false,
     },
@@ -20,6 +25,8 @@ export default defineNuxtConfig({
   imports: {
     dirs: [
       "~/store",
+      "~/core/*/store/**/*",
+      "~/core/*/composables/**/*",
       "~/features/*/store/**/*",
       "~/features/*/composables/**/*",
     ],

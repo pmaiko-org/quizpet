@@ -1,0 +1,359 @@
+<template>
+  <UForm
+    :schema="setSchema"
+    :state="state"
+    class="space-y-8 pb-32"
+    @submit="onSubmit"
+    @error="onError"
+  >
+    <section
+      class="
+        rounded-4xl border border-default bg-default/80 p-6 shadow-sm
+        sm:p-8
+      "
+    >
+      <div
+        class="
+          grid gap-6
+          xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]
+        "
+      >
+        <div class="space-y-5">
+          <div class="space-y-2">
+            <p
+              class="
+                text-sm font-medium tracking-[0.24em] text-primary uppercase
+              "
+            >
+              {{ formEyebrow }}
+            </p>
+            <h2 class="text-3xl font-semibold text-highlighted">
+              {{ formTitle }}
+            </h2>
+            <p class="max-w-2xl text-sm/6 text-toned">
+              {{ formDescription }}
+            </p>
+          </div>
+
+          <div
+            class="
+              grid gap-5
+              md:grid-cols-2
+            "
+          >
+            <UFormField
+              label="Назва модуля"
+              name="name"
+              description="Користувачі побачать її у списку ваших наборів."
+              required
+              size="xl"
+            >
+              <UInput
+                v-model="state.name"
+                size="xl"
+                class="w-full"
+                placeholder="Наприклад, Basic Biology"
+              />
+            </UFormField>
+
+            <UFormField
+              v-if="topics"
+              label="Тематика модуля"
+              name="topics"
+              description="Це допоможе зрозуміти, до якої сфери належить набір."
+              required
+              size="xl"
+            >
+              <USelectMenu
+                v-model="state.topicIds"
+                :items="topics"
+                labelKey="label"
+                valueKey="id"
+                :multiple="true"
+                :searchInput="{ placeholder: 'Знайти тематику' }"
+                size="xl"
+                class="w-full"
+              >
+                <template #item-leading="{ item }">
+                  <UIcon
+                    :name="item.icon"
+                    class="size-4 text-primary"
+                  />
+                </template>
+              </USelectMenu>
+            </UFormField>
+          </div>
+
+          <UFormField
+            label="Опис"
+            name="description"
+            description="Короткий контекст допоможе швидше зрозуміти тему набору."
+            size="xl"
+          >
+            <UTextarea
+              v-model="state.description"
+              size="xl"
+              autoresize
+              :rows="4"
+              class="w-full"
+              placeholder="Опишіть, для кого цей набір і що саме він покриває"
+            />
+          </UFormField>
+        </div>
+
+        <div
+          class="
+            rounded-[1.75rem] border border-default bg-linear-to-br
+            from-primary/10 via-transparent to-success/10 p-6
+          "
+        >
+          <p
+            class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
+          >
+            Порада
+          </p>
+          <h3 class="mt-3 text-xl font-semibold text-highlighted">
+            Краще робити картки короткими
+          </h3>
+          <p class="mt-3 text-sm/6 text-toned">
+            Один термін, одна думка, один візуальний акцент. Так набір читається
+            швидше і краще працює на повторення.
+          </p>
+
+          <div
+            class="
+              mt-5 rounded-2xl border border-default bg-default/80 p-4 text-sm
+              text-toned
+            "
+          >
+            Для кольорів і зображень нижче використані базові компоненти з
+            підтримкою помилок, світлої та темної теми.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="
+        rounded-4xl border border-default bg-default/80 p-6 shadow-sm
+        sm:p-8
+      "
+    >
+      <SetCsvTransfer
+        :cards="state.cards"
+        class="mb-6"
+        @import-cards="replaceCards"
+      />
+
+      <div class="space-y-10">
+        <CardForm
+          v-for="(card, index) in state.cards"
+          :key="card.position"
+          :modelValue="card"
+          :index="index"
+          :canRemove="state.cards.length > 2"
+          :isFirst="index === 0"
+          :isLast="index === state.cards.length - 1"
+          @update:model-value="updateCard(index, $event)"
+          @remove="removeCard(index)"
+          @move-up="moveCard(index, index - 1)"
+          @move-down="moveCard(index, index + 1)"
+        />
+      </div>
+    </section>
+
+    <div
+      class="
+        sticky bottom-0 z-20 mt-4 flex w-full justify-end gap-2 rounded-xl
+        border border-default p-1 shadow-lg backdrop-blur-sm
+      "
+    >
+      <UButton
+        type="button"
+        size="xl"
+        variant="ghost"
+        color="neutral"
+        icon="i-lucide-plus"
+        :disabled="submitting"
+        :class="!submitting && 'cursor-pointer'"
+        @click="addCard"
+      >
+        Ще одна картка
+      </UButton>
+
+      <UButton
+        type="submit"
+        size="xl"
+        :loading="submitting"
+        class="justify-center"
+        :class="!submitting && 'cursor-pointer'"
+      >
+        {{ submitLabel }}
+      </UButton>
+    </div>
+  </UForm>
+</template>
+
+<script setup lang="ts">
+import type { FormErrorEvent } from "#ui/types/form";
+import type { ISetDetailsResponse } from "~/types/api.generated";
+
+import {
+  type ICardFormData,
+  initialCard,
+  initialSet,
+  type SetFormData,
+} from "../types";
+import { setSchema } from "../validation";
+
+const props = defineProps<{
+  set?: ISetDetailsResponse;
+}>();
+
+const SET_FORM_DRAFT_STORAGE_KEY = "cards:set-form-draft";
+
+const { topics, submitting, loadTopics, saveSet } = useSetForm();
+
+const draft = useLocalStorage<string | null>(SET_FORM_DRAFT_STORAGE_KEY, null);
+
+const isMounted = useMounted();
+
+const createDraftSnapshot = (value: SetFormData): string =>
+  JSON.stringify(toRaw(value));
+
+const getDraftSnapshot = (value: string): SetFormData => {
+  if (!isMounted.value) {
+    return initialSet();
+  }
+  try {
+    return JSON.parse(value) as SetFormData;
+  } catch {
+    return initialSet();
+  }
+};
+
+const getInitialState = () => {
+  if (props.set) {
+    return initialSet(props.set);
+  }
+
+  return draft.value ? getDraftSnapshot(draft.value) : initialSet();
+};
+
+const state = reactive<SetFormData>(getInitialState());
+
+onMounted(async () => {
+  Object.assign(state, {
+    ...state,
+    ...getInitialState(),
+  });
+
+  await loadTopics();
+});
+
+const isEditMode = computed(() => Boolean(state.id));
+const formEyebrow = computed(() =>
+  isEditMode.value ? "Редагування набору" : "Новий набір",
+);
+const formTitle = computed(() =>
+  isEditMode.value
+    ? "Оновіть набір карток без втрати структури"
+    : "Створіть набір карток з чистою структурою",
+);
+const formDescription = computed(() =>
+  isEditMode.value
+    ? "Оновіть назву, опис, тематики й картки. Існуючі картки збережуться та оновляться по id."
+    : "Дайте модулю зрозумілу назву, коротко опишіть тему й додайте картки. Форма підтримує світлу та темну тему через стандартні токени Nuxt UI.",
+);
+const submitLabel = computed(() =>
+  isEditMode.value ? "Зберегти зміни" : "Створити набір",
+);
+
+watch(
+  state,
+  (nextState) => {
+    if (isEditMode.value) {
+      return;
+    }
+
+    draft.value = createDraftSnapshot(nextState as SetFormData);
+  },
+  { deep: true },
+);
+
+const syncCardPositions = () => {
+  state.cards.forEach((card, index) => {
+    card.position = index;
+  });
+};
+
+const addCard = () => {
+  state.cards.push(initialCard(state.cards.length));
+  syncCardPositions();
+};
+
+const replaceCards = (cards: ICardFormData[]) => {
+  state.cards.splice(0, state.cards.length, ...cards);
+  syncCardPositions();
+};
+
+const removeCard = (index: number) => {
+  state.cards.splice(index, 1);
+  syncCardPositions();
+};
+
+const moveCard = (fromIndex: number, toIndex: number) => {
+  if (toIndex < 0 || toIndex >= state.cards.length || fromIndex === toIndex) {
+    return;
+  }
+
+  const [card] = state.cards.splice(fromIndex, 1);
+  if (!card) {
+    return;
+  }
+
+  state.cards.splice(toIndex, 0, card);
+  syncCardPositions();
+};
+
+const updateCard = (index: number, card: ICardFormData) => {
+  if (!state.cards[index]) {
+    return;
+  }
+
+  state.cards[index] = card;
+};
+
+const onSubmit = async (event: {
+  data: ReturnType<typeof setSchema.parse>;
+}) => {
+  const created = await saveSet(event.data, state.cards, state.id);
+
+  if (created) {
+    draft.value = null;
+  }
+};
+
+const onError = async (event: FormErrorEvent) => {
+  const firstErrorId = event.errors?.[0]?.id;
+
+  if (!firstErrorId) {
+    return;
+  }
+
+  await nextTick();
+  const element = document.getElementById(firstErrorId);
+
+  element?.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+
+  if (
+    element instanceof HTMLInputElement ||
+    element instanceof HTMLTextAreaElement
+  ) {
+    element.focus();
+  }
+};
+</script>

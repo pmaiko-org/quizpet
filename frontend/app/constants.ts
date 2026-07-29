@@ -3,6 +3,6 @@ export enum StatusCodes {
 }
 
 export const PageName = {
-  CARDS_CREATE: "cards-create",
-  CARDS_ID_EDIT: "cards-id-edit",
+  SETS_CREATE: "sets-create",
+  SETS_ID_EDIT: "sets-id-edit",
 };

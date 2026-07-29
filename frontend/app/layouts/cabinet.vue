@@ -16,14 +16,7 @@
 </template>
 
 <script setup lang="ts">
-const { isLoggedIn } = useAuthStore();
-const { getProfile } = useProfileStore();
+useCurrentUser();
 
 const open = ref(true);
-
-onMounted(async () => {
-  if (isLoggedIn.value) {
-    await getProfile();
-  }
-});
 </script>

@@ -2,13 +2,12 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import configuration, { EnvironmentVariables } from "./config/configuration";
-import { AuthModule } from "./modules/auth/auth.module";
+import { AuthModule } from "./features/auth/auth.module";
 import { AppService } from "./app.service";
 import { AppController } from "./app.controller";
-import { UsersModule } from "./modules/users/users.module";
-import { CardsModule } from "./modules/cards/cards.module";
-import { SetsModule } from "./modules/sets/sets.module";
-import { StorageModule } from "./modules/storage/storage.module";
+import { UsersModule } from "./features/users/users.module";
+import { SetsModule } from "./features/sets/sets.module";
+import { StorageModule } from "./features/storage/storage.module";
 import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
@@ -31,7 +30,7 @@ import { ScheduleModule } from "@nestjs/schedule";
           username: db.username,
           password: db.password,
           database: db.database,
-          entities: [__dirname + "/modules/**/*.entity{.ts,.js}"],
+          entities: [__dirname + "/features/**/*.entity{.ts,.js}"],
           synchronize: true,
           charset: "utf8mb4_unicode_ci",
         };
@@ -39,7 +38,6 @@ import { ScheduleModule } from "@nestjs/schedule";
     }),
     AuthModule,
     UsersModule,
-    CardsModule,
     SetsModule,
     StorageModule,
   ],

@@ -100,22 +100,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/cards/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["CardsController_getCards"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/backend/sets/topics": {
     parameters: {
       query?: never;
@@ -162,6 +146,22 @@ export interface paths {
     options?: never;
     head?: never;
     patch: operations["SetsController_updateSet"];
+    trace?: never;
+  };
+  "/backend/sets/{id}/cards": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["SetsController_getCards"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   "/backend/storage/upload": {
@@ -249,7 +249,7 @@ export interface components {
       mySetsCount: number;
       myTopicsCount: number;
     };
-    UpdateProfileDto: {
+    ProfileUpdateDto: {
       firstName: string;
       lastName: string;
       /** Format: uuid */
@@ -272,22 +272,6 @@ export interface components {
     UserListResponseDto: {
       data: components["schemas"]["UserResponseDto"][];
       meta: components["schemas"]["PaginationMetaDto"];
-    };
-    FileResponseDto: {
-      id: string;
-      src: string;
-      name: string;
-    };
-    CardDetailsResponseDto: {
-      id: string;
-      position: number;
-      term: string;
-      termDescription: string | null;
-      termImage: components["schemas"]["FileResponseDto"] | null;
-      definition: string;
-      definitionImage: components["schemas"]["FileResponseDto"] | null;
-      textColor: string | null;
-      backgroundColor: string | null;
     };
     SetListQueryDto: {
       /** @default 1 */
@@ -314,6 +298,22 @@ export interface components {
       data: components["schemas"]["SetListItemResponseDto"][];
       meta: components["schemas"]["PaginationMetaDto"];
     };
+    FileResponseDto: {
+      id: string;
+      src: string;
+      name: string;
+    };
+    CardDetailsResponseDto: {
+      id: string;
+      position: number;
+      term: string;
+      termDescription: string | null;
+      termImage: components["schemas"]["FileResponseDto"] | null;
+      definition: string;
+      definitionImage: components["schemas"]["FileResponseDto"] | null;
+      textColor: string | null;
+      backgroundColor: string | null;
+    };
     SetDetailsResponseDto: {
       id: string;
       name: string;
@@ -322,7 +322,7 @@ export interface components {
       user: components["schemas"]["UserResponseDto"];
       cards: components["schemas"]["CardDetailsResponseDto"][];
     };
-    CreateCardDto: {
+    CardCreateDto: {
       position: number;
       term: string;
       termDescription?: string | null;
@@ -332,16 +332,16 @@ export interface components {
       textColor?: string | null;
       backgroundColor?: string | null;
     };
-    CreateSetDto: {
+    SetCreateDto: {
       name: string;
       description: string;
       topicIds: string[];
-      cards: components["schemas"]["CreateCardDto"][];
+      cards: components["schemas"]["CardCreateDto"][];
     };
     SuccessResponseDto: {
       success: boolean;
     };
-    UpdateCardDto: {
+    CardUpdateDto: {
       position: number;
       term: string;
       termDescription?: string | null;
@@ -353,11 +353,11 @@ export interface components {
       /** Format: uuid */
       id?: string | null;
     };
-    UpdateSetDto: {
+    SetUpdateDto: {
       name: string;
       description: string;
       topicIds: string[];
-      cards: components["schemas"]["UpdateCardDto"][];
+      cards: components["schemas"]["CardUpdateDto"][];
     };
   };
   responses: never;
@@ -398,9 +398,7 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content?: never;
       };
     };
   };
@@ -455,7 +453,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateProfileDto"];
+        "application/json": components["schemas"]["ProfileUpdateDto"];
       };
     };
     responses: {
@@ -510,27 +508,6 @@ export interface operations {
       };
     };
   };
-  CardsController_getCards: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CardDetailsResponseDto"][];
-        };
-      };
-    };
-  };
   SetsController_getTopics: {
     parameters: {
       query?: never;
@@ -581,7 +558,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateSetDto"];
+        "application/json": components["schemas"]["SetCreateDto"];
       };
     };
     responses: {
@@ -648,7 +625,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateSetDto"];
+        "application/json": components["schemas"]["SetUpdateDto"];
       };
     };
     responses: {
@@ -658,6 +635,27 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["SetDetailsResponseDto"];
+        };
+      };
+    };
+  };
+  SetsController_getCards: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetailsResponseDto"][];
         };
       };
     };
@@ -742,23 +740,23 @@ export interface operations {
 
 type ApiSchemas = components["schemas"];
 
+export type ICardCreate = ApiSchemas["CardCreateDto"];
 export type ICardDetailsResponse = ApiSchemas["CardDetailsResponseDto"];
-export type ICreateCard = ApiSchemas["CreateCardDto"];
-export type ICreateSet = ApiSchemas["CreateSetDto"];
+export type ICardUpdate = ApiSchemas["CardUpdateDto"];
 export type IFileResponse = ApiSchemas["FileResponseDto"];
 export type IPaginationMeta = ApiSchemas["PaginationMetaDto"];
 export type IProfileStatsResponse = ApiSchemas["ProfileStatsResponseDto"];
+export type IProfileUpdate = ApiSchemas["ProfileUpdateDto"];
 export type IRefreshToken = ApiSchemas["RefreshTokenDto"];
 export type IRefreshTokenResponse = ApiSchemas["RefreshTokenResponseDto"];
+export type ISetCreate = ApiSchemas["SetCreateDto"];
 export type ISetDetailsResponse = ApiSchemas["SetDetailsResponseDto"];
 export type ISetListItemResponse = ApiSchemas["SetListItemResponseDto"];
 export type ISetListQuery = ApiSchemas["SetListQueryDto"];
 export type ISetListResponse = ApiSchemas["SetListResponseDto"];
+export type ISetUpdate = ApiSchemas["SetUpdateDto"];
 export type ISuccessResponse = ApiSchemas["SuccessResponseDto"];
 export type ITopicResponse = ApiSchemas["TopicResponseDto"];
-export type IUpdateCard = ApiSchemas["UpdateCardDto"];
-export type IUpdateProfile = ApiSchemas["UpdateProfileDto"];
-export type IUpdateSet = ApiSchemas["UpdateSetDto"];
 export type IUserListQuery = ApiSchemas["UserListQueryDto"];
 export type IUserListResponse = ApiSchemas["UserListResponseDto"];
 export type IUserResponse = ApiSchemas["UserResponseDto"];

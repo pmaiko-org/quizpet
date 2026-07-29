@@ -48,44 +48,60 @@ Run a single test file: `npx jest path/to/file.spec.ts`
 ### Stack
 
 - **Backend**: NestJS 11 + TypeORM + PostgreSQL 17. TypeORM `synchronize: true` — no migration files, schema is driven by entity decorators.
-- **Frontend**: Nuxt 4 + Vue 3 + Nuxt UI (Tailwind v4) + Zod.
+- **Frontend**: Nuxt 4 + Vue 3 + Nuxt UI (Tailwind v4) + Pinia (setup stores) + Zod.
 - **Infrastructure**: Docker Compose. Dev and prod stacks share `compose.yaml`; `compose.dev.yaml` and `compose.prod.yaml` override it. All services communicate over a Docker bridge named `${PROJECT_PREFIX}-internal_network`. Frontend is also on `shared_network` (external, for reverse proxy).
 - **Auth**: Google OAuth 2.0 → issues JWT access + refresh tokens. Frontend auto-refreshes on 401 via the `$fetch` plugin, then retries the original request once.
 - **File storage**: Backend mounts a local filesystem path (`STORAGE_PATH`) and serves it as static files under the same path prefix. `StorageCleanService` and `StorageDbBackupsService` run on schedules.
 - **Redis**: Present in the compose stack (LRU cache, 100 MB limit) but not yet wired into backend application code.
 
-### Backend module layout (`src/modules/`)
+### Backend feature layout (`src/features/`)
 
-Each module follows the standard NestJS pattern: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `*.entity.ts`, `dto/`.
+Each feature follows the standard NestJS pattern: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `*.entity.ts`, `dto/`. (The directory is `src/features/`, mirroring the frontend's feature-based layout — it was renamed from `src/modules/`.)
 
-| Module | Responsibility |
+| Feature | Responsibility |
 |---|---|
 | `auth` | Google OAuth, JWT strategy, token refresh |
 | `users` | `UserEntity`, user profile CRUD |
-| `sets` | Flashcard sets — owned by a user |
-| `cards` | Individual flashcards — belong to a set |
+| `sets` | Flashcard sets + their cards (domain root `Set`, child `Card`). `SetEntity`, `CardEntity`, topics; cards are served under the set: `GET /sets/:id/cards` |
 | `storage` | File upload/download, static serving, scheduled cleanup and DB backup |
+
+> `cards` is **no longer a separate module** — the `Card` entity, its DTOs, and the cards endpoint were folded into `sets` (a card only exists inside a set). Routes moved from `/cards/:id` to `/sets/:id/cards`.
 
 `src/common/` holds shared DTOs, exception filters, interfaces, and the generic `RequestService` (Axios wrapper via `@nestjs/axios`).
 
-### Frontend feature-module layout (`app/`)
+#### DTO naming convention
 
-The frontend uses a **feature-module** architecture enforced by an ESLint rule (`local/no-cross-feature-imports`): **features must never import from each other**. Shared code lives at the app root.
+Files and classes follow one consistent scheme (entity/noun-first — never verb-first):
 
-| Path | Purpose |
-|---|---|
-| `features/<name>/store.ts` | Feature-scoped state (`useState`) |
-| `features/<name>/composables/` | Feature-scoped composables |
-| `features/<name>/components/` | Feature-scoped Vue components (auto-registered, `pathPrefix: false`) |
-| `features/<name>/types.ts` | TypeScript types and factory functions |
-| `features/<name>/validation.ts` | Zod schemas |
-| `components/base/` | Design-system primitives (globally reusable) |
-| `composables/` | Cross-feature composables only |
-| `store/` | Global UI state (`useUiStore`, `useRequestStore`) |
-| `repository/` | API layer — one file per domain; accessed only via the `$api` plugin, not imported directly from features |
-| `pages/` | Thin routing shell — `definePageMeta` + `useAsyncData` + orchestration only |
+- **Files**: `kebab-case` + role suffix via dot — `*.dto.ts`, responses `*.response.dto.ts`, query params `*.query.dto.ts`. One class per file.
+- **Folders**: when a feature owns several entities, split `dto/` by entity (`dto/set/`, `dto/card/`, `dto/topic/`). Single-entity features keep a flat `dto/`.
+- **Class = `<Entity><Qualifier><Role>Dto`**, PascalCase, entity/noun first, role suffix never dropped: `SetCreateDto`, `SetUpdateDto`, `SetDetailsResponseDto`, `SetListQueryDto`, `SetListResponseDto`, `CardCreateDto`, `ProfileUpdateDto`, `UserResponseDto`. **Not** `CreateSetDto` (verb-first is the one thing to avoid — keeps `Set*`/`Card*` grouped and collision-free when imported together).
+- **File name = the class in kebab-case, dropping the entity segment only when the folder already names it** (`dto/set/create.dto.ts` ↔ `SetCreateDto`). Flat folders keep the entity in the file name (`user-list.query.dto.ts` ↔ `UserListQueryDto`).
+- Other roles mirror this: `XEntity`, `XService`, `XController`, `XModule`, `XGuard`.
 
-Current features: `auth` (token management, refresh, logout), `profile` (current user), `cards` (sets, cards, CRUD).
+Class names become the OpenAPI schema names → the frontend alias `I<Name-without-Dto>` (`SetCreateDto` → `ISetCreate`). Renaming a DTO means re-running `npm run generate:api-types` and updating the frontend alias usages.
+
+### Frontend layered architecture (`app/`)
+
+The frontend uses a **layered feature-based** architecture with a strict dependency direction:
+
+```
+pages  →  features  →  core  →  shared
+```
+
+A layer may import only from layers to its right, never the reverse. Enforced by ESLint (`local/layer-imports`: dependency direction + feature isolation). **See `frontend/CLAUDE.md` for the full contract — read it before any structural change.**
+
+| Layer | Path | Purpose |
+|---|---|---|
+| `pages` | `pages/` | Routing only — `definePageMeta` + mount feature `*Widget` component(s). No fetch, no logic, no markup |
+| `features` | `features/<name>/` | Self-contained business features (de-facto domain modules). The screen entry point is a `widgets/*Widget.vue` (mounted directly by the page) that calls the feature's **section composable** (`composables/use*.ts`), where fetch/`useAsyncData` lives; `components/` holds the presentational bricks the widget composes. A feature never imports another feature; cross-cutting values (e.g. current user) come from `core` as `Ref` arguments |
+| `core` | `core/<name>/` | Cross-cutting infrastructure (session/auth + current user, ui, api, toast, theme, modal). Knows nothing about features |
+| `shared` | app-root dirs | `components/base/`, `components/layout/` (app chrome `App*`), `composables/`, `utils/`, `validation.ts`, `store/`, `repository/`, `types/` — domain-agnostic primitives |
+
+**Widgets are not a top-level layer** — they are a per-feature `widgets/` folder next to `components/`. The rule: a component mounted directly by a page ends in `*Widget` and lives in `features/<name>/widgets/`; the presentational bricks it composes live in `features/<name>/components/`. A widget sits inside its feature, so feature isolation applies to it too. There is no root `app/widgets/`. See `frontend/CLAUDE.md`.
+
+Current features: `profile` (profile-edit screen + my stats), `sets` (flashcard sets, cards, learn mode — domain root is `Set`), `people` (platform users list), `auth` (login screen UI).
+Current core modules: `session` (token management, refresh, logout — `useAuthStore`; current user — `useCurrentUser`), `ui` (`useUiStore`).
 
 ### API type generation
 
@@ -96,11 +112,20 @@ Current features: `auth` (token management, refresh, logout), `profile` (current
 ```ts
 // nuxt.config.ts
 components: [
-  "~/components",
-  { path: "~/features", pattern: "*/components/**/*.vue", pathPrefix: false },
+  { path: "~/components", pathPrefix: false },
+  // components + widgets in ONE entry — Nuxt dedupes component dirs by `path`,
+  // so two entries with the same `~/features` silently drop the second.
+  { path: "~/features", pattern: "*/{components,widgets}/**/*.vue", pathPrefix: false },
+  { path: "~/core", pattern: "*/components/**/*.vue", pathPrefix: false },
 ],
 imports: {
-  dirs: ["~/store", "~/features/*/store/**/*", "~/features/*/composables/**/*"],
+  dirs: [
+    "~/store",
+    "~/core/*/store/**/*",
+    "~/core/*/composables/**/*",
+    "~/features/*/store/**/*",
+    "~/features/*/composables/**/*",
+  ],
 },
 ```
 
