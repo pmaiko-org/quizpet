@@ -33,9 +33,5 @@ interface IAppSectionHeaderProps {
   summary?: string;
 }
 
-const {
-  eyebrow,
-  title,
-  summary = "",
-} = defineProps<IAppSectionHeaderProps>();
+const { eyebrow, title, summary = "" } = defineProps<IAppSectionHeaderProps>();
 </script>

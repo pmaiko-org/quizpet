@@ -61,10 +61,7 @@
 <script setup lang="ts">
 import type { IFileResponse } from "~/types/api.generated";
 
-const {
-  title,
-  description,
-} = defineProps<{
+const { title, description } = defineProps<{
   badge: string;
   title: string;
   description: string | null;

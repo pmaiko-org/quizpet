@@ -59,9 +59,7 @@
           v-else
           class="mt-3 border-t border-default pt-3"
         >
-          <div
-            class="app-radius-surface border border-default bg-muted/45 p-3"
-          >
+          <div class="app-radius-surface border border-default bg-muted/45 p-3">
             <div class="mb-2 flex items-center justify-between gap-2">
               <p class="text-xs font-medium text-muted">
                 Профіль
@@ -175,15 +173,9 @@ const items = ref<NavigationMenuItem[]>([
   },
 ]);
 
-const {
-  user: profile,
-  pending: profilePending,
-} = useCurrentUser();
+const { user: profile, pending: profilePending } = useCurrentUser();
 
-const {
-  stats,
-  pending: statsPending,
-} = useMyStats();
+const { stats, pending: statsPending } = useMyStats();
 
 const metrics = computed(() => [
   { value: stats.value.peopleCount, label: "Люди" },

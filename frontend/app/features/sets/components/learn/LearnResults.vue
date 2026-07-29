@@ -202,10 +202,7 @@ import {
   type ILearningCardReport,
 } from "../../utils";
 
-const {
-  reports,
-  totalDurationMs,
-} = defineProps<{
+const { reports, totalDurationMs } = defineProps<{
   reports: ILearningCardReport[];
   totalDurationMs: number;
 }>();

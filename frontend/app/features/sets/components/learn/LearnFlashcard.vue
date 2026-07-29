@@ -44,12 +44,14 @@
             transition-colors
             focus-visible:outline-2 focus-visible:outline-primary
           "
-          :class="!flipped
-            ? 'bg-elevated text-highlighted shadow-sm'
-            : `
-              text-muted
-              hover:text-default
-            `"
+          :class="
+            !flipped
+              ? 'bg-elevated text-highlighted shadow-sm'
+              : `
+                text-muted
+                hover:text-default
+              `
+          "
           :aria-pressed="!flipped"
           @click="showTerm"
         >
@@ -62,12 +64,14 @@
             transition-colors
             focus-visible:outline-2 focus-visible:outline-primary
           "
-          :class="flipped
-            ? 'bg-elevated text-highlighted shadow-sm'
-            : `
-              text-muted
-              hover:text-default
-            `"
+          :class="
+            flipped
+              ? 'bg-elevated text-highlighted shadow-sm'
+              : `
+                text-muted
+                hover:text-default
+              `
+          "
           :aria-pressed="flipped"
           @click="showDefinition"
         >
@@ -137,13 +141,7 @@ import type { ICardDetailsResponse } from "~/types/api.generated";
 
 import { buildFlashcardTheme } from "../../utils";
 
-const {
-  card,
-  currentStep,
-  currentCardTime,
-  flipped,
-  editLink,
-} = defineProps<{
+const { card, currentStep, currentCardTime, flipped, editLink } = defineProps<{
   card: ICardDetailsResponse;
   currentStep: number;
   currentCardTime: string;

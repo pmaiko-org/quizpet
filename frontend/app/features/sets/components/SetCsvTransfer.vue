@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="app-surface-subtle app-radius-surface p-3"
-  >
+  <div class="app-surface-subtle app-radius-surface p-3">
     <div
       class="
         flex flex-col gap-3

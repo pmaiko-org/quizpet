@@ -10,14 +10,10 @@ export const useSetEdit = () => {
     status,
     error,
     refresh,
-  } = useAsyncData(
-    asyncDataKey,
-    () => $repository.sets.getSet(setId.value),
-    {
-      server: false,
-      dedupe: "defer",
-    },
-  );
+  } = useAsyncData(asyncDataKey, () => $repository.sets.getSet(setId.value), {
+    server: false,
+    dedupe: "defer",
+  });
 
   return {
     set,
