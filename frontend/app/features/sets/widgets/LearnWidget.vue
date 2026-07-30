@@ -61,7 +61,7 @@
     <div
       v-else-if="currentCard"
       ref="learnStage"
-      class="flex min-h-0 flex-col gap-3 pb-[env(safe-area-inset-bottom)]"
+      class="flex min-h-0 flex-col gap-3"
       :class="
         isFullscreen
           ? 'h-svh bg-default p-4'

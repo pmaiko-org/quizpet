@@ -2,7 +2,7 @@
   <div
     class="
       flex h-[calc(100svh-var(--ui-header-height)-2.5rem)] min-h-0 flex-col
-      gap-3 pb-[env(safe-area-inset-bottom)]
+      gap-3
       sm:h-[calc(100svh-var(--ui-header-height)-3rem)]
     "
     aria-label="Завантаження навчального сеансу"
