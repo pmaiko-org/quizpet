@@ -37,9 +37,7 @@
           >Q</span>
           <span class="min-w-0">
             <span class="block truncate text-sm font-semibold text-highlighted">QuizPet</span>
-            <span class="block truncate text-[11px] text-muted">{{
-              sectionLabel
-            }}</span>
+            <span class="block truncate text-[11px] text-muted">Навчання картками</span>
           </span>
         </NuxtLink>
       </div>

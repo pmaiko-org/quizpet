@@ -9,37 +9,65 @@
     }"
     class="border-r border-default bg-elevated/95 [--sidebar-width:18rem]"
   >
-    <section class="mb-auto flex flex-col">
-      <UNavigationMenu
-        :items="items"
-        orientation="vertical"
-        :ui="{
-          root: 'min-w-0',
-          list: 'flex flex-col gap-1',
-          item: 'min-w-0',
-          link: 'group relative overflow-hidden app-radius-control border border-transparent px-3 py-2.5 transition-colors duration-150 hover:bg-muted data-[active=true]:border-primary/15 data-[active=true]:bg-primary/10',
-          linkLeadingIcon:
-            'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
-          linkLabel:
-            'truncate text-sm font-medium text-toned transition-colors duration-200 group-hover:text-highlighted group-data-[active=true]:text-highlighted',
-          linkLabelExternalIcon: 'hidden',
-          linkTrailingIcon:
-            'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
-        }"
-        @click="closeOnMobile"
-      />
-
-      <UButton
+    <section class="mb-auto flex flex-col gap-4">
+      <NuxtLink
         to="/sets/create"
-        color="primary"
-        variant="soft"
-        icon="i-lucide-plus"
-        block
-        class="mt-3 justify-start"
+        class="
+          group app-radius-surface flex items-center gap-3 border border-default
+          bg-linear-to-br from-primary/10 to-transparent p-3 transition-colors
+          hover:border-primary/25
+        "
         @click="closeOnMobile"
       >
-        Новий набір
-      </UButton>
+        <span
+          class="
+            app-radius-control flex size-10 shrink-0 items-center justify-center
+            bg-primary text-inverted shadow-sm transition-transform duration-200
+            group-hover:scale-105
+          "
+        >
+          <UIcon
+            name="i-lucide-plus"
+            class="size-5"
+          />
+        </span>
+        <span class="min-w-0">
+          <span class="block truncate text-sm font-semibold text-highlighted">
+            Новий набір
+          </span>
+          <span class="block truncate text-[11px] text-muted">
+            Створити картки для навчання
+          </span>
+        </span>
+      </NuxtLink>
+
+      <div class="flex flex-col gap-1.5">
+        <p
+          class="
+            px-3 text-[11px] font-semibold tracking-wider text-dimmed uppercase
+          "
+        >
+          Меню
+        </p>
+        <UNavigationMenu
+          :items="items"
+          orientation="vertical"
+          :ui="{
+            root: 'min-w-0',
+            list: 'flex flex-col gap-1',
+            item: 'min-w-0',
+            link: 'group relative overflow-hidden app-radius-control border border-transparent px-3 py-2.5 transition-colors duration-150 hover:bg-muted data-[active=true]:border-primary/15 data-[active=true]:bg-primary/10',
+            linkLeadingIcon:
+              'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
+            linkLabel:
+              'truncate text-sm font-medium text-toned transition-colors duration-200 group-hover:text-highlighted group-data-[active=true]:text-highlighted',
+            linkLabelExternalIcon: 'hidden',
+            linkTrailingIcon:
+              'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
+          }"
+          @click="closeOnMobile"
+        />
+      </div>
     </section>
 
     <client-only>
