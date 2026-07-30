@@ -7,13 +7,10 @@ The frontend (`app/`) follows a **layered feature-based architecture** (в ду�
 В компонентах всегда деструктурируй пропсы прямо из `defineProps` (без `withDefaults`):
 
 ```ts
-const {
-  title,
-  isLoading = false,
-} = defineProps<{
-  title: string
-  isLoading?: boolean
-}>()
+const { title, isLoading = false } = defineProps<{
+  title: string;
+  isLoading?: boolean;
+}>();
 ```
 
 Не сохраняй результат `defineProps` в объект `props`, если для этого нет веской причины.
