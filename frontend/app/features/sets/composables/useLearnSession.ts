@@ -2,8 +2,14 @@ import { useNow } from "@vueuse/core";
 
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
-import type { ILearningAttempt, ILearningCardReport } from "../utils";
-import { formatTime } from "../utils";
+import type {
+  ILearningAttempt,
+  ILearningCardReport,
+  TLearningOutcome,
+} from "../utils";
+import { canEditSet, formatTime } from "../utils";
+
+const ANSWER_HOLD_MS = 280;
 
 interface ICardSessionState {
   attempts: ILearningAttempt[];
@@ -13,27 +19,28 @@ interface ICardSessionState {
   totalDurationMs: number;
 }
 
-export const useLearnSession = () => {
+export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
   const route = useRoute();
   const { $repository } = useNuxtApp();
 
   const setId = computed(() => route.params.id as string);
-  const asyncDataKey = computed(() => `cards-learning-${setId.value}`);
+  const asyncDataKey = computed(() => `set-learning-${setId.value}`);
 
   const {
-    data: cards,
+    data: set,
     status,
     error,
     refresh,
-  } = useAsyncData(
-    asyncDataKey,
-    () => $repository.sets.getSetCards(setId.value),
-    {
-      server: false,
-      default: () => [] as ICardDetailsResponse[],
-      dedupe: "defer",
-    },
-  );
+  } = useAsyncData(asyncDataKey, () => $repository.sets.getSet(setId.value), {
+    server: false,
+    dedupe: "defer",
+  });
+
+  const cards = computed<ICardDetailsResponse[]>(() => set.value?.cards ?? []);
+
+  const canEdit = computed(() => {
+    return canEditSet(set.value ?? null, currentUserEmail?.value);
+  });
 
   const loading = computed(
     () => status.value === "pending" || status.value === "idle",
@@ -48,6 +55,7 @@ export const useLearnSession = () => {
   const currentStep = ref(0);
   const flipped = ref(false);
   const isAnswering = ref(false);
+  const lastOutcome = ref<TLearningOutcome | null>(null);
   const sessionStartedAt = ref(0);
   const sessionFinishedAt = ref<number | null>(null);
   const cardStartedAt = ref(0);
@@ -182,6 +190,7 @@ export const useLearnSession = () => {
     currentStep.value = 0;
     flipped.value = false;
     isAnswering.value = false;
+    lastOutcome.value = null;
     sessionStartedAt.value = 0;
     sessionFinishedAt.value = null;
     cardStartedAt.value = 0;
@@ -211,6 +220,7 @@ export const useLearnSession = () => {
     currentStep.value = 0;
     flipped.value = false;
     isAnswering.value = false;
+    lastOutcome.value = null;
     sessionStartedAt.value = Date.now();
     sessionFinishedAt.value = null;
     cardStartedAt.value = Date.now();
@@ -265,6 +275,7 @@ export const useLearnSession = () => {
     }
 
     isAnswering.value = true;
+    lastOutcome.value = outcome;
 
     const state = getCardState(card.id);
     const durationMs = Math.max(250, Date.now() - cardStartedAt.value);
@@ -279,7 +290,7 @@ export const useLearnSession = () => {
 
     if (outcome === "known") {
       state.successes += 1;
-      queueNextCard(flipped.value ? 240 : 140);
+      queueNextCard(ANSWER_HOLD_MS);
       return;
     }
 
@@ -289,7 +300,7 @@ export const useLearnSession = () => {
       queue.value.push(card.id);
     }
 
-    queueNextCard(140);
+    queueNextCard(ANSWER_HOLD_MS);
   };
 
   const markKnown = () => {
@@ -353,6 +364,7 @@ export const useLearnSession = () => {
 
   return {
     cards,
+    canEdit,
     loading,
     error,
     refreshSet,
@@ -361,6 +373,7 @@ export const useLearnSession = () => {
     currentStep,
     flipped,
     isAnswering,
+    lastOutcome,
     editSetLink,
     currentCard,
     currentCardEditLink,

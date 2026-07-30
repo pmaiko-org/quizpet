@@ -28,15 +28,12 @@
       <div class="flex min-h-0 flex-1 flex-col">
         <div
           v-if="image"
-          class="
-            app-radius-surface mb-3 flex min-h-0 w-full flex-3 items-center
-            justify-center overflow-hidden bg-muted/40
-          "
+          class="mb-3 flex min-h-0 w-full flex-3 items-center justify-center"
         >
           <img
             :src="image.src"
             :alt="image.name"
-            class="size-full object-contain"
+            class="app-radius-surface h-full max-w-full object-contain"
             @load="fit"
           >
         </div>

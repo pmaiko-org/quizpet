@@ -35,6 +35,7 @@
         />
 
         <UButton
+          v-if="canEdit"
           size="sm"
           variant="ghost"
           color="neutral"
@@ -56,16 +57,18 @@
     </div>
 
     <div
+      ref="swipeAreaRef"
       role="button"
       tabindex="0"
       class="
-        group app-radius-surface relative block min-h-0 w-full flex-1 text-left
+        group app-radius-surface relative block min-h-0 w-full flex-1 touch-pan-y
+        text-left select-none
         focus:outline-none
         focus-visible:ring-2 focus-visible:ring-primary/70
       "
       :aria-pressed="flipped"
       :aria-label="flipped ? 'Показати термін' : 'Показати відповідь'"
-      @click="emit('flip')"
+      @click="onCardClick"
       @keydown.enter.prevent="emit('flip')"
     >
       <UPopover class="absolute top-2 left-2 z-20">
@@ -131,6 +134,25 @@
         :image="flipped ? card.definitionImage : card.termImage"
         :style="theme.cardStyle"
       />
+
+      <Transition name="learn-verdict">
+        <div
+          v-if="answering && outcome"
+          class="learn-verdict app-radius-surface"
+          :class="outcome === 'known' ? 'is-known' : 'is-missed'"
+          aria-hidden="true"
+        >
+          <div class="learn-verdict__badge">
+            <UIcon
+              :name="
+                outcome === 'known' ? 'i-lucide-check' : 'i-lucide-rotate-ccw'
+              "
+              class="size-9"
+            />
+            <span>{{ outcome === "known" ? "Знаю" : "Не знаю" }}</span>
+          </div>
+        </div>
+      </Transition>
     </div>
   </section>
 </template>
@@ -138,13 +160,16 @@
 <script setup lang="ts">
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
-import { buildFlashcardTheme } from "../../utils";
+import { buildFlashcardTheme, type TLearningOutcome } from "../../utils";
 
 const { card, flipped } = defineProps<{
   card: ICardDetailsResponse;
   currentStep: number;
   currentCardTime: string;
   flipped: boolean;
+  answering?: boolean;
+  outcome?: TLearningOutcome | null;
+  canEdit?: boolean;
   editLink: string;
   fullscreenSupported?: boolean;
   isFullscreen?: boolean;
@@ -194,6 +219,67 @@ const speakCurrentSide = () => {
 
 @media (prefers-reduced-motion: reduce) {
   .learn-side {
+    animation: none;
+  }
+}
+
+.learn-verdict {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid transparent;
+  backdrop-filter: blur(1px);
+}
+
+.learn-verdict.is-known {
+  border-color: rgba(16, 185, 129, 0.7);
+  background: rgba(16, 185, 129, 0.14);
+  color: rgb(52, 211, 153);
+}
+
+.learn-verdict.is-missed {
+  border-color: rgba(245, 158, 11, 0.7);
+  background: rgba(245, 158, 11, 0.14);
+  color: rgb(251, 191, 36);
+}
+
+.learn-verdict__badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  animation: learn-verdict-pop 240ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes learn-verdict-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.learn-verdict-enter-active {
+  transition: opacity 140ms ease;
+}
+
+.learn-verdict-enter-from {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learn-verdict__badge {
     animation: none;
   }
 }

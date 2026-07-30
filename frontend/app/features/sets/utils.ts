@@ -2,6 +2,7 @@ import type { CSSProperties } from "vue";
 
 import type {
   ICardDetailsResponse,
+  ISetDetailsResponse,
   ISetListItemResponse,
 } from "~/types/api.generated";
 
@@ -16,6 +17,13 @@ export const canDeleteSet = (
   currentEmail?: string | null,
 ) => {
   return Boolean(currentEmail && currentEmail === set.user.email);
+};
+
+export const canEditSet = (
+  set: ISetDetailsResponse | null,
+  currentEmail?: string | null,
+) => {
+  return Boolean(currentEmail && set && currentEmail === set.user.email);
 };
 
 export type TLearningOutcome = "known" | "missed";

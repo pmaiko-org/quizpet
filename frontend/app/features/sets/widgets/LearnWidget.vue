@@ -38,6 +38,7 @@
           режим навчання з повторенням та статистикою.
         </p>
         <UButton
+          v-if="canEdit"
           :to="editSetLink"
           icon="i-lucide-pencil"
           size="xl"
@@ -81,22 +82,31 @@
       />
 
       <div
-        :key="`${currentCard.id}-${currentStep}`"
-        class="learn-card-anim min-h-0 flex-1"
+        class="relative min-h-0 flex-1"
         aria-live="polite"
       >
-        <LearnFlashcard
-          class="h-full"
-          :card="currentCard"
-          :currentStep="currentStep + 1"
-          :currentCardTime="currentCardTime"
-          :flipped="flipped"
-          :editLink="currentCardEditLink"
-          :fullscreenSupported="fullscreenSupported"
-          :isFullscreen="isFullscreen"
-          @flip="toggleFlip"
-          @toggle-fullscreen="toggleFullscreen"
-        />
+        <Transition :name="cardTransition">
+          <div
+            :key="`${currentCard.id}-${currentStep}`"
+            class="absolute inset-0"
+          >
+            <LearnFlashcard
+              class="h-full"
+              :card="currentCard"
+              :currentStep="currentStep + 1"
+              :currentCardTime="currentCardTime"
+              :flipped="flipped"
+              :answering="isAnswering"
+              :outcome="lastOutcome"
+              :canEdit="canEdit"
+              :editLink="currentCardEditLink"
+              :fullscreenSupported="fullscreenSupported"
+              :isFullscreen="isFullscreen"
+              @flip="toggleFlip"
+              @toggle-fullscreen="toggleFullscreen"
+            />
+          </div>
+        </Transition>
       </div>
 
       <LearnControls
@@ -117,8 +127,11 @@ const {
   toggle: toggleFullscreen,
 } = useFullscreen(learnStage);
 
+const { email } = useCurrentUser();
+
 const {
   cards,
+  canEdit,
   loading,
   error,
   refreshSet,
@@ -127,6 +140,7 @@ const {
   currentStep,
   flipped,
   isAnswering,
+  lastOutcome,
   editSetLink,
   currentCard,
   currentCardEditLink,
@@ -142,7 +156,11 @@ const {
   markMissed,
   restartSession,
   restartMistakes,
-} = useLearnSession();
+} = useLearnSession(email);
+
+const cardTransition = computed(() => {
+  return lastOutcome.value === "missed" ? "card-missed" : "card-known";
+});
 
 const onKeydown = (event: KeyboardEvent) => {
   if (isShowingResults.value || !currentCard.value) {
@@ -173,25 +191,50 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 </script>
 
 <style scoped>
-.learn-card-anim {
-  animation: learn-card-in 180ms ease both;
+.card-known-enter-active,
+.card-missed-enter-active {
+  transition:
+    transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 260ms ease;
 }
 
-@keyframes learn-card-in {
-  from {
-    opacity: 0;
-    transform: translateX(16px);
-  }
+.card-known-leave-active,
+.card-missed-leave-active {
+  z-index: 10;
+  transition:
+    transform 320ms cubic-bezier(0.55, 0.06, 0.68, 0.19),
+    opacity 320ms ease;
+}
 
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.card-known-enter-from,
+.card-missed-enter-from {
+  opacity: 0;
+  transform: translateY(10px) scale(0.955);
+}
+
+.card-known-leave-to {
+  opacity: 0;
+  transform: translateX(118%) rotate(7deg);
+}
+
+.card-missed-leave-to {
+  opacity: 0;
+  transform: translateX(-118%) rotate(-7deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .learn-card-anim {
-    animation: none;
+  .card-known-enter-active,
+  .card-missed-enter-active,
+  .card-known-leave-active,
+  .card-missed-leave-active {
+    transition: opacity 120ms ease;
+  }
+
+  .card-known-enter-from,
+  .card-missed-enter-from,
+  .card-known-leave-to,
+  .card-missed-leave-to {
+    transform: none;
   }
 }
 </style>
