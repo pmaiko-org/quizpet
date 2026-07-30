@@ -289,14 +289,7 @@ export const useLearnSession = () => {
       queue.value.push(card.id);
     }
 
-    if (!flipped.value) {
-      state.revealCount += 1;
-      flipped.value = true;
-      queueNextCard(1100);
-      return;
-    }
-
-    queueNextCard(380);
+    queueNextCard(140);
   };
 
   const markKnown = () => {

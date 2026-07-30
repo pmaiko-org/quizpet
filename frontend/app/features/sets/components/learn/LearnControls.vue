@@ -15,6 +15,8 @@
 
       <UButton
         size="lg"
+        color="primary"
+        variant="soft"
         icon="i-lucide-arrow-right"
         trailing
         class="h-11 justify-center"

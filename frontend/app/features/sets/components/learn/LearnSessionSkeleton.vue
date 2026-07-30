@@ -1,9 +1,13 @@
 <template>
   <div
-    class="mx-auto max-w-3xl space-y-3"
+    class="
+      flex h-[calc(100svh-var(--ui-header-height)-2.5rem)] min-h-0 flex-col
+      gap-3 pb-[env(safe-area-inset-bottom)]
+      sm:h-[calc(100svh-var(--ui-header-height)-3rem)]
+    "
     aria-label="Завантаження навчального сеансу"
   >
-    <section class="app-surface p-3">
+    <section class="app-surface shrink-0 p-3">
       <div
         class="
           flex flex-col gap-3
@@ -26,42 +30,19 @@
       <USkeleton class="mt-3 h-2 w-full" />
     </section>
 
-    <div class="space-y-2">
-      <div class="flex items-center justify-between gap-3">
-        <div class="flex gap-2">
-          <USkeleton class="h-6 w-18" />
-          <USkeleton class="h-6 w-16" />
-        </div>
-        <div class="flex gap-1">
-          <USkeleton class="size-8" />
-          <USkeleton class="size-8" />
-        </div>
+    <div class="flex shrink-0 items-center gap-2">
+      <USkeleton class="h-6 w-20" />
+      <USkeleton class="h-7 w-16" />
+      <div class="ml-auto flex gap-1">
+        <USkeleton class="size-8" />
+        <USkeleton class="size-8" />
+        <USkeleton class="size-8" />
       </div>
-
-      <USkeleton class="mx-auto h-9 w-full max-w-64" />
-
-      <section
-        class="
-          app-radius-surface flex min-h-60 flex-col border border-default
-          bg-elevated p-3
-          sm:min-h-80 sm:p-4
-        "
-      >
-        <USkeleton class="h-6 w-16" />
-        <div
-          class="
-            flex flex-1 flex-col items-center justify-center space-y-3 py-3
-          "
-        >
-          <USkeleton class="h-9 w-2/5" />
-          <USkeleton class="h-4 w-1/3" />
-        </div>
-      </section>
-
-      <USkeleton class="mx-auto h-3 w-3/5" />
     </div>
 
-    <div class="grid grid-cols-2 gap-2">
+    <USkeleton class="app-radius-surface min-h-0 w-full flex-1" />
+
+    <div class="grid shrink-0 grid-cols-2 gap-2">
       <USkeleton class="h-11 w-full" />
       <USkeleton class="h-11 w-full" />
     </div>

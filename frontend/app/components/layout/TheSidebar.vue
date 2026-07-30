@@ -9,7 +9,7 @@
     }"
     class="border-r border-default bg-elevated/95 [--sidebar-width:18rem]"
   >
-    <section class="flex flex-col">
+    <section class="mb-auto flex flex-col">
       <UNavigationMenu
         :items="items"
         orientation="vertical"
@@ -47,7 +47,7 @@
 
       <section
         v-else
-        class="mt-auto border-t border-default pt-3"
+        class="border-t border-default pt-3"
       >
         <div class="app-radius-surface border border-default bg-muted/45 p-3">
           <div class="mb-2 flex items-center justify-between gap-2">

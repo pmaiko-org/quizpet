@@ -48,59 +48,75 @@
       </section>
     </template>
 
+    <div v-if="isShowingResults">
+      <LearnResults
+        :reports="reports"
+        :totalDurationMs="totalElapsedMs"
+        @restart="restartSession"
+        @retry-mistakes="restartMistakes"
+      />
+    </div>
+
     <div
-      class="mx-auto space-y-3"
-      :class="isShowingResults ? 'max-w-5xl' : 'max-w-3xl'"
+      v-else-if="currentCard"
+      ref="learnStage"
+      class="flex min-h-0 flex-col gap-3 pb-[env(safe-area-inset-bottom)]"
+      :class="
+        isFullscreen
+          ? 'h-svh bg-default p-4'
+          : `
+            h-[calc(100svh-var(--ui-header-height)-2.5rem)]
+            sm:h-[calc(100svh-var(--ui-header-height)-3rem)]
+          `
+      "
     >
-      <template v-if="isShowingResults">
-        <LearnResults
-          :reports="reports"
-          :totalDurationMs="totalElapsedMs"
-          @restart="restartSession"
-          @retry-mistakes="restartMistakes"
-        />
-      </template>
+      <LearnProgress
+        class="shrink-0"
+        :learnedCount="learnedCount"
+        :totalCards="activeCardIds.length"
+        :currentStep="currentStep"
+        :queueLength="queue.length"
+        :mistakesCount="mistakeCardCount"
+        :totalTime="totalTime"
+      />
 
-      <template v-else-if="currentCard">
-        <LearnProgress
-          :learnedCount="learnedCount"
-          :totalCards="activeCardIds.length"
-          :currentStep="currentStep"
-          :queueLength="queue.length"
-          :mistakesCount="mistakeCardCount"
-          :totalTime="totalTime"
+      <div
+        :key="`${currentCard.id}-${currentStep}`"
+        class="learn-card-anim min-h-0 flex-1"
+        aria-live="polite"
+      >
+        <LearnFlashcard
+          class="h-full"
+          :card="currentCard"
+          :currentStep="currentStep + 1"
+          :currentCardTime="currentCardTime"
+          :flipped="flipped"
+          :editLink="currentCardEditLink"
+          :fullscreenSupported="fullscreenSupported"
+          :isFullscreen="isFullscreen"
+          @flip="toggleFlip"
+          @toggle-fullscreen="toggleFullscreen"
         />
+      </div>
 
-        <Transition
-          name="learn-card"
-          mode="out-in"
-        >
-          <div
-            :key="`${currentCard.id}-${currentStep}`"
-            aria-live="polite"
-          >
-            <LearnFlashcard
-              :card="currentCard"
-              :currentStep="currentStep + 1"
-              :currentCardTime="currentCardTime"
-              :flipped="flipped"
-              :editLink="currentCardEditLink"
-              @flip="toggleFlip"
-            />
-          </div>
-        </Transition>
-
-        <LearnControls
-          :locked="isAnswering"
-          @known="markKnown"
-          @missed="markMissed"
-        />
-      </template>
+      <LearnControls
+        class="shrink-0"
+        :locked="isAnswering"
+        @known="markKnown"
+        @missed="markMissed"
+      />
     </div>
   </BaseDataBoundary>
 </template>
 
 <script setup lang="ts">
+const learnStage = ref<HTMLElement | null>(null);
+const {
+  isFullscreen,
+  isSupported: fullscreenSupported,
+  toggle: toggleFullscreen,
+} = useFullscreen(learnStage);
+
 const {
   cards,
   loading,
@@ -127,30 +143,55 @@ const {
   restartSession,
   restartMistakes,
 } = useLearnSession();
+
+const onKeydown = (event: KeyboardEvent) => {
+  if (isShowingResults.value || !currentCard.value) {
+    return;
+  }
+
+  const target = event.target as HTMLElement | null;
+  const tag = target?.tagName;
+
+  if (tag === "INPUT" || tag === "TEXTAREA" || target?.isContentEditable) {
+    return;
+  }
+
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    markMissed();
+  } else if (event.key === "ArrowRight") {
+    event.preventDefault();
+    markKnown();
+  } else if (event.key === " " || event.code === "Space") {
+    event.preventDefault();
+    toggleFlip();
+  }
+};
+
+onMounted(() => window.addEventListener("keydown", onKeydown));
+onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 </script>
 
 <style scoped>
-.learn-card-enter-active,
-.learn-card-leave-active {
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
+.learn-card-anim {
+  animation: learn-card-in 180ms ease both;
 }
 
-.learn-card-enter-from {
-  opacity: 0;
-  transform: translateX(16px);
-}
+@keyframes learn-card-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
 
-.learn-card-leave-to {
-  opacity: 0;
-  transform: translateX(-10px);
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .learn-card-enter-active,
-  .learn-card-leave-active {
-    transition: none;
+  .learn-card-anim {
+    animation: none;
   }
 }
 </style>
