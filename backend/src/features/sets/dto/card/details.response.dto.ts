@@ -16,7 +16,7 @@ export class CardDetailsResponseDto {
     this.id = entity.id;
     this.position = entity.position;
     this.term = entity.term;
-    this.termDescription = entity.termDescription || null;
+    this.termDescription = entity.termDescription ?? null;
     this.termImage = entity.termImage
       ? new FileResponseDto(entity.termImage)
       : null;
@@ -24,7 +24,7 @@ export class CardDetailsResponseDto {
     this.definitionImage = entity.definitionImage
       ? new FileResponseDto(entity.definitionImage)
       : null;
-    this.textColor = entity.textColor || null;
-    this.backgroundColor = entity.backgroundColor || null;
+    this.textColor = entity.textColor ?? null;
+    this.backgroundColor = entity.backgroundColor ?? null;
   }
 }

@@ -11,8 +11,8 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @Column()
   term: string; // word or question
 
-  @Column({ nullable: true })
-  termDescription?: string;
+  @Column({ type: "text", nullable: true })
+  termDescription?: string | null;
 
   @ManyToOne(() => StorageFileEntity, {
     nullable: true,
@@ -33,11 +33,11 @@ export class CardEntity extends AbstractEntity<CardEntity> {
   @JoinColumn({ name: "definitionImageId" })
   definitionImage?: StorageFileEntity;
 
-  @Column({ nullable: true })
-  textColor?: string;
+  @Column({ type: "varchar", nullable: true })
+  textColor?: string | null;
 
-  @Column({ nullable: true })
-  backgroundColor?: string;
+  @Column({ type: "varchar", nullable: true })
+  backgroundColor?: string | null;
 
   @ManyToOne(() => SetEntity, set => set.cards, { onDelete: "CASCADE" })
   @JoinColumn({ name: "setId" })

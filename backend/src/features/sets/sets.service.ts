@@ -201,7 +201,8 @@ export class SetsService {
         id: ("id" in card && card.id) || undefined,
         position: card.position,
         term: card.term,
-        termDescription: card.termDescription ?? undefined,
+        termDescription:
+          card.termDescription === undefined ? undefined : card.termDescription,
         termImage: card.termImageId
           ? ({ id: card.termImageId } as DeepPartial<CardEntity["termImage"]>)
           : (null as unknown as DeepPartial<CardEntity["termImage"]>),
@@ -211,8 +212,9 @@ export class SetsService {
               id: card.definitionImageId,
             } as DeepPartial<CardEntity["definitionImage"]>)
           : (null as unknown as DeepPartial<CardEntity["definitionImage"]>),
-        textColor: card.textColor ?? undefined,
-        backgroundColor: card.backgroundColor ?? undefined,
+        textColor: card.textColor === undefined ? undefined : card.textColor,
+        backgroundColor:
+          card.backgroundColor === undefined ? undefined : card.backgroundColor,
         set: setId ? ({ id: setId } as SetEntity) : undefined,
       };
 

@@ -18,33 +18,6 @@
       >
         Створити набір
       </UButton>
-
-      <ClientOnly>
-        <UButton
-          :loading="pending"
-          icon="i-lucide-refresh-cw"
-          variant="outline"
-          color="neutral"
-          size="lg"
-          class="justify-center"
-          @click="emit('refresh')"
-        >
-          Оновити список
-        </UButton>
-
-        <template #fallback>
-          <UButton
-            icon="i-lucide-refresh-cw"
-            variant="outline"
-            color="neutral"
-            size="lg"
-            class="justify-center"
-            disabled
-          >
-            Оновити список
-          </UButton>
-        </template>
-      </ClientOnly>
     </div>
 
     <template #aside>
@@ -69,9 +42,5 @@ interface IHeroStat {
 const { stats, pending = false } = defineProps<{
   stats: IHeroStat[];
   pending?: boolean;
-}>();
-
-const emit = defineEmits<{
-  refresh: [];
 }>();
 </script>
