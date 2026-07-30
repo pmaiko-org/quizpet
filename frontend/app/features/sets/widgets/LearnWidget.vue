@@ -103,6 +103,8 @@
               :fullscreenSupported="fullscreenSupported"
               :isFullscreen="isFullscreen"
               @flip="toggleFlip"
+              @known="markKnown"
+              @missed="markMissed"
               @toggle-fullscreen="toggleFullscreen"
             />
           </div>
