@@ -7,10 +7,6 @@
       xl:px-14
     "
   >
-    <div class="absolute top-4 right-4">
-      <UColorModeSwitch />
-    </div>
-
     <div
       class="
         w-full max-w-xl rounded-[32px] border border-slate-200/80 bg-white/88
@@ -84,13 +80,77 @@
           />
           Без паролів. Безпечний вхід через Google.
         </div>
+
+        <p
+          class="
+            px-2 text-center text-xs/5 text-slate-500
+            dark:text-muted
+          "
+        >
+          Реєструючись або продовжуючи через Google, ви підтверджуєте, що
+          ознайомилися з
+          <NuxtLink
+            to="/privacy"
+            class="
+              font-medium text-amber-600 underline underline-offset-2
+              hover:text-amber-700
+              dark:text-amber-300
+              dark:hover:text-amber-200
+            "
+          >
+            Політикою конфіденційності та Умовами використання</NuxtLink>.
+        </p>
+
+        <p
+          class="
+            flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 px-2
+            text-center text-xs/5 text-slate-400
+            dark:text-muted
+          "
+        >
+          <span>
+            Проєкт з відкритим кодом. Повідомити про проблему або зв'язатися з
+            автором:
+          </span>
+          <a
+            :href="PROJECT_LINKS.github"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub проєкту QuizPet (відкривається в новій вкладці)"
+            class="
+              rounded-sm font-medium text-slate-600 underline-offset-2
+              transition-colors
+              hover:text-amber-600 hover:underline
+              focus-visible:ring-2 focus-visible:ring-amber-400
+              focus-visible:outline-none
+              dark:text-toned
+              dark:hover:text-amber-300
+            "
+          >GitHub</a>
+          <span aria-hidden="true">·</span>
+          <a
+            :href="PROJECT_LINKS.telegram"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram автора (відкривається в новій вкладці)"
+            class="
+              rounded-sm font-medium text-slate-600 underline-offset-2
+              transition-colors
+              hover:text-amber-600 hover:underline
+              focus-visible:ring-2 focus-visible:ring-amber-400
+              focus-visible:outline-none
+              dark:text-toned
+              dark:hover:text-amber-300
+            "
+          >Telegram</a>
+        </p>
       </div>
 
       <div
         class="
           mt-8 grid gap-3 rounded-[24px] bg-amber-50 p-4 text-sm text-slate-700
           sm:grid-cols-3
-          dark:bg-amber-950/20 dark:text-toned
+          dark:bg-white/5 dark:text-toned dark:ring-1 dark:ring-white/10
         "
       >
         <div>
@@ -151,3 +211,7 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { PROJECT_LINKS } from "~/constants";
+</script>

@@ -11,9 +11,12 @@ import { AbstractService } from "../../common/abstract.service";
 import { UserListQueryDto } from "./dto/user-list.query.dto";
 import { UserListResponseDto } from "./dto/user-list.response.dto";
 import { ProfileUpdateDto } from "./dto/profile-update.dto";
+import { AccountDeleteDto } from "./dto/account-delete.dto";
 import { StorageFileEntity } from "../storage/storage-file.entity";
 import { SetEntity } from "../sets/entity/set.entity";
 import { ProfileStatsResponseDto } from "./dto/profile-stats.response.dto";
+import { StorageService } from "../storage/services/storage.service";
+import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 
 @Injectable()
 export class UsersService {
@@ -24,6 +27,7 @@ export class UsersService {
     private storageFileRepository: Repository<StorageFileEntity>,
     @InjectRepository(SetEntity)
     private setRepository: Repository<SetEntity>,
+    private storageService: StorageService,
   ) {}
 
   async getMe(userId: string) {
@@ -91,5 +95,35 @@ export class UsersService {
     await this.userRepository.save(user);
 
     return (await this.getMe(userId)) as UserResponseDto;
+  }
+
+  async deleteMe(
+    userId: string,
+    body: AccountDeleteDto,
+  ): Promise<SuccessResponseDto> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    if (body.confirmEmail.toLowerCase() !== user.email.toLowerCase()) {
+      throw new BadRequestException("Email confirmation does not match");
+    }
+
+    const picture = user.picture ?? null;
+
+    if (picture) {
+      user.picture = null;
+      await this.userRepository.save(user);
+    }
+
+    await this.userRepository.remove(user);
+
+    if (picture) {
+      await this.storageService.deleteFile(picture.id);
+    }
+
+    return new SuccessResponseDto();
   }
 }

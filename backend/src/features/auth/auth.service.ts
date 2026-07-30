@@ -79,4 +79,16 @@ export class AuthService {
       return null;
     }
   }
+
+  async refreshAccessToken(refreshToken: string): Promise<string | null> {
+    const payload = this.verifyRefreshToken(refreshToken);
+    if (!payload) return null;
+
+    const user = await this.userRepository.findOne({
+      where: { id: payload.sub },
+    });
+    if (!user) return null;
+
+    return this.generateAccessToken(user);
+  }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Query,
@@ -16,8 +17,16 @@ import { UserListQueryDto } from "./dto/user-list.query.dto";
 import { UserListResponseDto } from "./dto/user-list.response.dto";
 import { ProfileStatsResponseDto } from "./dto/profile-stats.response.dto";
 import { ProfileUpdateDto } from "./dto/profile-update.dto";
+import { AccountDeleteDto } from "./dto/account-delete.dto";
+import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 
-@ApiExtraModels(UserListQueryDto, ProfileStatsResponseDto, ProfileUpdateDto)
+@ApiExtraModels(
+  UserListQueryDto,
+  ProfileStatsResponseDto,
+  ProfileUpdateDto,
+  AccountDeleteDto,
+  SuccessResponseDto,
+)
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -45,6 +54,15 @@ export class UsersController {
     @Body() body: ProfileUpdateDto,
   ): Promise<UserResponseDto> {
     return this.usersService.updateMe(req.user.sub, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete("me")
+  deleteMe(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: AccountDeleteDto,
+  ): Promise<SuccessResponseDto> {
+    return this.usersService.deleteMe(req.user.sub, body);
   }
 
   @Get()

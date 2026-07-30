@@ -62,7 +62,7 @@ export interface paths {
     get: operations["UsersController_getMe"];
     put?: never;
     post?: never;
-    delete?: never;
+    delete: operations["UsersController_deleteMe"];
     options?: never;
     head?: never;
     patch: operations["UsersController_updateMe"];
@@ -255,6 +255,12 @@ export interface components {
       /** Format: uuid */
       avatarFileId?: string | null;
     };
+    AccountDeleteDto: {
+      confirmEmail: string;
+    };
+    SuccessResponseDto: {
+      success: boolean;
+    };
     UserResponseDto: {
       id: string;
       firstName: string;
@@ -337,9 +343,6 @@ export interface components {
       description: string;
       topicIds: string[];
       cards: components["schemas"]["CardCreateDto"][];
-    };
-    SuccessResponseDto: {
-      success: boolean;
     };
     CardUpdateDto: {
       position: number;
@@ -440,6 +443,29 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UserResponseDto"];
+        };
+      };
+    };
+  };
+  UsersController_deleteMe: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AccountDeleteDto"];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponseDto"];
         };
       };
     };
@@ -740,6 +766,7 @@ export interface operations {
 
 type ApiSchemas = components["schemas"];
 
+export type IAccountDelete = ApiSchemas["AccountDeleteDto"];
 export type ICardCreate = ApiSchemas["CardCreateDto"];
 export type ICardDetailsResponse = ApiSchemas["CardDetailsResponseDto"];
 export type ICardUpdate = ApiSchemas["CardUpdateDto"];

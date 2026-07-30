@@ -1,3 +1,5 @@
+const PUBLIC_PATHS = ["/login", "/privacy"];
+
 export default defineNuxtRouteMiddleware((to) => {
   const { isLoggedIn } = storeToRefs(useAuthStore());
 
@@ -5,7 +7,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo("/");
   }
 
-  if (!isLoggedIn.value && to.path !== "/login") {
+  if (!isLoggedIn.value && !PUBLIC_PATHS.includes(to.path)) {
     return navigateTo("/login");
   }
 });

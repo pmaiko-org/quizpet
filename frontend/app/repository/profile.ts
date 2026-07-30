@@ -1,7 +1,11 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
 
 import type { TRequestOptions } from "~/repository/types";
-import type { IProfileUpdate, IUserResponse } from "~/types/api.generated";
+import type {
+  IProfileUpdate,
+  ISuccessResponse,
+  IUserResponse,
+} from "~/types/api.generated";
 
 export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
@@ -12,6 +16,17 @@ export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     updateProfile: (body: IProfileUpdate, options?: TRequestOptions) => {
       return fetch<IUserResponse>("/backend/users/me", {
         method: "PATCH",
+        body,
+        ...options,
+      });
+    },
+
+    deleteAccount: (
+      body: { confirmEmail: string },
+      options?: TRequestOptions,
+    ) => {
+      return fetch<ISuccessResponse>("/backend/users/me", {
+        method: "DELETE",
         body,
         ...options,
       });

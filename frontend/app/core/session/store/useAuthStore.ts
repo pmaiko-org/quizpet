@@ -91,8 +91,8 @@ export const useAuthStore = defineStore("auth", () => {
       const response = await promiseAuthRefreshToken.value;
       accessToken.value = response.accessToken;
       return response.accessToken;
-    } catch (error) {
-      console.error("Error refreshing token:", error);
+    } catch {
+      console.error("Failed to refresh access token");
     } finally {
       promiseAuthRefreshToken.value = null;
     }

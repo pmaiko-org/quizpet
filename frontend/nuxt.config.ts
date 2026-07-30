@@ -32,7 +32,6 @@ export default defineNuxtConfig({
     ],
   },
   devtools: { enabled: true },
-  css: ["~/assets/css/main.css"],
 
   app: {
     head: {
@@ -54,8 +53,7 @@ export default defineNuxtConfig({
         { property: "og:title", content: "QuizPet — навчання картками" },
         {
           property: "og:description",
-          content:
-            "Створюй набори флеш-карток і вчись легко та ефективно.",
+          content: "Створюй набори флеш-карток і вчись легко та ефективно.",
         },
         { property: "og:image", content: "/og-image.png" },
         { property: "og:image:width", content: "1200" },
@@ -64,13 +62,13 @@ export default defineNuxtConfig({
         { name: "twitter:title", content: "QuizPet — навчання картками" },
         {
           name: "twitter:description",
-          content:
-            "Створюй набори флеш-карток і вчись легко та ефективно.",
+          content: "Створюй набори флеш-карток і вчись легко та ефективно.",
         },
         { name: "twitter:image", content: "/og-image.png" },
       ],
     },
   },
+  css: ["~/assets/css/main.css"],
 
   runtimeConfig: {
     public: {

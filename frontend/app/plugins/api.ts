@@ -94,7 +94,7 @@ export default defineNuxtPlugin(() => {
           });
         } catch (error) {
           if (error instanceof FetchError) {
-            console.error(error);
+            console.error("Request retry after token refresh failed");
           }
         }
       }

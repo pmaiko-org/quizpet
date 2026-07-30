@@ -31,7 +31,7 @@ export class AuthController {
     const { accessToken, refreshToken } = req.user;
 
     return res.redirect(
-      `/login?accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`,
+      `/login#accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`,
     );
   }
 
@@ -50,20 +50,16 @@ export class AuthController {
       },
     }),
   )
-  refreshToken(
+  async refreshToken(
     @Body() refreshTokenDto: RefreshTokenDto,
-  ): RefreshTokenResponseDto {
-    const payload = this.authService.verifyRefreshToken(
+  ): Promise<RefreshTokenResponseDto> {
+    const accessToken = await this.authService.refreshAccessToken(
       refreshTokenDto.refreshToken,
     );
-    if (!payload) {
+
+    if (!accessToken) {
       throw new UnauthorizedException("Invalid refresh token");
     }
-
-    const accessToken = this.authService.generateAccessToken({
-      id: payload.sub,
-      email: "",
-    });
 
     return new RefreshTokenResponseDto(accessToken);
   }
