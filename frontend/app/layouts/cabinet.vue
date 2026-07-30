@@ -1,12 +1,12 @@
 <template>
   <div class="flex min-h-screen flex-1 bg-default">
-    <AppSidebar
+    <TheSidebar
       v-if="!isLearning"
       v-model="open"
     />
 
     <div class="flex min-w-0 flex-1 flex-col bg-default">
-      <AppHeader
+      <TheHeader
         v-model="open"
         :showSidebarToggle="!isLearning"
       />
@@ -29,7 +29,7 @@
           <slot />
         </UMain>
       </UContainer>
-      <AppFooter v-if="!isLearning" />
+      <TheFooter v-if="!isLearning" />
     </div>
   </div>
 </template>

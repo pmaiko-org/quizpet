@@ -1,12 +1,12 @@
 <template>
   <div>
-    <AppHeader />
+    <TheHeader />
 
     <UMain>
       <slot />
     </UMain>
 
-    <AppFooter />
+    <TheFooter />
   </div>
 </template>
 

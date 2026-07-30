@@ -1,5 +1,5 @@
 <template>
-  <AppHeroSection
+  <BaseHeroSection
     eyebrow="Бібліотека карток"
     title="Ваші набори для швидкого повторення"
     description="Переглядайте наповнення, відкривайте навчання або створюйте нову тему."
@@ -48,7 +48,7 @@
     </div>
 
     <template #aside>
-      <AppMetricGrid
+      <BaseMetricGrid
         :items="stats"
         class="lg:grid-cols-1"
         variant="hero"
@@ -56,7 +56,7 @@
         :pending="pending"
       />
     </template>
-  </AppHeroSection>
+  </BaseHeroSection>
 </template>
 
 <script setup lang="ts">

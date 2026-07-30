@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <AppSectionIntro
+        <BaseSectionIntro
           v-else
           :eyebrow="eyebrow"
           :title="title"
@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-interface IAppHeroSectionProps {
+interface IBaseHeroSectionProps {
   eyebrow: string;
   title: string;
   description?: string;
@@ -79,7 +79,7 @@ const {
   description = "",
   titleTag = "h1",
   pending = false,
-} = defineProps<IAppHeroSectionProps>();
+} = defineProps<IBaseHeroSectionProps>();
 
 const slots = useSlots();
 

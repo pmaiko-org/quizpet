@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-5">
-    <AppHeroSection
+    <BaseHeroSection
       :eyebrow="eyebrow"
       :title="title"
       :description="description"
@@ -32,14 +32,14 @@
           {{ secondaryLabel }}
         </UButton>
       </div>
-    </AppHeroSection>
+    </BaseHeroSection>
 
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-interface IAppPlaceholderPageProps {
+interface IBasePlaceholderPageProps {
   eyebrow: string;
   title: string;
   description: string;
@@ -59,5 +59,5 @@ const {
   primaryIcon = "i-lucide-arrow-right",
   secondaryTo = "",
   secondaryLabel = "",
-} = defineProps<IAppPlaceholderPageProps>();
+} = defineProps<IBasePlaceholderPageProps>();
 </script>

@@ -19,7 +19,7 @@
             md:flex-row md:items-start md:justify-between
           "
         >
-          <AppSectionIntro
+          <BaseSectionIntro
             :eyebrow="formEyebrow"
             :title="formTitle"
             :description="formDescription"
@@ -159,7 +159,7 @@
           sm:flex-row sm:items-end sm:justify-between
         "
       >
-        <AppSectionIntro
+        <BaseSectionIntro
           eyebrow="Наповнення"
           title="Картки набору"
           titleTag="h2"

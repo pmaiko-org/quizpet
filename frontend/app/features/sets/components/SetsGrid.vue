@@ -1,6 +1,6 @@
 <template>
   <section class="space-y-3">
-    <AppSectionHeader
+    <BaseSectionHeader
       eyebrow="Набори"
       title="Ваша колекція карток"
       :summary="summaryText"

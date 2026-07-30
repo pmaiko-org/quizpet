@@ -1,5 +1,5 @@
 <template>
-  <AppPlaceholderPage
+  <BasePlaceholderPage
     eyebrow="Hover Map"
     title="Цей експериментальний екран поки без наповнення"
     description="Маршрут залишено для подальших візуальних або UX-експериментів. Поки що зручніше повернутися до основних робочих сторінок."

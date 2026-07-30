@@ -1,5 +1,5 @@
 <template>
-  <AppPlaceholderPage
+  <BasePlaceholderPage
     eyebrow="Папки"
     title="Розділ папок ще в роботі"
     description="Тут з’явиться структура для групування наборів, щоб можна було швидше перемикатися між темами й сценаріями навчання."

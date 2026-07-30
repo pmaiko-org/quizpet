@@ -1,5 +1,5 @@
 <template>
-  <AppPlaceholderPage
+  <BasePlaceholderPage
     eyebrow="Статистика"
     title="Розділ статистики готується"
     description="Тут з’явиться огляд прогресу, складних карток і динаміки повторень, не виходячи з основного кабінету."

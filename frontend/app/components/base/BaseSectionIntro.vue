@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-interface IAppSectionIntroProps {
+interface IBaseSectionIntroProps {
   eyebrow: string;
   title: string;
   description?: string;
@@ -40,7 +40,7 @@ const {
   description = "",
   titleTag = "h2",
   size = "hero",
-} = defineProps<IAppSectionIntroProps>();
+} = defineProps<IBaseSectionIntroProps>();
 
 const containerClass = computed(() => {
   return size === "hero" ? "space-y-2.5" : "space-y-1.5";

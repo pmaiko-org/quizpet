@@ -65,7 +65,7 @@
           </div>
         </div>
 
-        <AppMetricGrid
+        <BaseMetricGrid
           :items="stats"
           variant="summary"
           columns="two"

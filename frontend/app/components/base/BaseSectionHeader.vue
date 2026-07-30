@@ -5,7 +5,7 @@
       sm:flex-row sm:items-end sm:justify-between sm:gap-4
     "
   >
-    <AppSectionIntro
+    <BaseSectionIntro
       :eyebrow="eyebrow"
       :title="title"
       titleTag="h2"
@@ -27,11 +27,11 @@
 </template>
 
 <script setup lang="ts">
-interface IAppSectionHeaderProps {
+interface IBaseSectionHeaderProps {
   eyebrow: string;
   title: string;
   summary?: string;
 }
 
-const { eyebrow, title, summary = "" } = defineProps<IAppSectionHeaderProps>();
+const { eyebrow, title, summary = "" } = defineProps<IBaseSectionHeaderProps>();
 </script>

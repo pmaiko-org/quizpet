@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-6">
-    <AppHeroSection
+    <BaseHeroSection
       eyebrow="Сьогодні у QuizPet"
       :title="heroTitle"
       description="Оберіть набір і проведіть кілька хвилин у фокусі. Прогрес складається з коротких, регулярних повторень."
@@ -33,7 +33,7 @@
       </div>
 
       <template #aside>
-        <AppMetricGrid
+        <BaseMetricGrid
           :items="overviewMetrics"
           class="lg:grid-cols-1"
           variant="hero"
@@ -41,10 +41,10 @@
           :pending="statsPending"
         />
       </template>
-    </AppHeroSection>
+    </BaseHeroSection>
 
     <section class="space-y-3">
-      <AppSectionHeader
+      <BaseSectionHeader
         eyebrow="Швидкий доступ"
         title="Продовжуйте у своєму темпі"
         summary="Усе необхідне для навчання зібране поруч."

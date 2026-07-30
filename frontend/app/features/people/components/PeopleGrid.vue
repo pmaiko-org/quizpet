@@ -1,6 +1,6 @@
 <template>
   <section class="space-y-3">
-    <AppSectionHeader
+    <BaseSectionHeader
       eyebrow="Користувачі"
       title="Усі учасники"
       :summary="meta ? `${meta.total} ${pluralUsers(meta.total)}` : ''"

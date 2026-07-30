@@ -29,7 +29,7 @@
           "
         >
           <div class="space-y-5">
-            <AppSectionIntro
+            <BaseSectionIntro
               eyebrow="Профіль"
               title="Ваш профіль"
               description="Оновіть ім’я та аватар, які бачать інші учасники QuizPet."

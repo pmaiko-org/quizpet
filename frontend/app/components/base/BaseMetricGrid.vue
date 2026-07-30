@@ -97,15 +97,15 @@
 </template>
 
 <script setup lang="ts">
-interface IAppMetricGridItem {
+interface IBaseMetricGridItem {
   label: string;
   value: number | string;
   description?: string;
   icon?: string;
 }
 
-interface IAppMetricGridProps {
-  items: IAppMetricGridItem[];
+interface IBaseMetricGridProps {
+  items: IBaseMetricGridItem[];
   variant?: "compact" | "hero" | "summary";
   columns?: "auto" | "two" | "three" | "four";
   pending?: boolean;
@@ -116,14 +116,14 @@ const {
   variant = "summary",
   columns = "auto",
   pending = false,
-} = defineProps<IAppMetricGridProps>();
+} = defineProps<IBaseMetricGridProps>();
 
 const columnClasses = {
   auto: "",
   two: "grid-cols-2",
   three: "grid-cols-3",
   four: "grid-cols-2 lg:grid-cols-4",
-} satisfies Record<NonNullable<IAppMetricGridProps["columns"]>, string>;
+} satisfies Record<NonNullable<IBaseMetricGridProps["columns"]>, string>;
 
 const gridClass = computed(() => {
   return ["grid gap-2.5", columnClasses[columns]].filter(Boolean).join(" ");
