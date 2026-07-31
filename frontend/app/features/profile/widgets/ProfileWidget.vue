@@ -19,7 +19,7 @@
       >
         <UCard
           :ui="{
-            root: 'app-surface app-radius-surface',
+            root: 'border border-default bg-elevated/96 shadow-sm rounded-md',
             body: 'p-5 sm:p-6',
           }"
         >
@@ -93,7 +93,7 @@
 
             <UCard
               :ui="{
-                root: 'app-surface-subtle app-radius-surface',
+                root: 'rounded-md border border-muted bg-elevated/72',
                 body: 'min-w-0 p-4',
               }"
             >
@@ -125,7 +125,7 @@
 
       <UCard
         :ui="{
-          root: 'app-radius-surface ring-1 ring-error/30',
+          root: 'rounded-md ring-1 ring-error/30',
           body: 'p-5 sm:p-6',
         }"
       >
@@ -205,6 +205,7 @@
 </template>
 
 <script setup lang="ts">
+import { RouteName } from "~/constants";
 import type { IFileResponse, IUserResponse } from "~/types/api.generated";
 
 import { profileSchema } from "../validation";
@@ -260,7 +261,7 @@ const onDeleteAccount = async () => {
 
     toast.add({ title: "Акаунт видалено", description: "" });
 
-    await navigateTo("/login");
+    await navigateTo({ name: RouteName.LOGIN });
   } catch {
     toast.add({
       title: "Не вдалося видалити акаунт",

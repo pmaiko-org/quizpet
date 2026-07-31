@@ -4,15 +4,15 @@
       <UBadge
         variant="soft"
         color="primary"
-        class="app-radius-control shrink-0"
+        class="shrink-0 rounded-sm"
       >
         Картка {{ currentStep }}
       </UBadge>
 
       <span
         class="
-          app-radius-control inline-flex shrink-0 items-center gap-1 border px-2
-          py-1 text-xs
+          inline-flex shrink-0 items-center gap-1 rounded-sm border px-2 py-1
+          text-xs
         "
         :style="theme.accentStyle"
       >
@@ -61,8 +61,8 @@
       role="button"
       tabindex="0"
       class="
-        group app-radius-surface relative block min-h-0 w-full flex-1
-        touch-pan-y text-left select-none
+        group relative block min-h-0 w-full flex-1 touch-pan-y rounded-md
+        text-left select-none
         focus:outline-none
         focus-visible:ring-2 focus-visible:ring-primary/70
       "
@@ -78,10 +78,7 @@
             size="xs"
             color="neutral"
             variant="ghost"
-            class="
-              app-radius-control rounded-full! bg-elevated/70 p-2
-              backdrop-blur-sm
-            "
+            class="rounded-full! bg-elevated/70 p-2 backdrop-blur-sm"
             aria-label="Підказки та керування з клавіатури"
             @click.stop
             @keydown.enter.stop
@@ -145,8 +142,7 @@
             color="neutral"
             variant="ghost"
             class="
-              app-radius-control rounded-full! bg-elevated/70 p-2 text-amber-500
-              backdrop-blur-sm
+              rounded-full! bg-elevated/70 p-2 text-amber-500 backdrop-blur-sm
             "
             aria-label="Підказка: перша літера відповіді"
             @click.stop
@@ -169,8 +165,8 @@
               <div class="flex items-center gap-3">
                 <span
                   class="
-                    app-radius-control flex size-12 shrink-0 items-center
-                    justify-center border text-2xl font-bold uppercase
+                    flex size-12 shrink-0 items-center justify-center rounded-sm
+                    border text-2xl font-bold uppercase
                   "
                   :style="theme.accentStyle"
                 >
@@ -214,7 +210,7 @@
 
       <div
         v-if="swipeHint"
-        class="learn-swipe-hint app-radius-surface"
+        class="learn-swipe-hint rounded-md"
         :class="swipeHint === 'known' ? 'is-known' : 'is-missed'"
         :style="{ opacity: swipeHintOpacity }"
         aria-hidden="true"
@@ -233,7 +229,7 @@
       <Transition name="learn-verdict">
         <div
           v-if="answering && outcome"
-          class="learn-verdict app-radius-surface"
+          class="learn-verdict rounded-md"
           :class="outcome === 'known' ? 'is-known' : 'is-missed'"
           aria-hidden="true"
         >
@@ -253,6 +249,8 @@
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationRaw } from "vue-router";
+
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
 import { useLearnCardSwipe } from "../../composables/useLearnCardSwipe";
@@ -270,7 +268,7 @@ const {
   answering?: boolean;
   outcome?: TLearningOutcome | null;
   canEdit?: boolean;
-  editLink: string;
+  editLink: RouteLocationRaw;
   fullscreenSupported?: boolean;
   isFullscreen?: boolean;
 }>();

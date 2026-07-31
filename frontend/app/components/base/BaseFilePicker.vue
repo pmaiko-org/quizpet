@@ -12,8 +12,8 @@
       <button
         type="button"
         class="
-          app-radius-surface w-full overflow-hidden border border-default
-          bg-default text-left transition
+          w-full overflow-hidden rounded-md border border-default bg-default
+          text-left transition
           hover:border-primary/60 hover:bg-elevated/80
           focus:outline-none
           focus-visible:ring-2 focus-visible:ring-primary
@@ -106,11 +106,7 @@
             "
           >
             <div class="space-y-4">
-              <div
-                class="
-                  app-radius-surface border border-default bg-default/80 p-4
-                "
-              >
+              <div class="rounded-md border border-default bg-default/80 p-4">
                 <div class="mb-3 flex items-start justify-between gap-3">
                   <div>
                     <p class="text-sm font-medium text-highlighted">
@@ -143,11 +139,7 @@
                 />
               </div>
 
-              <div
-                class="
-                  app-radius-surface border border-default bg-default/80 p-4
-                "
-              >
+              <div class="rounded-md border border-default bg-default/80 p-4">
                 <div class="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <p class="text-sm font-medium text-highlighted">
@@ -183,7 +175,7 @@
                     v-for="index in 6"
                     :key="index"
                     class="
-                      app-radius-surface overflow-hidden border border-default
+                      overflow-hidden rounded-md border border-default
                       bg-default/70
                     "
                   >
@@ -198,14 +190,14 @@
                 <div
                   v-else-if="!remoteItems.length"
                   class="
-                    app-radius-surface border border-dashed border-default
-                    bg-muted/20 px-4 py-10 text-center
+                    rounded-md border border-dashed border-default bg-muted/20
+                    px-4 py-10 text-center
                   "
                 >
                   <div
                     class="
-                      app-radius-surface mx-auto flex size-12 items-center
-                      justify-center bg-primary/10 text-primary
+                      mx-auto flex size-12 items-center justify-center
+                      rounded-md bg-primary/10 text-primary
                     "
                   >
                     <UIcon
@@ -233,8 +225,7 @@
                     v-for="item in remoteItems"
                     :key="item.id"
                     class="
-                      app-radius-surface overflow-hidden border bg-default/70
-                      transition
+                      overflow-hidden rounded-md border bg-default/70 transition
                     "
                     :class="itemCardClass(item)"
                   >
@@ -317,8 +308,7 @@
 
             <div
               class="
-                app-radius-surface overflow-hidden border border-default
-                bg-elevated/70
+                overflow-hidden rounded-md border border-default bg-elevated/70
               "
             >
               <div
@@ -374,8 +364,8 @@
                 <div
                   v-if="currentPreview"
                   class="
-                    app-radius-surface border border-primary/20 bg-primary/5
-                    px-4 py-3 text-sm text-toned
+                    rounded-md border border-primary/20 bg-primary/5 px-4 py-3
+                    text-sm text-toned
                   "
                 >
                   Це зображення буде використане для поточного поля форми.

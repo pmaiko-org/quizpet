@@ -35,7 +35,7 @@
       "
     >
       <UButton
-        to="/sets"
+        :to="{ name: RouteName.SETS }"
         icon="i-lucide-arrow-left"
         variant="outline"
         color="neutral"
@@ -45,7 +45,7 @@
       </UButton>
 
       <UButton
-        :to="`/sets/${setId}/learn`"
+        :to="{ name: RouteName.SETS_ID_LEARN, params: { id: setId } }"
         icon="i-lucide-graduation-cap"
         size="xl"
       >
@@ -56,6 +56,8 @@
 </template>
 
 <script setup lang="ts">
+import { RouteName } from "~/constants";
+
 const { setId } = defineProps<{
   setId: string;
 }>();

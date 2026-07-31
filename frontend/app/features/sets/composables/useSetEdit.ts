@@ -1,8 +1,10 @@
+import { RouteName } from "~/constants";
+
 export const useSetEdit = () => {
-  const route = useRoute();
+  const route = useRoute(RouteName.SETS_ID_EDIT);
   const { $repository } = useNuxtApp();
 
-  const setId = computed(() => route.params.id as string);
+  const setId = computed(() => route.params.id);
   const asyncDataKey = computed(() => `set-edit-${setId.value}`);
 
   const {

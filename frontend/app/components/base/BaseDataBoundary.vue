@@ -11,9 +11,7 @@
         <div
           v-for="i in skeletonCount"
           :key="i"
-          class="
-            app-radius-surface border border-default bg-default/80 p-6 shadow-sm
-          "
+          class="rounded-md border border-default bg-default/80 p-6 shadow-sm"
         >
           <div class="space-y-3">
             <USkeleton class="h-4 w-24" />
@@ -27,7 +25,7 @@
 
   <template v-else-if="error">
     <slot name="error">
-      <div class="app-radius-surface border border-error/30 bg-error/5 p-6">
+      <div class="rounded-md border border-error/30 bg-error/5 p-6">
         <div
           class="
             flex flex-col gap-4

@@ -14,25 +14,22 @@
           color="neutral"
           size="sm"
           aria-label="Відкрити або закрити бокову панель"
-          class="
-            app-radius-surface cursor-pointer border border-default
-            bg-elevated/70
-          "
+          class="cursor-pointer rounded-md border border-default bg-elevated/70"
           @click="open = !open"
         />
 
         <NuxtLink
-          to="/"
+          :to="{ name: RouteName.INDEX }"
           class="
-            app-radius-surface inline-flex min-w-0 items-center gap-2 px-1.5
-            py-1 transition-colors
+            inline-flex min-w-0 items-center gap-2 rounded-md px-1.5 py-1
+            transition-colors
             hover:bg-elevated/70
           "
         >
           <span
             class="
-              app-radius-surface flex size-8 items-center justify-center
-              bg-primary text-xs font-bold text-inverted
+              flex size-8 items-center justify-center rounded-md bg-primary
+              text-xs font-bold text-inverted
             "
           >Q</span>
           <span class="min-w-0">
@@ -71,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { PageName } from "~/constants";
+import { RouteName } from "~/constants";
 
 const open = defineModel<boolean>({ required: false });
 
@@ -81,7 +78,7 @@ const { showSidebarToggle = true } = defineProps<{
 
 const route = useRoute();
 
-const isLearning = computed(() => route.name === PageName.SETS_ID_LEARN);
+const isLearning = computed(() => route.name === RouteName.SETS_ID_LEARN);
 const sectionLabel = computed(() =>
   isLearning.value ? "Режим навчання" : "Навчальний простір",
 );

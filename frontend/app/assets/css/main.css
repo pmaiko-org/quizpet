@@ -1,20 +1,18 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+@theme {
+  --font-sans:
+    "Avenir Next", "Avenir", "Segoe UI Variable", "Segoe UI", sans-serif;
+  --font-display:
+    "Avenir Next Rounded", "Avenir Next", "Avenir", ui-rounded, sans-serif;
+}
+
 :root {
   --ui-header-height: 3.75rem;
   --ui-radius: 0.625rem;
   --ui-container: 78rem;
-  --app-radius-control: 0.625rem;
-  --app-radius-surface: 1rem;
-  --app-font-body:
-    "Avenir Next", "Avenir", "Segoe UI Variable", "Segoe UI", sans-serif;
-  --app-font-display:
-    "Avenir Next Rounded", "Avenir Next", "Avenir", ui-rounded, sans-serif;
-  --app-shadow-sm:
-    0 1px 2px rgb(24 31 43 / 0.05), 0 10px 30px rgb(24 31 43 / 0.05);
-  --app-shadow-md:
-    0 2px 4px rgb(24 31 43 / 0.06), 0 18px 48px rgb(24 31 43 / 0.09);
+  --ui-primary: var(--color-blue-500);
   --ui-text-dimmed: #a0a8b5;
   --ui-text-muted: #727b89;
   --ui-text-toned: #505968;
@@ -31,8 +29,7 @@
 }
 
 .dark {
-  --app-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.16), 0 10px 28px rgb(0 0 0 / 0.12);
-  --app-shadow-md: 0 2px 4px rgb(0 0 0 / 0.22), 0 18px 48px rgb(0 0 0 / 0.2);
+  --ui-primary: var(--color-blue-400);
   --ui-text-dimmed: #667080;
   --ui-text-muted: #8a94a4;
   --ui-text-toned: #b1b9c5;
@@ -49,7 +46,6 @@
 }
 
 html {
-  font-family: var(--app-font-body);
   background: var(--ui-bg);
 }
 
@@ -70,59 +66,11 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--app-font-display);
+  font-family: var(--font-display);
   letter-spacing: -0.025em;
 }
 
 ::selection {
   color: var(--ui-text-highlighted);
   background: color-mix(in oklab, var(--ui-primary) 24%, transparent);
-}
-
-.app-surface {
-  border-radius: var(--app-radius-surface);
-  border: 1px solid var(--ui-border);
-  background: color-mix(in oklab, var(--ui-bg-elevated) 96%, transparent);
-  box-shadow: var(--app-shadow-sm);
-}
-
-.app-surface-subtle {
-  border-radius: var(--app-radius-surface);
-  border: 1px solid var(--ui-border-muted);
-  background: color-mix(in oklab, var(--ui-bg-elevated) 72%, transparent);
-}
-
-.app-radius-surface {
-  border-radius: var(--app-radius-surface);
-}
-
-.app-radius-control {
-  border-radius: var(--app-radius-control);
-}
-
-.app-eyebrow {
-  color: var(--ui-primary);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  line-height: 1rem;
-  text-transform: uppercase;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .app-reveal {
-    animation: app-reveal 420ms ease-out both;
-  }
-}
-
-@keyframes app-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

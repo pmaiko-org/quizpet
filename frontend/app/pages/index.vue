@@ -13,7 +13,7 @@
         "
       >
         <UButton
-          to="/sets"
+          :to="{ name: RouteName.SETS }"
           icon="i-lucide-play"
           size="lg"
           class="justify-center"
@@ -21,7 +21,7 @@
           Почати навчання
         </UButton>
         <UButton
-          to="/sets/create"
+          :to="{ name: RouteName.SETS_CREATE }"
           icon="i-lucide-plus"
           size="lg"
           variant="outline"
@@ -58,18 +58,18 @@
       >
         <NuxtLink
           v-for="link in quickLinks"
-          :key="link.to"
+          :key="link.title"
           :to="link.to"
           class="
-            app-surface group app-radius-surface p-4 transition-all duration-200
-            hover:-translate-y-0.5 hover:border-primary/30
-            hover:shadow-(--app-shadow-md)
+            group rounded-md border border-default bg-elevated/96 p-4 shadow-sm
+            transition-all duration-200
+            hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md
           "
         >
           <div class="flex items-start justify-between gap-4">
             <span
               class="
-                app-radius-surface flex size-10 items-center justify-center
+                flex size-10 items-center justify-center rounded-md
                 bg-primary/10 text-primary transition-colors
                 group-hover:bg-primary group-hover:text-inverted
               "
@@ -101,6 +101,10 @@
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationRaw } from "vue-router";
+
+import { RouteName } from "~/constants";
+
 definePageMeta({
   layout: "cabinet",
 });
@@ -109,7 +113,7 @@ type TQuickLink = {
   title: string;
   description: string;
   icon: string;
-  to: string;
+  to: RouteLocationRaw;
 };
 
 useHead({
@@ -150,19 +154,19 @@ const quickLinks: TQuickLink[] = [
     title: "Картки",
     description: "Ваші набори, повторення та швидкий старт навчання.",
     icon: "i-lucide-layers-3",
-    to: "/sets",
+    to: { name: RouteName.SETS },
   },
   {
     title: "Профіль",
     description: "Ім’я, аватар та особисті дані облікового запису.",
     icon: "i-lucide-user-round-pen",
-    to: "/profile",
+    to: { name: RouteName.PROFILE },
   },
   {
     title: "Спільнота",
     description: "Учасники платформи та майбутні навчальні зв’язки.",
     icon: "i-lucide-users",
-    to: "/peoples",
+    to: { name: RouteName.PEOPLES },
   },
 ];
 </script>

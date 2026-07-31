@@ -11,7 +11,7 @@
       "
     >
       <UButton
-        to="/sets/create"
+        :to="{ name: RouteName.SETS_CREATE }"
         icon="i-lucide-plus"
         size="lg"
         class="justify-center"
@@ -33,6 +33,8 @@
 </template>
 
 <script setup lang="ts">
+import { RouteName } from "~/constants";
+
 interface IHeroStat {
   label: string;
   value: number;

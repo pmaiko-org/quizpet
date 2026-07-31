@@ -1,7 +1,8 @@
 <template>
   <section
     class="
-      app-surface app-radius-surface relative overflow-hidden p-5
+      relative overflow-hidden rounded-md border border-default bg-elevated/96
+      p-5 shadow-sm
       sm:p-6
     "
   >

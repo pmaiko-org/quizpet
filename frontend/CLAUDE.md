@@ -139,6 +139,42 @@ definePageMeta({ layout: "cabinet" });
 
 Данные из маршрута виджет читает сам (`useRoute()`), поэтому странице нечего ему прокидывать.
 
+## Навигация
+
+Включён `experimental.typedPages` (`nuxt.config.ts`): имена маршрутов, их `params` и `query` типизированы — Nuxt генерит `RouteNamedMap` из структуры `pages/`, компилятор проверяет каждую ссылку.
+
+Правила навигации по приложению:
+
+- **Только по именам, не по строковым путям.** Все внутренние переходы задаются объектом `{ name, params?, query? }`, а не литералом URL. Источник правды об URL-схеме — файловая структура `pages/`; строковый путь дублировал бы её и не ловился бы при рефакторинге.
+
+- **Имя маршрута берётся из `RouteName` (`~/constants`), а не пишется строкой.** Единый объект-константа со всеми именами маршрутов; в навигации и сравнениях используем `RouteName.X`, а не литерал `"sets-id-edit"`.
+
+  ```ts
+  // ✅
+  navigateTo({ name: RouteName.SETS_ID_EDIT, params: { id } });
+  <UButton :to="{ name: RouteName.SETS_CREATE }" />
+
+  // ❌ строковый путь / голый строковый литерал имени
+  navigateTo(`/sets/${id}/edit`);
+  <UButton to="/sets/create" />
+  navigateTo({ name: "sets-id-edit", params: { id } });
+  ```
+
+  `RouteName` объявлен `as const`, поэтому значения остаются литеральными типами — `typedPages` продолжает проверять само имя и его `params`/`query`. Имена совпадают с автогенерируемыми Nuxt из пути файла: `pages/sets/[id]/edit.vue` → `"sets-id-edit"`, `pages/sets/index.vue` → `"sets"`, `pages/index.vue` → `"index"`. При добавлении/переименовании страницы обнови `RouteName`.
+
+- **Программный переход — только `navigateTo`, не `router.push`/`router.replace`.** `navigateTo` — SSR-безопасная обёртка Nuxt (умеет middleware, `external`, работает на сервере). Для замены записи в истории — второй аргумент:
+
+  ```ts
+  await navigateTo({ name: RouteName.SETS }); // push
+  navigateTo({ name: RouteName.INDEX }, { replace: true }); // replace
+  ```
+
+  `useRouter()` для навигации не используем (оставлен только для чтения, если реально нужен).
+
+- **Тип для пропа/поля, принимающего цель перехода**, — `RouteLocationRaw` из `vue-router` (не `string`). См. `primaryTo`/`secondaryTo` в `BasePlaceholderPage`, `editLink` в `LearnFlashcard`, `TQuickLink.to` в `index.vue`.
+
+- **Типизированные `params` из текущего маршрута**: передавай имя маршрута в `useRoute(RouteName.SETS_ID_EDIT)` — тогда `route.params.id` типизирован как `string` без каста (см. `useSetEdit`, `useLearnSession`).
+
 ## Правила слоёв (enforced by ESLint)
 
 Одно кастомное правило `local/layer-imports` (в `eslint.config.mjs`) стережёт **весь граф** сразу:

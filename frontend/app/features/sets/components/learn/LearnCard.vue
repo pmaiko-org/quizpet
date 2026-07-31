@@ -1,7 +1,7 @@
 <template>
   <article
     class="
-      app-radius-surface relative flex size-full flex-col overflow-hidden border
+      relative flex size-full flex-col overflow-hidden rounded-md border
       border-default bg-elevated text-highlighted shadow-sm
     "
     :aria-label="badge"
@@ -33,7 +33,7 @@
           <img
             :src="image.src"
             :alt="image.name"
-            class="app-radius-surface h-full max-w-full object-contain"
+            class="h-full max-w-full rounded-md object-contain"
             @load="fit"
           >
         </div>

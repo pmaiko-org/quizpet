@@ -24,7 +24,9 @@
           <div
             v-for="index in 4"
             :key="index"
-            class="app-surface app-radius-surface p-5"
+            class="
+              rounded-md border border-default bg-elevated/96 p-5 shadow-sm
+            "
           >
             <div class="space-y-4">
               <div class="flex items-start justify-between gap-3">
@@ -47,8 +49,8 @@
 
               <div
                 class="
-                  app-radius-surface grid grid-cols-3 gap-3 border
-                  border-default bg-muted/45 p-3
+                  grid grid-cols-3 gap-3 rounded-md border border-default
+                  bg-muted/45 p-3
                 "
               >
                 <div
@@ -76,14 +78,14 @@
       <template #empty>
         <div
           class="
-            app-radius-surface border border-dashed border-default
-            bg-elevated/55 p-6 text-center
+            rounded-md border border-dashed border-default bg-elevated/55 p-6
+            text-center
           "
         >
           <div
             class="
-              app-radius-surface mx-auto flex size-11 items-center
-              justify-center bg-primary/10 text-primary
+              mx-auto flex size-11 items-center justify-center rounded-md
+              bg-primary/10 text-primary
             "
           >
             <UIcon
@@ -99,7 +101,7 @@
             карток, щоб бібліотека одразу виглядала живою.
           </p>
           <UButton
-            to="/sets/create"
+            :to="{ name: RouteName.SETS_CREATE }"
             icon="i-lucide-plus"
             size="lg"
             class="mt-5 justify-center"
@@ -129,6 +131,7 @@
 </template>
 
 <script setup lang="ts">
+import { RouteName } from "~/constants";
 import type { ISetListItemResponse } from "~/types/api.generated";
 
 const {

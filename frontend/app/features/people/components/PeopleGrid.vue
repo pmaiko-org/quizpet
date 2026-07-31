@@ -24,7 +24,9 @@
           <div
             v-for="i in perPage"
             :key="i"
-            class="app-surface app-radius-surface p-4"
+            class="
+              rounded-md border border-default bg-elevated/96 p-4 shadow-sm
+            "
           >
             <div class="flex items-center gap-3">
               <USkeleton class="size-12 shrink-0 rounded-full" />
@@ -40,14 +42,14 @@
       <template #empty>
         <div
           class="
-            app-radius-surface border border-dashed border-default
-            bg-elevated/55 p-6 text-center
+            rounded-md border border-dashed border-default bg-elevated/55 p-6
+            text-center
           "
         >
           <div
             class="
-              app-radius-surface mx-auto flex size-11 items-center
-              justify-center bg-primary/10 text-primary
+              mx-auto flex size-11 items-center justify-center rounded-md
+              bg-primary/10 text-primary
             "
           >
             <UIcon

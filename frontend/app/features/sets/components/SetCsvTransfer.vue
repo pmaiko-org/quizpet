@@ -1,5 +1,5 @@
 <template>
-  <div class="app-surface-subtle app-radius-surface p-3">
+  <div class="rounded-md border border-muted bg-elevated/72 p-3">
     <div
       class="
         flex flex-col gap-3
@@ -9,7 +9,7 @@
       <div class="flex items-start gap-3">
         <span
           class="
-            app-radius-surface flex size-9 shrink-0 items-center justify-center
+            flex size-9 shrink-0 items-center justify-center rounded-md
             bg-primary/10 text-primary
           "
         >

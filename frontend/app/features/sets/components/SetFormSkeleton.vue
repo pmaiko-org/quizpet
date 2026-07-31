@@ -5,7 +5,7 @@
   >
     <section
       class="
-        app-surface app-radius-surface space-y-5 p-5
+        space-y-5 rounded-md border border-default bg-elevated/96 p-5 shadow-sm
         sm:p-6
       "
     >
@@ -65,7 +65,8 @@
           v-for="index in 2"
           :key="index"
           class="
-            app-surface app-radius-surface space-y-4 p-4
+            space-y-4 rounded-md border border-default bg-elevated/96 p-4
+            shadow-sm
             sm:p-5
           "
         >

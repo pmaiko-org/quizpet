@@ -1,5 +1,6 @@
 import { FetchError } from "ofetch";
 
+import { RouteName } from "~/constants";
 import type {
   ISetCreate,
   ISetUpdate,
@@ -12,7 +13,6 @@ import type { setSchema } from "../validation";
 export const useSetForm = () => {
   const { $repository } = useNuxtApp();
   const toast = useToast();
-  const router = useRouter();
 
   const topics = ref<ITopicResponse[]>([]);
   const topicsPending = ref(true);
@@ -72,14 +72,14 @@ export const useSetForm = () => {
         };
 
         await $repository.sets.updateSet(id, payload);
-        await router.push("/sets");
+        await navigateTo({ name: RouteName.SETS });
         toast.add({ title: "Набір оновлено", description: "" });
 
         return false;
       }
 
       await $repository.sets.createSet(basePayload);
-      await router.push("/sets");
+      await navigateTo({ name: RouteName.SETS });
       toast.add({ title: "Набір створено", description: "" });
 
       return true;

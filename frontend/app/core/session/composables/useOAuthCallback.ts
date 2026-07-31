@@ -1,6 +1,7 @@
+import { RouteName } from "~/constants";
+
 export const useOAuthCallback = () => {
   const { setTokens } = useAuthStore();
-  const router = useRouter();
 
   onMounted(() => {
     const hash = window.location.hash.startsWith("#")
@@ -16,7 +17,7 @@ export const useOAuthCallback = () => {
     if (accessToken && refreshToken) {
       setTokens(accessToken, refreshToken);
       history.replaceState(null, "", window.location.pathname);
-      router.replace("/");
+      navigateTo({ name: RouteName.INDEX }, { replace: true });
     }
   });
 };

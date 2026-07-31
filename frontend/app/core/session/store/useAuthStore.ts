@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@vueuse/core";
 import { skipHydrate } from "pinia";
 
+import { RouteName } from "~/constants";
 import type {
   IRefreshToken,
   IRefreshTokenResponse,
@@ -49,7 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
       const route = useRoute();
       try {
         if (route.path !== "/login") {
-          await navigateTo("/login");
+          await navigateTo({ name: RouteName.LOGIN });
         }
       } finally {
         clearNuxtData();

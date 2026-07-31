@@ -11,9 +11,9 @@
   >
     <section class="mb-auto flex flex-col gap-4">
       <NuxtLink
-        to="/sets/create"
+        :to="{ name: RouteName.SETS_CREATE }"
         class="
-          group app-radius-surface flex items-center gap-3 border border-default
+          group flex items-center gap-3 rounded-md border border-default
           bg-linear-to-br from-primary/10 to-transparent p-3 transition-colors
           hover:border-primary/25
         "
@@ -21,7 +21,7 @@
       >
         <span
           class="
-            app-radius-control flex size-10 shrink-0 items-center justify-center
+            flex size-10 shrink-0 items-center justify-center rounded-sm
             bg-primary text-inverted shadow-sm transition-transform duration-200
             group-hover:scale-105
           "
@@ -56,7 +56,7 @@
             root: 'min-w-0',
             list: 'flex flex-col gap-1',
             item: 'min-w-0',
-            link: 'group relative overflow-hidden app-radius-control border border-transparent px-3 py-2.5 transition-colors duration-150 hover:bg-muted data-[active=true]:border-primary/15 data-[active=true]:bg-primary/10',
+            link: 'group relative overflow-hidden rounded-sm border border-transparent px-3 py-2.5 transition-colors duration-150 hover:bg-muted data-[active=true]:border-primary/15 data-[active=true]:bg-primary/10',
             linkLeadingIcon:
               'size-5 text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
             linkLabel:
@@ -77,13 +77,13 @@
         v-else
         class="border-t border-default pt-3"
       >
-        <div class="app-radius-surface border border-default bg-muted/45 p-3">
+        <div class="rounded-md border border-default bg-muted/45 p-3">
           <div class="mb-2 flex items-center justify-between gap-2">
             <p class="text-xs font-medium text-muted">
               Профіль
             </p>
             <UButton
-              to="/profile"
+              :to="{ name: RouteName.PROFILE }"
               color="neutral"
               variant="ghost"
               icon="i-lucide-settings-2"
@@ -150,6 +150,7 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "#ui/components/NavigationMenu.vue";
+import { RouteName } from "~/constants";
 
 const open = defineModel<boolean>({ required: true });
 const authStore = useAuthStore();
@@ -165,27 +166,27 @@ const closeOnMobile = () => {
 const items = ref<NavigationMenuItem[]>([
   {
     label: "Головна",
-    to: "/",
+    to: { name: RouteName.INDEX },
     icon: "i-lucide-home",
   },
   {
     label: "Папки",
-    to: "/folders",
+    to: { name: RouteName.FOLDERS },
     icon: "i-lucide-folder",
   },
   {
     label: "Картки",
-    to: "/sets",
+    to: { name: RouteName.SETS },
     icon: "i-lucide-layers",
   },
   {
     label: "Статистика",
-    to: "/statistic",
+    to: { name: RouteName.STATISTIC },
     icon: "i-lucide-bar-chart-3",
   },
   {
     label: "Люди",
-    to: "/peoples",
+    to: { name: RouteName.PEOPLES },
     icon: "i-lucide-users",
   },
 ]);

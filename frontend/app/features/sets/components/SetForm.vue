@@ -8,7 +8,7 @@
   >
     <section
       class="
-        app-surface app-radius-surface p-5
+        rounded-md border border-default bg-elevated/96 p-5 shadow-sm
         sm:p-6
       "
     >
@@ -77,8 +77,8 @@
             <div
               v-else-if="topicsError"
               class="
-                app-radius-control flex items-center justify-between gap-3
-                border border-error/25 bg-error/5 px-3 py-2
+                flex items-center justify-between gap-3 rounded-sm border
+                border-error/25 bg-error/5 px-3 py-2
               "
             >
               <p class="text-sm text-error">
@@ -136,7 +136,7 @@
 
         <div
           class="
-            app-radius-surface flex items-start gap-3 border border-secondary/20
+            flex items-start gap-3 rounded-md border border-secondary/20
             bg-secondary/8 px-3 py-2.5 text-sm/5 text-toned
           "
         >
@@ -194,9 +194,8 @@
 
     <div
       class="
-        app-radius-surface sticky bottom-2 z-20 mx-auto grid w-full grid-cols-2
-        gap-2 border border-default bg-elevated/92 p-2 shadow-(--app-shadow-md)
-        backdrop-blur-xl
+        sticky bottom-2 z-20 mx-auto grid w-full grid-cols-2 gap-2 rounded-md
+        border border-default bg-elevated/92 p-2 shadow-md backdrop-blur-xl
         sm:flex sm:w-fit sm:justify-end
       "
     >
@@ -231,6 +230,8 @@
 </template>
 
 <script setup lang="ts">
+import { useLocalStorage, useMounted } from "@vueuse/core";
+
 import type { FormErrorEvent } from "#ui/types/form";
 import type { ISetDetailsResponse } from "~/types/api.generated";
 

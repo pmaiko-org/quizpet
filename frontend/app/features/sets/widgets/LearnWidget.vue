@@ -15,13 +15,13 @@
     <template #empty>
       <section
         class="
-          app-radius-surface border border-dashed border-default bg-default/70
-          p-8 text-center shadow-sm
+          rounded-md border border-dashed border-default bg-default/70 p-8
+          text-center shadow-sm
         "
       >
         <div
           class="
-            app-radius-surface mx-auto flex size-14 items-center justify-center
+            mx-auto flex size-14 items-center justify-center rounded-md
             bg-primary/10 text-primary
           "
         >
@@ -33,30 +33,16 @@
         <h2 class="mt-5 text-2xl font-semibold text-highlighted">
           У наборі поки немає карток
         </h2>
-        <p class="mx-auto mt-3 max-w-xl text-sm/6 text-toned">
-          Додайте кілька карток у редакторі, і тут одразу з’явиться повноцінний
-          режим навчання з повторенням та статистикою.
-        </p>
-        <UButton
-          v-if="canEdit"
-          :to="editSetLink"
-          icon="i-lucide-pencil"
-          size="xl"
-          class="mt-6 justify-center"
-        >
-          Відкрити редактор
-        </UButton>
       </section>
     </template>
 
-    <div v-if="isShowingResults">
-      <LearnResults
-        :reports="reports"
-        :totalDurationMs="totalElapsedMs"
-        @restart="restartSession"
-        @retry-mistakes="restartMistakes"
-      />
-    </div>
+    <LearnResults
+      v-if="isShowingResults"
+      :reports="reports"
+      :totalDurationMs="totalElapsedMs"
+      @restart="restartSession"
+      @retry-mistakes="restartMistakes"
+    />
 
     <div
       v-else-if="currentCard"
@@ -122,6 +108,8 @@
 </template>
 
 <script setup lang="ts">
+import { useFullscreen } from "@vueuse/core";
+
 const learnStage = ref<HTMLElement | null>(null);
 const {
   isFullscreen,
@@ -143,7 +131,6 @@ const {
   flipped,
   isAnswering,
   lastOutcome,
-  editSetLink,
   currentCard,
   currentCardEditLink,
   isShowingResults,

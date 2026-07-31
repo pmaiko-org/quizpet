@@ -58,7 +58,7 @@
         </a>
         <span aria-hidden="true">·</span>
         <NuxtLink
-          to="/privacy"
+          :to="{ name: RouteName.PRIVACY }"
           class="
             rounded-sm transition-colors
             hover:text-default
@@ -74,5 +74,5 @@
 </template>
 
 <script setup lang="ts">
-import { PROJECT_LINKS } from "~/constants";
+import { PROJECT_LINKS, RouteName } from "~/constants";
 </script>

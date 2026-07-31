@@ -77,7 +77,7 @@
           :key="preset"
           type="button"
           class="
-            group app-radius-control relative h-8 border border-default
+            group relative h-8 rounded-sm border border-default
             transition-transform
             hover:-translate-y-0.5
             focus:outline-none

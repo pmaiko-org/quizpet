@@ -11,7 +11,7 @@
           sm:py-6
         "
       >
-        <UMain class="app-reveal min-h-0 min-w-0">
+        <UMain class="min-h-0 min-w-0">
           <slot />
         </UMain>
       </UContainer>

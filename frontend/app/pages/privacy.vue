@@ -3,7 +3,7 @@
     <header class="border-b border-default">
       <UContainer class="flex items-center justify-between gap-4 py-4">
         <NuxtLink
-          to="/"
+          :to="{ name: RouteName.INDEX }"
           class="text-lg font-semibold text-highlighted"
         >
           QuizPet
@@ -178,7 +178,7 @@
 
       <div class="mt-10 border-t border-default pt-6">
         <UButton
-          to="/"
+          :to="{ name: RouteName.INDEX }"
           variant="soft"
           icon="i-lucide-arrow-left"
         >
@@ -190,6 +190,8 @@
 </template>
 
 <script setup lang="ts">
+import { RouteName } from "~/constants";
+
 definePageMeta({
   layout: "empty",
 });

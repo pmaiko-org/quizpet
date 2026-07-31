@@ -1,11 +1,5 @@
 export default defineNuxtConfig({
-  modules: [
-    "@nuxt/ui",
-    "@nuxt/image",
-    "@nuxt/eslint",
-    "@vueuse/nuxt",
-    "@pinia/nuxt",
-  ],
+  modules: ["@nuxt/ui", "@nuxt/image", "@nuxt/eslint", "@pinia/nuxt"],
   components: [
     {
       path: "~/components",
@@ -77,6 +71,9 @@ export default defineNuxtConfig({
   },
   features: {
     inlineStyles: true,
+  },
+  experimental: {
+    typedPages: true,
   },
   compatibilityDate: "2025-07-15",
   eslint: {

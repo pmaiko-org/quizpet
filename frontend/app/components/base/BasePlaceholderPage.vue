@@ -39,14 +39,16 @@
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationRaw } from "vue-router";
+
 interface IBasePlaceholderPageProps {
   eyebrow: string;
   title: string;
   description: string;
-  primaryTo: string;
+  primaryTo: RouteLocationRaw;
   primaryLabel: string;
   primaryIcon?: string;
-  secondaryTo?: string;
+  secondaryTo?: RouteLocationRaw;
   secondaryLabel?: string;
 }
 
@@ -57,7 +59,7 @@ const {
   primaryTo,
   primaryLabel,
   primaryIcon = "i-lucide-arrow-right",
-  secondaryTo = "",
+  secondaryTo,
   secondaryLabel = "",
 } = defineProps<IBasePlaceholderPageProps>();
 </script>

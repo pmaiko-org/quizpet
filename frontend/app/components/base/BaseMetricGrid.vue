@@ -49,7 +49,7 @@
             <div
               v-if="item.icon"
               class="
-                app-radius-surface hidden size-9 items-center justify-center
+                hidden size-9 items-center justify-center rounded-md
                 bg-primary/10 text-primary
                 sm:flex
               "
@@ -132,20 +132,20 @@ const gridClass = computed(() => {
 const itemUi = computed(() => {
   if (variant === "hero") {
     return {
-      root: "app-radius-surface border border-default bg-default/70",
+      root: "rounded-md border border-default bg-default/70",
       body: "p-3 sm:p-4",
     };
   }
 
   if (variant === "compact") {
     return {
-      root: "app-radius-surface border border-default bg-default/55",
+      root: "rounded-md border border-default bg-default/55",
       body: "px-2 py-2",
     };
   }
 
   return {
-    root: "app-radius-surface border border-default bg-default/65",
+    root: "rounded-md border border-default bg-default/65",
     body: "px-3 py-2.5",
   };
 });

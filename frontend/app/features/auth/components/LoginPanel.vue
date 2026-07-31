@@ -90,7 +90,7 @@
           Реєструючись або продовжуючи через Google, ви підтверджуєте, що
           ознайомилися з
           <NuxtLink
-            to="/privacy"
+            :to="{ name: RouteName.PRIVACY }"
             class="
               font-medium text-amber-600 underline underline-offset-2
               hover:text-amber-700
@@ -213,5 +213,5 @@
 </template>
 
 <script setup lang="ts">
-import { PROJECT_LINKS } from "~/constants";
+import { PROJECT_LINKS, RouteName } from "~/constants";
 </script>

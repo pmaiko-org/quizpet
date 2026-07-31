@@ -5,9 +5,8 @@
       gap-3
       sm:h-[calc(100svh-var(--ui-header-height)-3rem)]
     "
-    aria-label="Завантаження навчального сеансу"
   >
-    <section class="app-surface-subtle shrink-0 px-3 py-2">
+    <USkeleton class="shrink-0 rounded-md bg-elevated/70 px-3 py-2">
       <div
         class="
           flex flex-col gap-1.5
@@ -15,20 +14,19 @@
         "
       >
         <div class="flex items-center gap-2">
-          <USkeleton class="h-2.5 w-24" />
-          <USkeleton class="h-3.5 w-20" />
+          <div class="h-3.5 w-20" />
         </div>
 
         <div class="flex gap-1">
-          <USkeleton
+          <div
             v-for="index in 3"
             :key="index"
-            class="app-radius-control h-8 w-16"
+            class="h-8 w-16"
           />
         </div>
       </div>
-      <USkeleton class="mt-2 h-1 w-full rounded-full" />
-    </section>
+      <USkeleton class="mt-1 h-1 w-full rounded-full" />
+    </USkeleton>
 
     <div class="flex shrink-0 items-center gap-2">
       <USkeleton class="h-6 w-20" />
@@ -40,7 +38,7 @@
       </div>
     </div>
 
-    <USkeleton class="app-radius-surface min-h-0 w-full flex-1" />
+    <USkeleton class="min-h-0 w-full flex-1" />
 
     <div class="grid shrink-0 grid-cols-2 gap-2">
       <USkeleton class="h-11 w-full" />

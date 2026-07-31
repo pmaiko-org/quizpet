@@ -1,16 +1,20 @@
 <template>
   <article
     class="
-      app-surface group app-radius-surface flex min-h-0 flex-col p-4
-      transition-all duration-200
-      hover:-translate-y-0.5 hover:border-primary/25
-      hover:shadow-(--app-shadow-md)
+      group flex min-h-0 flex-col rounded-md border border-default
+      bg-elevated/96 p-4 shadow-sm transition-all duration-200
+      hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-md
       sm:p-5
     "
   >
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0 space-y-1.5">
-        <p class="app-eyebrow">
+        <p
+          class="
+            text-[0.6875rem]/4 font-bold tracking-[0.18em] text-primary
+            uppercase
+          "
+        >
           Набір карток
         </p>
         <h3 class="truncate text-xl font-semibold text-highlighted">
@@ -20,7 +24,7 @@
 
       <div
         class="
-          app-radius-surface flex size-9 shrink-0 items-center justify-center
+          flex size-9 shrink-0 items-center justify-center rounded-md
           bg-primary/10 text-primary transition-colors
           group-hover:bg-primary group-hover:text-inverted
         "
@@ -68,7 +72,7 @@
       </UBadge>
     </div>
 
-    <div class="app-radius-surface mt-4 border border-default bg-muted/45 p-3">
+    <div class="mt-4 rounded-md border border-default bg-muted/45 p-3">
       <div class="grid grid-cols-3 gap-3">
         <div>
           <p
@@ -113,7 +117,7 @@
 
     <div class="mt-4 flex items-center justify-between gap-2">
       <UButton
-        :to="`/sets/${set.id}/learn`"
+        :to="{ name: RouteName.SETS_ID_LEARN, params: { id: set.id } }"
         icon="i-lucide-play"
         size="lg"
         class="min-w-32 justify-center"
@@ -126,7 +130,7 @@
         class="flex items-center gap-1"
       >
         <UButton
-          :to="`/sets/${set.id}/edit`"
+          :to="{ name: RouteName.SETS_ID_EDIT, params: { id: set.id } }"
           variant="ghost"
           color="neutral"
           icon="i-lucide-pencil"
@@ -148,6 +152,7 @@
 </template>
 
 <script setup lang="ts">
+import { RouteName } from "~/constants";
 import type { ISetListItemResponse } from "~/types/api.generated";
 
 import { getAuthorName } from "../utils";

@@ -1,5 +1,7 @@
 import { useNow } from "@vueuse/core";
+import type { RouteLocationRaw } from "vue-router";
 
+import { RouteName } from "~/constants";
 import type { ICardDetailsResponse } from "~/types/api.generated";
 
 import type {
@@ -20,10 +22,10 @@ interface ICardSessionState {
 }
 
 export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
-  const route = useRoute();
+  const route = useRoute(RouteName.SETS_ID_LEARN);
   const { $repository } = useNuxtApp();
 
-  const setId = computed(() => route.params.id as string);
+  const setId = computed(() => route.params.id);
   const asyncDataKey = computed(() => `set-learning-${setId.value}`);
 
   const {
@@ -64,8 +66,8 @@ export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
 
   let advanceTimeout: number | null = null;
 
-  const editSetLink = computed(() => {
-    return `/sets/${setId.value}/edit`;
+  const editSetLink = computed<RouteLocationRaw>(() => {
+    return { name: RouteName.SETS_ID_EDIT, params: { id: setId.value } };
   });
 
   const cardMap = computed<Map<string, ICardDetailsResponse>>(() => {
@@ -84,12 +86,12 @@ export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
     return cardMap.value.get(currentCardId.value) ?? null;
   });
 
-  const currentCardEditLink = computed(() => {
-    if (!currentCard.value) {
-      return editSetLink.value;
-    }
-
-    return `${editSetLink.value}?card=${currentCard.value.id}`;
+  const currentCardEditLink = computed<RouteLocationRaw>(() => {
+    return {
+      name: RouteName.SETS_ID_EDIT,
+      params: { id: setId.value },
+      ...(currentCard.value ? { query: { card: currentCard.value.id } } : {}),
+    };
   });
 
   const isShowingResults = computed(() => {

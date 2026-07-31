@@ -2,7 +2,7 @@
   <section class="space-y-6">
     <section
       class="
-        app-radius-surface overflow-hidden border border-default bg-linear-to-br
+        overflow-hidden rounded-md border border-default bg-linear-to-br
         from-primary/10 via-elevated to-elevated p-6 shadow-sm
         md:p-8
       "
@@ -75,7 +75,7 @@
 
     <section
       class="
-        app-radius-surface border border-default bg-default/85 p-5 shadow-sm
+        rounded-md border border-default bg-default/85 p-5 shadow-sm
         md:p-6
       "
     >
@@ -105,7 +105,7 @@
         <article
           v-for="report in orderedReports"
           :key="report.card.id"
-          class="app-radius-surface border p-4"
+          class="rounded-md border p-4"
           :class="
             report.mistakes
               ? 'border-error/20 bg-error/5'
@@ -128,7 +128,7 @@
                   :color="report.mistakes ? 'error' : 'primary'"
                   variant="soft"
                   size="md"
-                  class="app-radius-control"
+                  class="rounded-sm"
                 >
                   {{
                     report.mistakes
@@ -149,11 +149,7 @@
                 lg:min-w-88
               "
             >
-              <div
-                class="
-                  app-radius-surface border border-default bg-default/70 p-3
-                "
-              >
+              <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Спроб
                 </p>
@@ -162,11 +158,7 @@
                 </p>
               </div>
 
-              <div
-                class="
-                  app-radius-surface border border-default bg-default/70 p-3
-                "
-              >
+              <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Час
                 </p>
@@ -175,11 +167,7 @@
                 </p>
               </div>
 
-              <div
-                class="
-                  app-radius-surface border border-default bg-default/70 p-3
-                "
-              >
+              <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
                   Середнє
                 </p>

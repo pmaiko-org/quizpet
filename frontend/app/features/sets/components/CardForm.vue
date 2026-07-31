@@ -1,7 +1,7 @@
 <template>
   <article
     class="
-      app-surface app-radius-surface p-4
+      rounded-md border border-default bg-elevated/96 p-4 shadow-sm
       sm:p-5
     "
   >
@@ -9,8 +9,8 @@
       <div class="flex items-center gap-3">
         <span
           class="
-            app-radius-control flex size-8 items-center justify-center
-            bg-primary/10 text-sm font-bold text-primary
+            flex size-8 items-center justify-center rounded-sm bg-primary/10
+            text-sm font-bold text-primary
           "
         >
           {{ index + 1 }}
@@ -115,8 +115,7 @@
 
     <details
       class="
-        group app-radius-surface mt-4 overflow-hidden border border-default
-        bg-muted/35
+        group mt-4 overflow-hidden rounded-md border border-default bg-muted/35
       "
     >
       <summary

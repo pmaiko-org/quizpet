@@ -1,6 +1,10 @@
 <template>
   <div :class="containerClass">
-    <p class="app-eyebrow">
+    <p
+      class="
+        text-[0.6875rem]/4 font-bold tracking-[0.18em] text-primary uppercase
+      "
+    >
       {{ eyebrow }}
     </p>
 

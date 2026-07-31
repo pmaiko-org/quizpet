@@ -1,19 +1,7 @@
 <template>
-  <section class="app-surface-subtle px-3 py-2">
-    <div
-      class="
-        flex flex-col gap-1.5
-        sm:flex-row sm:items-center sm:justify-between
-      "
-    >
+  <section class="rounded-md bg-elevated/70 px-3 py-2">
+    <div class="flex flex-row items-center justify-between gap-1.5">
       <div class="flex min-w-0 items-baseline gap-2">
-        <p
-          class="
-            shrink-0 text-[10px] font-medium tracking-wide text-dimmed uppercase
-          "
-        >
-          Навчальний сеанс
-        </p>
         <h1 class="truncate text-sm font-semibold text-toned">
           {{ title }}
         </h1>
@@ -23,7 +11,7 @@
         <div
           v-for="stat in stats"
           :key="stat.label"
-          class="app-radius-control min-w-16 px-2 py-0.5 text-center"
+          class="min-w-16 rounded-sm px-2 py-0.5 text-center"
           :class="stat.pulseClass"
         >
           <p
@@ -41,7 +29,7 @@
       </div>
     </div>
 
-    <div class="mt-2 h-1 overflow-hidden rounded-full bg-muted/60">
+    <div class="mt-1 h-1 overflow-hidden rounded-full bg-muted/60">
       <div
         class="
           h-full rounded-full bg-primary/80 transition-[width] duration-300

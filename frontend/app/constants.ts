@@ -2,7 +2,15 @@ export enum StatusCodes {
   UNAUTHORIZED = 401,
 }
 
-export const PageName = {
+export const RouteName = {
+  INDEX: "index",
+  LOGIN: "login",
+  PRIVACY: "privacy",
+  FOLDERS: "folders",
+  STATISTIC: "statistic",
+  PEOPLES: "peoples",
+  PROFILE: "profile",
+  SETS: "sets",
   SETS_CREATE: "sets-create",
   SETS_ID_EDIT: "sets-id-edit",
   SETS_ID_LEARN: "sets-id-learn",

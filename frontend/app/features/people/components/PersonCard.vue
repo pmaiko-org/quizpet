@@ -1,9 +1,9 @@
 <template>
   <article
     class="
-      app-surface app-radius-surface p-4 transition-all duration-200
-      hover:-translate-y-0.5 hover:border-primary/25
-      hover:shadow-(--app-shadow-md)
+      rounded-md border border-default bg-elevated/96 p-4 shadow-sm
+      transition-all duration-200
+      hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-md
     "
   >
     <div class="flex items-center gap-3">
