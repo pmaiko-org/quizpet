@@ -1,4 +1,4 @@
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 
 export const useOAuthCallback = () => {
   const { setTokens } = useAuthStore();

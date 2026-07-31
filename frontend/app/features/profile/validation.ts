@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fileSchema } from "~/validation";
+import { fileSchema } from "~/shared/validation";
 
 export const profileSchema = z.object({
   firstName: z.string().trim().min(1, "Вкажіть ім'я"),

@@ -11,7 +11,8 @@ const LAYER_HEIGHT = {
   "core": 1,
   "features": 2,
   "pages": 3,
-  "app-infra": 4,
+  "shell": 4,
+  "app-infra": 5,
 };
 
 const layerOfFile = (filename) => {
@@ -24,15 +25,11 @@ const layerOfFile = (filename) => {
   ) {
     return "app-infra";
   }
+  if (/\/app\/shell\//.test(f)) return "shell";
   if (/\/features\//.test(f)) return "features";
   if (/\/core\//.test(f)) return "core";
   if (/\/pages\//.test(f)) return "pages";
-  if (
-    /\/app\/(components|composables|utils|repository|types|store)\//.test(f)
-    || /\/app\/(constants|validation)\.ts$/.test(f)
-  ) {
-    return "shared";
-  }
+  if (/\/app\/shared\//.test(f)) return "shared";
 
   return null;
 };
@@ -44,16 +41,12 @@ const layerOfImport = (importPath) => {
 
   const rest = importPath.slice(2);
 
+  if (rest.startsWith("shell/")) return "shell";
   if (rest.startsWith("features/")) return "features";
   if (rest.startsWith("core/")) return "core";
   if (rest.startsWith("pages/")) return "pages";
   if (/^(plugins|middleware|layouts)\//.test(rest)) return "app-infra";
-  if (
-    /^(components|composables|utils|repository|types|store)(\/|$)/.test(rest)
-  ) {
-    return "shared";
-  }
-  if (/^(constants|validation)(\.|\/|$)/.test(rest)) return "shared";
+  if (rest.startsWith("shared/")) return "shared";
 
   return null;
 };
@@ -73,11 +66,11 @@ const localPlugin = {
           layer:
             "Layer \"{{current}}\" must not import from higher layer "
             + "\"{{imported}}\" (allowed direction: "
-            + "pages → features → core → shared).",
+            + "shell → pages → features → core → shared).",
           crossFeature:
             "Feature \"{{current}}\" must not import from feature "
-            + "\"{{imported}}\". Share code via core/ or app-level "
-            + "composables/, utils/, components/.",
+            + "\"{{imported}}\". Share code via core/ or shared/ "
+            + "(composables/, utils/, components/).",
         },
       },
       create(context) {

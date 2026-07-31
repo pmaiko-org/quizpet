@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --public",
-    "generate:api-types": "npm --prefix ../backend run generate:openapi && openapi-typescript ../backend/openapi.json -o ./app/types/api.generated.ts && node ./scripts/append-openapi-aliases.mjs",
+    "generate:api-types": "npm --prefix ../backend run generate:openapi && openapi-typescript ../backend/openapi.json -o ./app/shared/types/api.generated.ts && node ./scripts/append-openapi-aliases.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

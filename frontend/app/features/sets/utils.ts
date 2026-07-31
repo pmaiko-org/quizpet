@@ -4,7 +4,7 @@ import type {
   ICardDetailsResponse,
   ISetDetailsResponse,
   ISetListItemResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 export const getAuthorName = (set: ISetListItemResponse) => {
   const fullName = `${set.user.firstName} ${set.user.lastName}`.trim();

@@ -205,8 +205,11 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/constants";
-import type { IFileResponse, IUserResponse } from "~/types/api.generated";
+import { RouteName } from "~/shared/constants";
+import type {
+  IFileResponse,
+  IUserResponse,
+} from "~/shared/types/api.generated";
 
 import { profileSchema } from "../validation";
 

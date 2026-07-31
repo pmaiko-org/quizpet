@@ -3,7 +3,7 @@ import type {
   ICardDetailsResponse,
   IFileResponse,
   ISetDetailsResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
   return {

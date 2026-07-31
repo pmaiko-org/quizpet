@@ -3,7 +3,7 @@ import type { Ref } from "vue";
 import type {
   ISetListItemResponse,
   ISetListResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 import { canDeleteSet } from "../utils";
 

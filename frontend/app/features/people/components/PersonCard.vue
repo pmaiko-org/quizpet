@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IUserResponse } from "~/types/api.generated";
+import type { IUserResponse } from "~/shared/types/api.generated";
 
 const { user } = defineProps<{
   user: IUserResponse;

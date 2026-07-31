@@ -103,7 +103,7 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 
 definePageMeta({
   layout: "cabinet",

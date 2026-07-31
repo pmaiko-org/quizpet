@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@nuxt/image", "@nuxt/eslint", "@pinia/nuxt"],
   components: [
     {
-      path: "~/components",
+      path: "~/shell/components",
       pathPrefix: false,
     },
     {
@@ -15,14 +15,21 @@ export default defineNuxtConfig({
       pattern: "*/components/**/*.vue",
       pathPrefix: false,
     },
+    {
+      path: "~/shared/components",
+      pathPrefix: false,
+    },
   ],
   imports: {
     dirs: [
-      "~/store",
-      "~/core/*/store/**/*",
-      "~/core/*/composables/**/*",
+      "~/shell/composables",
       "~/features/*/store/**/*",
       "~/features/*/composables/**/*",
+      "~/core/*/store/**/*",
+      "~/core/*/composables/**/*",
+      "~/shared/store",
+      "~/shared/composables",
+      "~/shared/utils",
     ],
   },
   devtools: { enabled: true },

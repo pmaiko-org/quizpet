@@ -1,7 +1,10 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
 
-import type { TRequestOptions } from "~/repository/types";
-import type { IFileResponse, ISuccessResponse } from "~/types/api.generated";
+import type { TRequestOptions } from "~/shared/repository/types";
+import type {
+  IFileResponse,
+  ISuccessResponse,
+} from "~/shared/types/api.generated";
 
 export const storageFilesRepository = <T>(
   fetch: $Fetch<T, NitroFetchRequest>,

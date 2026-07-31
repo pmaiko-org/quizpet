@@ -131,8 +131,8 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/constants";
-import type { ISetListItemResponse } from "~/types/api.generated";
+import { RouteName } from "~/shared/constants";
+import type { ISetListItemResponse } from "~/shared/types/api.generated";
 
 const {
   sets,

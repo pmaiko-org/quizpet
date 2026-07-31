@@ -1,7 +1,7 @@
 import { FetchError } from "ofetch";
 
-import { StatusCodes } from "~/constants";
-import { createRepository } from "~/repository";
+import { StatusCodes } from "~/shared/constants";
+import { createRepository } from "~/shared/repository";
 
 export default defineNuxtPlugin(() => {
   const apiUrl = useApiUrl();

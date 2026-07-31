@@ -1,11 +1,11 @@
 import { FetchError } from "ofetch";
 
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 import type {
   ISetCreate,
   ISetUpdate,
   ITopicResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 import type { TCardFormData, TSetFormData } from "../types";
 import type { setSchema } from "../validation";

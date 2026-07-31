@@ -35,7 +35,7 @@ defineProps<{
 }>();
 
 defineEmits<{
-  known: [];
   missed: [];
+  known: [];
 }>();
 </script>

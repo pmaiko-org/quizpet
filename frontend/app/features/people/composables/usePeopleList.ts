@@ -2,7 +2,7 @@ import type {
   IPaginationMeta,
   IUserListResponse,
   IUserResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 export const usePeopleList = () => {
   const { $repository } = useNuxtApp();

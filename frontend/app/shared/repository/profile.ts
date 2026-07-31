@@ -1,11 +1,11 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
 
-import type { TRequestOptions } from "~/repository/types";
+import type { TRequestOptions } from "~/shared/repository/types";
 import type {
   IProfileUpdate,
   ISuccessResponse,
   IUserResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {

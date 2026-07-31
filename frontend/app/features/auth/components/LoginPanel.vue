@@ -213,5 +213,5 @@
 </template>
 
 <script setup lang="ts">
-import { PROJECT_LINKS, RouteName } from "~/constants";
+import { PROJECT_LINKS, RouteName } from "~/shared/constants";
 </script>

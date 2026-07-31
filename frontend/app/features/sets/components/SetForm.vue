@@ -233,7 +233,7 @@
 import { useLocalStorage, useMounted } from "@vueuse/core";
 
 import type { FormErrorEvent } from "#ui/types/form";
-import type { ISetDetailsResponse } from "~/types/api.generated";
+import type { ISetDetailsResponse } from "~/shared/types/api.generated";
 
 import {
   initialCard,

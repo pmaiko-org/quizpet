@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 
 const open = defineModel<boolean>({ required: false });
 

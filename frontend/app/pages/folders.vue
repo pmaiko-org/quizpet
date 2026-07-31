@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 
 definePageMeta({
   layout: "cabinet",

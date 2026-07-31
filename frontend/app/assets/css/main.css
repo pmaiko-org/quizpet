@@ -8,6 +8,12 @@
     "Avenir Next Rounded", "Avenir Next", "Avenir", ui-rounded, sans-serif;
 }
 
+@layer base {
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
 :root {
   --ui-header-height: 3.75rem;
   --ui-radius: 0.625rem;

@@ -1,4 +1,4 @@
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 
 const PUBLIC_PATHS = ["/login", "/privacy"];
 

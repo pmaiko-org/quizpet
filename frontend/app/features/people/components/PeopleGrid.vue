@@ -92,7 +92,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IPaginationMeta, IUserResponse } from "~/types/api.generated";
+import type {
+  IPaginationMeta,
+  IUserResponse,
+} from "~/shared/types/api.generated";
 
 import { pluralUsers } from "../utils";
 

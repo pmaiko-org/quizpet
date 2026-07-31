@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fileSchema } from "~/validation";
+import { fileSchema } from "~/shared/validation";
 
 export const optionalHexColor = z.preprocess(
   value => (typeof value === "string" && !value.trim() ? undefined : value),

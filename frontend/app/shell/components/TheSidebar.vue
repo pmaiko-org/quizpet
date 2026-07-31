@@ -150,7 +150,7 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "#ui/components/NavigationMenu.vue";
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 
 const open = defineModel<boolean>({ required: true });
 const authStore = useAuthStore();

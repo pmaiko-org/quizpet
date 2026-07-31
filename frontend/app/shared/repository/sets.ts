@@ -1,6 +1,6 @@
 import type { $Fetch, NitroFetchRequest } from "nitropack";
 
-import type { TRequestOptions } from "~/repository/types";
+import type { TRequestOptions } from "~/shared/repository/types";
 import type {
   ICardDetailsResponse,
   ISetCreate,
@@ -10,7 +10,7 @@ import type {
   ISetUpdate,
   ISuccessResponse,
   ITopicResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {

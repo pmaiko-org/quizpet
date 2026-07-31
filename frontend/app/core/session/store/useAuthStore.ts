@@ -1,11 +1,11 @@
 import { useLocalStorage } from "@vueuse/core";
 import { skipHydrate } from "pinia";
 
-import { RouteName } from "~/constants";
+import { RouteName } from "~/shared/constants";
 import type {
   IRefreshToken,
   IRefreshTokenResponse,
-} from "~/types/api.generated";
+} from "~/shared/types/api.generated";
 
 export const useAuthStore = defineStore("auth", () => {
   const apiUrl = useApiUrl();

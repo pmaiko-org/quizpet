@@ -5,6 +5,7 @@ const frontendRoot = path.resolve(import.meta.dirname, "..");
 const generatedFilePath = path.join(
   frontendRoot,
   "app",
+  "shared",
   "types",
   "api.generated.ts",
 );

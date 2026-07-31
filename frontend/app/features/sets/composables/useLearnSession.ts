@@ -1,8 +1,8 @@
 import { useNow } from "@vueuse/core";
 import type { RouteLocationRaw } from "vue-router";
 
-import { RouteName } from "~/constants";
-import type { ICardDetailsResponse } from "~/types/api.generated";
+import { RouteName } from "~/shared/constants";
+import type { ICardDetailsResponse } from "~/shared/types/api.generated";
 
 import type {
   ILearningAttempt,

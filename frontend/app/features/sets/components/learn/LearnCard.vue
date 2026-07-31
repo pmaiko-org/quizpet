@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IFileResponse } from "~/types/api.generated";
+import type { IFileResponse } from "~/shared/types/api.generated";
 
 const { badge, title, description, image, side } = defineProps<{
   badge: string;
