@@ -6,7 +6,7 @@
     errorTitle="Не вдалося завантажити набір"
     errorDescription="Спробуйте оновити сторінку або повторно звернутися до сервера."
     retryLabel="Спробувати ще раз"
-    @retry="refreshSet"
+    @retry="handleRetry"
   >
     <template #loading>
       <LearnSessionSkeleton />
@@ -40,8 +40,8 @@
       v-if="isShowingResults"
       :reports="reports"
       :totalDurationMs="totalElapsedMs"
-      @restart="restartSession"
-      @retry-mistakes="restartMistakes"
+      @restart="handleRestart"
+      @retry-mistakes="handleRetryMistakes"
     />
 
     <div
@@ -88,10 +88,10 @@
               :editLink="currentCardEditLink"
               :fullscreenSupported="fullscreenSupported"
               :isFullscreen="isFullscreen"
-              @flip="toggleFlip"
-              @known="markKnown"
-              @missed="markMissed"
-              @toggle-fullscreen="toggleFullscreen"
+              @flip="handleFlip"
+              @known="handleKnown"
+              @missed="handleMissed"
+              @toggle-fullscreen="handleToggleFullscreen"
             />
           </div>
         </Transition>
@@ -100,8 +100,8 @@
       <LearnControls
         class="shrink-0"
         :locked="isAnswering"
-        @known="markKnown"
-        @missed="markMissed"
+        @known="handleKnown"
+        @missed="handleMissed"
       />
     </div>
   </BaseDataBoundary>
@@ -114,7 +114,7 @@ const learnStage = ref<HTMLElement | null>(null);
 const {
   isFullscreen,
   isSupported: fullscreenSupported,
-  toggle: toggleFullscreen,
+  toggle: handleToggleFullscreen,
 } = useFullscreen(learnStage);
 
 const { email } = useCurrentUser();
@@ -124,7 +124,7 @@ const {
   canEdit,
   loading,
   error,
-  refreshSet,
+  refreshSet: handleRetry,
   activeCardIds,
   queue,
   currentStep,
@@ -140,18 +140,18 @@ const {
   reports,
   learnedCount,
   mistakeCardCount,
-  toggleFlip,
-  markKnown,
-  markMissed,
-  restartSession,
-  restartMistakes,
+  toggleFlip: handleFlip,
+  markKnown: handleKnown,
+  markMissed: handleMissed,
+  restartSession: handleRestart,
+  restartMistakes: handleRetryMistakes,
 } = useLearnSession(email);
 
 const cardTransition = computed(() => {
   return lastOutcome.value === "missed" ? "card-missed" : "card-known";
 });
 
-const onKeydown = (event: KeyboardEvent) => {
+const handleKeydown = (event: KeyboardEvent) => {
   if (isShowingResults.value || !currentCard.value) {
     return;
   }
@@ -165,18 +165,18 @@ const onKeydown = (event: KeyboardEvent) => {
 
   if (event.key === "ArrowLeft") {
     event.preventDefault();
-    markMissed();
+    handleMissed();
   } else if (event.key === "ArrowRight") {
     event.preventDefault();
-    markKnown();
+    handleKnown();
   } else if (event.key === " " || event.code === "Space") {
     event.preventDefault();
-    toggleFlip();
+    handleFlip();
   }
 };
 
-onMounted(() => window.addEventListener("keydown", onKeydown));
-onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
+onMounted(() => window.addEventListener("keydown", handleKeydown));
+onBeforeUnmount(() => window.removeEventListener("keydown", handleKeydown));
 </script>
 
 <style scoped>

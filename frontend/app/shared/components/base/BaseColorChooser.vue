@@ -45,7 +45,7 @@
                 <UButton
                   color="primary"
                   variant="soft"
-                  @click="applyDraftColor"
+                  @click="handleApplyDraftColor"
                 >
                   Застосувати
                 </UButton>
@@ -60,7 +60,7 @@
           variant="ghost"
           size="lg"
           icon="i-lucide-eraser"
-          @click="clearColor"
+          @click="handleClearColor"
         >
           Очистити
         </UButton>
@@ -148,7 +148,7 @@ const chipStyle = computed(() => {
   };
 });
 
-const applyDraftColor = () => {
+const handleApplyDraftColor = () => {
   if (!draftColor.value) {
     modelValue.value = undefined;
     return;
@@ -157,7 +157,7 @@ const applyDraftColor = () => {
   modelValue.value = draftColor.value;
 };
 
-const clearColor = () => {
+const handleClearColor = () => {
   modelValue.value = undefined;
 };
 </script>

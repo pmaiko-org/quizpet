@@ -3,8 +3,8 @@
     :schema="setSchema"
     :state="state"
     class="space-y-5 pb-20"
-    @submit="onSubmit"
-    @error="onError"
+    @submit="handleSubmit"
+    @error="handleError"
   >
     <section
       class="
@@ -90,7 +90,7 @@
                 variant="soft"
                 size="sm"
                 icon="i-lucide-refresh-cw"
-                @click="loadTopics"
+                @click="handleLoadTopics"
               >
                 Повторити
               </UButton>
@@ -172,7 +172,7 @@
 
       <SetCsvTransfer
         :cards="state.cards"
-        @import-cards="replaceCards"
+        @import-cards="handleImportCards"
       />
 
       <div class="space-y-3">
@@ -184,10 +184,10 @@
           :canRemove="state.cards.length > 2"
           :isFirst="index === 0"
           :isLast="index === state.cards.length - 1"
-          @update:model-value="updateCard(index, $event)"
-          @remove="removeCard(index)"
-          @move-up="moveCard(index, index - 1)"
-          @move-down="moveCard(index, index + 1)"
+          @update:model-value="handleUpdateCard(index, $event)"
+          @remove="handleRemoveCard(index)"
+          @move-up="handleMoveCard(index, index - 1)"
+          @move-down="handleMoveCard(index, index + 1)"
         />
       </div>
     </section>
@@ -208,7 +208,7 @@
         :disabled="submitting"
         class="justify-center"
         :class="!submitting && 'cursor-pointer'"
-        @click="addCard"
+        @click="handleAddCard"
       >
         Додати картку
       </UButton>
@@ -249,8 +249,14 @@ const { set } = defineProps<{
 
 const SET_FORM_DRAFT_STORAGE_KEY = "cards:set-form-draft";
 
-const { topics, topicsPending, topicsError, submitting, loadTopics, saveSet } =
-  useSetForm();
+const {
+  topics,
+  topicsPending,
+  topicsError,
+  submitting,
+  loadTopics: handleLoadTopics,
+  saveSet,
+} = useSetForm();
 
 const draft = useLocalStorage<string | null>(SET_FORM_DRAFT_STORAGE_KEY, null);
 
@@ -287,7 +293,7 @@ onMounted(() => {
     ...getInitialState(),
   });
 
-  void loadTopics();
+  void handleLoadTopics();
 });
 
 const isEditMode = computed(() => Boolean(state.id));
@@ -324,22 +330,22 @@ const syncCardPositions = () => {
   });
 };
 
-const addCard = () => {
+const handleAddCard = () => {
   state.cards.push(initialCard(state.cards.length));
   syncCardPositions();
 };
 
-const replaceCards = (cards: TCardFormData[]) => {
+const handleImportCards = (cards: TCardFormData[]) => {
   state.cards.splice(0, state.cards.length, ...cards);
   syncCardPositions();
 };
 
-const removeCard = (index: number) => {
+const handleRemoveCard = (index: number) => {
   state.cards.splice(index, 1);
   syncCardPositions();
 };
 
-const moveCard = (fromIndex: number, toIndex: number) => {
+const handleMoveCard = (fromIndex: number, toIndex: number) => {
   if (toIndex < 0 || toIndex >= state.cards.length || fromIndex === toIndex) {
     return;
   }
@@ -353,7 +359,7 @@ const moveCard = (fromIndex: number, toIndex: number) => {
   syncCardPositions();
 };
 
-const updateCard = (index: number, card: TCardFormData) => {
+const handleUpdateCard = (index: number, card: TCardFormData) => {
   if (!state.cards[index]) {
     return;
   }
@@ -361,7 +367,7 @@ const updateCard = (index: number, card: TCardFormData) => {
   state.cards[index] = card;
 };
 
-const onSubmit = async (event: {
+const handleSubmit = async (event: {
   data: ReturnType<typeof setSchema.parse>;
 }) => {
   const created = await saveSet(event.data, state.cards, state.id);
@@ -371,7 +377,7 @@ const onSubmit = async (event: {
   }
 };
 
-const onError = async (event: FormErrorEvent) => {
+const handleError = async (event: FormErrorEvent) => {
   const firstErrorId = event.errors?.[0]?.id;
 
   if (!firstErrorId) {

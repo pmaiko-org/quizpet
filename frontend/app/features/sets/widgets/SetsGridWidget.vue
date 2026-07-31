@@ -6,8 +6,8 @@
     :error="error"
     :deletingId="deletingSetId"
     :canDelete="canDelete"
-    @refresh="refresh"
-    @delete="deleteSet"
+    @refresh="handleRefresh"
+    @delete="handleDeleteSet"
   />
 </template>
 
@@ -21,7 +21,7 @@ const {
   error,
   deletingSetId,
   canDelete,
-  deleteSet,
-  refresh,
+  deleteSet: handleDeleteSet,
+  refresh: handleRefresh,
 } = useSetsList(email);
 </script>

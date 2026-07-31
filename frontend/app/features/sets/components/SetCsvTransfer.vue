@@ -42,7 +42,7 @@
           color="neutral"
           icon="i-lucide-download"
           :disabled="!cards.length"
-          @click="exportCsv"
+          @click="handleExportCsv"
         >
           Експорт
         </UButton>
@@ -53,7 +53,7 @@
           variant="soft"
           color="primary"
           icon="i-lucide-upload"
-          @click="openFilePicker"
+          @click="handleOpenFilePicker"
         >
           Імпорт
         </UButton>
@@ -65,7 +65,7 @@
       type="file"
       class="hidden"
       accept=".csv,text/csv"
-      @change="onFileChange"
+      @change="handleFileChange"
     >
   </div>
 </template>
@@ -90,11 +90,11 @@ const emit = defineEmits<{
 const toast = useToast();
 const fileInput = ref<HTMLInputElement | null>(null);
 
-const openFilePicker = () => {
+const handleOpenFilePicker = () => {
   fileInput.value?.click();
 };
 
-const exportCsv = () => {
+const handleExportCsv = () => {
   const rows = [
     ["term", "termDescription", "definition"],
     ...cards.map(card => [
@@ -120,7 +120,7 @@ const exportCsv = () => {
   URL.revokeObjectURL(url);
 };
 
-const onFileChange = async (event: Event) => {
+const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement | null;
   const file = target?.files?.[0];
 

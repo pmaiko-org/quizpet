@@ -106,7 +106,7 @@ export const useLearnCardSwipe = (
     return Math.min(1, Math.abs(dragX.value) / COMMIT_PX);
   });
 
-  const onCardClick = () => {
+  const handleCardClick = () => {
     if (swallowNextClick) {
       swallowNextClick = false;
       return;
@@ -125,6 +125,6 @@ export const useLearnCardSwipe = (
     swipeStyle,
     swipeHint,
     swipeHintOpacity,
-    onCardClick,
+    handleCardClick,
   };
 };

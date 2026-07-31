@@ -17,7 +17,7 @@
           bg-linear-to-br from-primary/10 to-transparent p-3 transition-colors
           hover:border-primary/25
         "
-        @click="closeOnMobile"
+        @click="handleCloseOnMobile"
       >
         <span
           class="
@@ -65,7 +65,7 @@
             linkTrailingIcon:
               'text-muted transition-colors duration-200 group-hover:text-default group-data-[active=true]:text-primary',
           }"
-          @click="closeOnMobile"
+          @click="handleCloseOnMobile"
         />
       </div>
     </section>
@@ -89,7 +89,7 @@
               icon="i-lucide-settings-2"
               size="sm"
               aria-label="Редагувати профіль"
-              @click="closeOnMobile"
+              @click="handleCloseOnMobile"
             />
           </div>
 
@@ -133,7 +133,7 @@
               block
               class="justify-start"
               :loading="isLoggingOut"
-              @click="doLogout"
+              @click="handleLogout"
             >
               Вийти
             </UButton>
@@ -155,9 +155,9 @@ import { RouteName } from "~/shared/constants";
 const open = defineModel<boolean>({ required: true });
 const authStore = useAuthStore();
 const { isLoggingOut } = storeToRefs(authStore);
-const { doLogout } = authStore;
+const { doLogout: handleLogout } = authStore;
 
-const closeOnMobile = () => {
+const handleCloseOnMobile = () => {
   if (import.meta.client && window.matchMedia("(max-width: 1023px)").matches) {
     open.value = false;
   }

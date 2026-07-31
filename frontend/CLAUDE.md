@@ -26,6 +26,32 @@ const emit = defineEmits<{
 }>();
 ```
 
+Локальные обработчики событий называй через `handle + действие`: `handleSubmit`, `handleClose`, `handleDeleteCard`. Название должно описывать смысл действия, а не элемент интерфейса: `handleDeleteCard` лучше, чем `handleButtonClick`.
+
+Входящие callback-пропсы называй через `on + действие`: `onClose`, `onSubmit`. Избегай неинформативных имён вроде `click`, `buttonClick`, `doStuff`.
+
+Для простых обработчиков допустимы короткие имена вроде `handleKnown` и `handleMissed`, если контекст компонента однозначен.
+
+Короткие примеры:
+
+```ts
+// good
+const handleSubmit = () => {};
+const handleDeleteCard = (cardId: string) => {};
+const { onClose, onSubmit } = defineProps<{
+  onClose?: () => void;
+  onSubmit?: () => void;
+}>();
+
+// bad
+const click = () => {};
+const buttonClick = () => {};
+const doStuff = () => {};
+const { submitCallback } = defineProps<{
+  submitCallback?: () => void;
+}>();
+```
+
 Код разложен по слоям. Каждый слой знает только про слои **ниже** себя.
 
 ## Слои и направление зависимостей

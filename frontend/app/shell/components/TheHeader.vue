@@ -15,7 +15,7 @@
           size="sm"
           aria-label="Відкрити або закрити бокову панель"
           class="cursor-pointer rounded-md border border-default bg-elevated/70"
-          @click="open = !open"
+          @click="handleToggleSidebar"
         />
 
         <NuxtLink
@@ -77,6 +77,10 @@ const { showSidebarToggle = true } = defineProps<{
 }>();
 
 const route = useRoute();
+
+const handleToggleSidebar = () => {
+  open.value = !open.value;
+};
 
 const isLearning = computed(() => route.name === RouteName.SETS_ID_LEARN);
 const sectionLabel = computed(() =>

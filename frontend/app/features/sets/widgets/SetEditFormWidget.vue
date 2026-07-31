@@ -4,7 +4,7 @@
     :error="error"
     errorTitle="Не вдалося завантажити набір"
     errorDescription="Спробуйте повторно відкрити редактор набору."
-    @retry="refresh"
+    @retry="handleRetry"
   >
     <template #loading>
       <SetFormSkeleton />
@@ -19,5 +19,5 @@
 </template>
 
 <script setup lang="ts">
-const { set, status, error, refresh } = useSetEdit();
+const { set, status, error, refresh: handleRetry } = useSetEdit();
 </script>

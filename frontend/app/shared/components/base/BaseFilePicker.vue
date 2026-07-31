@@ -18,7 +18,7 @@
           focus:outline-none
           focus-visible:ring-2 focus-visible:ring-primary
         "
-        @click="isOpen = true"
+        @click="handleOpenPicker"
       >
         <div
           class="
@@ -77,7 +77,7 @@
           variant="ghost"
           size="sm"
           icon="i-lucide-x"
-          @click="clearImage"
+          @click="handleClearImage"
         >
           Очистити
         </UButton>
@@ -157,7 +157,7 @@
                     size="sm"
                     icon="i-lucide-refresh-cw"
                     :loading="isLoading"
-                    @click="loadImages"
+                    @click="handleLoadImages"
                   >
                     Оновити
                   </UButton>
@@ -232,7 +232,7 @@
                     <button
                       type="button"
                       class="block w-full text-left"
-                      @click="setImageValue(item)"
+                      @click="handleSelectImage(item)"
                     >
                       <div
                         class="
@@ -286,7 +286,7 @@
                         :variant="isSelected(item) ? 'solid' : 'outline'"
                         color="primary"
                         icon="i-lucide-check"
-                        @click="setImageValue(item)"
+                        @click="handleSelectImage(item)"
                       >
                         Обрати
                       </UButton>
@@ -405,7 +405,11 @@ const selectedFile = ref<File | null>(null);
 const remoteItems = ref<IFileResponse[]>([]);
 const deletingFileId = ref<string | null>(null);
 
-const setImageValue = (value: IFileResponse | undefined) => {
+const handleOpenPicker = () => {
+  isOpen.value = true;
+};
+
+const handleSelectImage = (value: IFileResponse | undefined) => {
   modelValue.value = value;
 };
 
@@ -421,7 +425,7 @@ const itemCardClass = (item: IFileResponse) => {
     : "border-default hover:border-primary/40 hover:bg-elevated/70";
 };
 
-const loadImages = async () => {
+const handleLoadImages = async () => {
   try {
     isLoading.value = true;
     requestError.value = undefined;
@@ -440,7 +444,7 @@ const uploadFile = async (file: File) => {
 
     const response = await $repository.storageFiles.upload(file);
     modelValue.value = response;
-    await loadImages();
+    await handleLoadImages();
   } catch {
     requestError.value = "Не вдалося завантажити файл на сервер.";
   } finally {
@@ -489,10 +493,10 @@ watch(isOpen, async (value) => {
     return;
   }
 
-  await loadImages();
+  await handleLoadImages();
 });
 
-const clearImage = () => {
+const handleClearImage = () => {
   modelValue.value = undefined;
 };
 </script>

@@ -31,7 +31,7 @@
           variant="ghost"
           :icon="isSpeaking ? 'i-lucide-square' : 'i-lucide-volume-2'"
           :aria-label="isSpeaking ? 'Зупинити озвучення' : 'Озвучити картку'"
-          @click.stop="speakCurrentSide"
+          @click.stop="handleSpeakCurrentSide"
         />
 
         <UButton
@@ -68,7 +68,7 @@
       "
       :aria-pressed="flipped"
       :aria-label="flipped ? 'Показати термін' : 'Показати відповідь'"
-      @click="onCardClick"
+      @click="handleCardClick"
       @keydown.enter.prevent="emit('flip')"
     >
       <LearnFlashcardHints
@@ -188,7 +188,7 @@ const answerMask = computed(() => {
 
 const swipeAreaRef = ref<HTMLElement | null>(null);
 
-const { swipeStyle, swipeHint, swipeHintOpacity, onCardClick } =
+const { swipeStyle, swipeHint, swipeHintOpacity, handleCardClick } =
   useLearnCardSwipe(swipeAreaRef, {
     disabled: () => answering,
     onTap: () => emit("flip"),
@@ -196,7 +196,7 @@ const { swipeStyle, swipeHint, swipeHintOpacity, onCardClick } =
     onMissed: () => emit("missed"),
   });
 
-const speakCurrentSide = () => {
+const handleSpeakCurrentSide = () => {
   const text = flipped ? card.definition : card.term;
 
   if (!text.trim()) {

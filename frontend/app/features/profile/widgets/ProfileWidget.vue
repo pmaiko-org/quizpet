@@ -15,7 +15,7 @@
         :schema="profileSchema"
         :state="state"
         class="space-y-4"
-        @submit="onSubmit"
+        @submit="handleSubmit"
       >
         <UCard
           :ui="{
@@ -150,7 +150,7 @@
             variant="soft"
             icon="i-lucide-trash-2"
             class="shrink-0"
-            @click="openDeleteModal"
+            @click="handleOpenDeleteModal"
           >
             Видалити акаунт
           </UButton>
@@ -186,7 +186,7 @@
             variant="ghost"
             color="neutral"
             :disabled="deleting"
-            @click="deleteModalOpen = false"
+            @click="handleCloseDeleteModal"
           >
             Скасувати
           </UButton>
@@ -194,7 +194,7 @@
             color="error"
             :loading="deleting"
             :disabled="!canDelete"
-            @click="onDeleteAccount"
+            @click="handleDeleteAccount"
           >
             Видалити назавжди
           </UButton>
@@ -243,12 +243,16 @@ const canDelete = computed(() => {
   return !!email && deleteConfirmEmail.value.trim().toLowerCase() === email;
 });
 
-const openDeleteModal = () => {
+const handleOpenDeleteModal = () => {
   deleteConfirmEmail.value = "";
   deleteModalOpen.value = true;
 };
 
-const onDeleteAccount = async () => {
+const handleCloseDeleteModal = () => {
+  deleteModalOpen.value = false;
+};
+
+const handleDeleteAccount = async () => {
   if (!canDelete.value) return;
 
   try {
@@ -291,7 +295,7 @@ const applyProfile = (value: IUserResponse | null) => {
 
 watch(user, applyProfile, { immediate: true });
 
-const onSubmit = async (event: {
+const handleSubmit = async (event: {
   data: ReturnType<typeof profileSchema.parse>;
 }) => {
   try {
