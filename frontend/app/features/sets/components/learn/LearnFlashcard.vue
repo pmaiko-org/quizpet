@@ -51,7 +51,7 @@
           color="neutral"
           :icon="isFullscreen ? 'i-lucide-minimize' : 'i-lucide-maximize'"
           :aria-label="isFullscreen ? 'Вийти з повного екрана' : 'Повний екран'"
-          @click="emit('toggle-fullscreen')"
+          @click="emit('toggleFullscreen')"
         />
       </div>
     </div>
@@ -160,10 +160,10 @@ const {
 }>();
 
 const emit = defineEmits<{
-  "flip": [];
-  "known": [];
-  "missed": [];
-  "toggle-fullscreen": [];
+  flip: [];
+  known: [];
+  missed: [];
+  toggleFullscreen: [];
 }>();
 
 const { isSupported, isSpeaking, speak, stop } = useCardSpeech();

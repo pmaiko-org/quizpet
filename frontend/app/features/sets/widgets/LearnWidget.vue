@@ -41,7 +41,7 @@
       :reports="reports"
       :totalDurationMs="totalElapsedMs"
       @restart="handleRestart"
-      @retry-mistakes="handleRetryMistakes"
+      @retryMistakes="handleRetryMistakes"
     />
 
     <div
@@ -91,7 +91,7 @@
               @flip="handleFlip"
               @known="handleKnown"
               @missed="handleMissed"
-              @toggle-fullscreen="handleToggleFullscreen"
+              @toggleFullscreen="handleToggleFullscreen"
             />
           </div>
         </Transition>

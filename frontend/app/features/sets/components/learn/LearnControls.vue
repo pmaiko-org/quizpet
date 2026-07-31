@@ -8,7 +8,7 @@
         icon="i-lucide-rotate-ccw"
         class="h-11 justify-center"
         :disabled="locked"
-        @click="$emit('missed')"
+        @click="emit('missed')"
       >
         Не знаю
       </UButton>
@@ -21,7 +21,7 @@
         trailing
         class="h-11 justify-center"
         :disabled="locked"
-        @click="$emit('known')"
+        @click="emit('known')"
       >
         Знаю, далі
       </UButton>
@@ -34,7 +34,7 @@ defineProps<{
   locked?: boolean;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   missed: [];
   known: [];
 }>();

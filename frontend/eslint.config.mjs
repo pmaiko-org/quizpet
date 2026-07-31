@@ -235,6 +235,15 @@ export default withNuxt()
       ],
 
       "vue/prop-name-casing": ["error", "camelCase"],
+      "vue/v-on-event-hyphenation": [
+        "error",
+        "never",
+        {
+          autofix: false,
+          ignore: [],
+        },
+      ],
+      "vue/custom-event-name-casing": ["error", "camelCase"],
     },
   })
   .append({

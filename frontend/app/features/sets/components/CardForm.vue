@@ -34,7 +34,7 @@
           icon="i-lucide-arrow-up"
           :disabled="isFirst"
           aria-label="Перемістити картку вище"
-          @click="$emit('moveUp')"
+          @click="emit('moveUp')"
         />
         <UButton
           type="button"
@@ -44,7 +44,7 @@
           icon="i-lucide-arrow-down"
           :disabled="isLast"
           aria-label="Перемістити картку нижче"
-          @click="$emit('moveDown')"
+          @click="emit('moveDown')"
         />
         <UButton
           v-if="canRemove"
@@ -54,7 +54,7 @@
           size="sm"
           icon="i-lucide-trash-2"
           aria-label="Видалити картку"
-          @click="$emit('remove')"
+          @click="emit('remove')"
         />
       </div>
     </div>
@@ -194,7 +194,7 @@ const {
   isLast?: boolean;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   remove: [];
   moveUp: [];
   moveDown: [];

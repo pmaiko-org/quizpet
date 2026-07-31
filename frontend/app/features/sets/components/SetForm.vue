@@ -172,7 +172,7 @@
 
       <SetCsvTransfer
         :cards="state.cards"
-        @import-cards="handleImportCards"
+        @importCards="handleImportCards"
       />
 
       <div class="space-y-3">
@@ -184,10 +184,10 @@
           :canRemove="state.cards.length > 2"
           :isFirst="index === 0"
           :isLast="index === state.cards.length - 1"
-          @update:model-value="handleUpdateCard(index, $event)"
+          @update:modelValue="handleUpdateCard(index, $event)"
           @remove="handleRemoveCard(index)"
-          @move-up="handleMoveCard(index, index - 1)"
-          @move-down="handleMoveCard(index, index + 1)"
+          @moveUp="handleMoveCard(index, index - 1)"
+          @moveDown="handleMoveCard(index, index + 1)"
         />
       </div>
     </section>

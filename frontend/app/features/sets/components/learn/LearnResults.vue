@@ -46,7 +46,7 @@
               size="xl"
               icon="i-lucide-rotate-ccw"
               class="justify-center"
-              @click="$emit('restart')"
+              @click="emit('restart')"
             >
               Пройти ще раз
             </UButton>
@@ -58,7 +58,7 @@
               icon="i-lucide-target"
               class="justify-center"
               :disabled="mistakeCards.length === 0"
-              @click="$emit('retryMistakes')"
+              @click="emit('retryMistakes')"
             >
               Повторити лише складні
             </UButton>
@@ -195,7 +195,7 @@ const { reports, totalDurationMs } = defineProps<{
   totalDurationMs: number;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   restart: [];
   retryMistakes: [];
 }>();
