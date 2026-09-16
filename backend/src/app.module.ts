@@ -8,6 +8,7 @@ import { AppController } from "./app.controller";
 import { UsersModule } from "./features/users/users.module";
 import { SetsModule } from "./features/sets/sets.module";
 import { StorageModule } from "./features/storage/storage.module";
+import { PitanyachkaModule } from "./features/pitanyachka/pitanyachka.module";
 import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
@@ -40,6 +41,7 @@ import { ScheduleModule } from "@nestjs/schedule";
     UsersModule,
     SetsModule,
     StorageModule,
+    PitanyachkaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -189,6 +189,11 @@ const items = ref<NavigationMenuItem[]>([
     to: { name: RouteName.PEOPLES },
     icon: "i-lucide-users",
   },
+  {
+    label: "ПИТАНЯЧКА",
+    to: { name: RouteName.PITANYACHKA },
+    icon: "i-lucide-dices",
+  },
 ]);
 
 const { user: profile, pending: profilePending } = useCurrentUser();

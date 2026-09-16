@@ -9,6 +9,7 @@ export const RouteName = {
   FOLDERS: "folders",
   STATISTIC: "statistic",
   PEOPLES: "peoples",
+  PITANYACHKA: "pitanyachka",
   PROFILE: "profile",
   SETS: "sets",
   SETS_CREATE: "sets-create",

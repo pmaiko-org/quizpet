@@ -1,4 +1,5 @@
 import { NestFactory } from "@nestjs/core";
+import { WsAdapter } from "@nestjs/platform-ws";
 import { AppModule } from "./app.module";
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { GLOBAL_PREFIX } from "./config/constants";
@@ -6,6 +7,7 @@ import { setupOpenApi } from "./openapi";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
