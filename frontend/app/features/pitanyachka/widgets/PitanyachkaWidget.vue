@@ -12,8 +12,8 @@
       :playersCount="state.players.length"
       :remaining="state.remaining"
       :total="state.total"
-      @start="start"
-      @reset="reset"
+      :categoryLabel="state.selectedCategory"
+      @restart="restart"
     />
 
     <PitanyachkaQuestionCard
@@ -29,18 +29,18 @@
       description="Слухайте уважно та чекайте, поки хід передадуть далі."
     />
 
-    <PitanyachkaStage
+    <PitanyachkaCategoryPicker
       v-else-if="!state.started"
-      icon="i-lucide-play"
-      title="Готові грати?"
-      description="Натисніть «Старт», щоб почати нову гру для всієї компанії."
+      :categories="categories"
+      :disabled="!connected"
+      @start="start"
     />
 
     <PitanyachkaStage
       v-else-if="state.remaining === 0"
       icon="i-lucide-party-popper"
       title="Питання закінчились"
-      description="Усі питання вже прозвучали. Натисніть «Скинути», щоб повернути їх у колоду."
+      description="Усі питання вже прозвучали. Натисніть «Почати заново», щоб зіграти зі свіжою колодою."
     />
 
     <PitanyachkaStage
@@ -83,9 +83,10 @@ const {
   connected,
   state,
   myQuestion,
+  categories,
   isReader,
   start,
-  reset,
+  restart,
   generateQuestion,
   passTurn,
 } = usePitanyachka(playerName);

@@ -14,11 +14,36 @@ import type { Server, WebSocket } from "ws";
 import { PITANYACHKA_QUESTIONS } from "./pitanyachka.questions";
 import {
   PitanyachkaPhase,
+  type TPitanyachkaCategory,
   type TPitanyachkaJoinPayload,
   type TPitanyachkaPlayer,
   type TPitanyachkaPublicState,
   type TPitanyachkaQuestion,
+  type TPitanyachkaStartPayload,
 } from "./pitanyachka.types";
+
+const PITANYACHKA_CATEGORIES: readonly TPitanyachkaCategory[] = (() => {
+  const map = new Map<string, TPitanyachkaCategory>();
+
+  for (const question of PITANYACHKA_QUESTIONS) {
+    const existing = map.get(question.category);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      map.set(question.category, {
+        name: question.category,
+        emoji: question.emoji,
+        count: 1,
+      });
+    }
+  }
+
+  return [...map.values()];
+})();
+
+const CATEGORY_NAMES = new Set(
+  PITANYACHKA_CATEGORIES.map(category => category.name),
+);
 
 @WebSocketGateway({ path: "/backend/pitanyachka" })
 export class PitanyachkaGateway
@@ -35,12 +60,14 @@ export class PitanyachkaGateway
   private phase = PitanyachkaPhase.IDLE;
   private readerId: string | null = null;
   private currentQuestion: TPitanyachkaQuestion | null = null;
+  private selectedCategory: string | null = null;
 
   handleConnection(client: WebSocket): void {
     const playerId = randomUUID();
     this.sockets.set(client, playerId);
     this.players.set(playerId, { id: playerId, name: "" });
     this.emit(client, "welcome", { playerId });
+    this.emit(client, "categories", PITANYACHKA_CATEGORIES);
     this.broadcastState();
   }
 
@@ -71,15 +98,20 @@ export class PitanyachkaGateway
   }
 
   @SubscribeMessage("start")
-  handleStart(): void {
+  handleStart(@MessageBody() payload: TPitanyachkaStartPayload): void {
+    const category = payload?.category ?? null;
+    this.selectedCategory =
+      category && CATEGORY_NAMES.has(category) ? category : null;
     this.started = true;
     this.usedIds.clear();
     this.returnToIdle();
     this.broadcastState();
   }
 
-  @SubscribeMessage("reset")
-  handleReset(): void {
+  @SubscribeMessage("restart")
+  handleRestart(): void {
+    this.started = false;
+    this.selectedCategory = null;
     this.usedIds.clear();
     this.returnToIdle();
     this.broadcastState();
@@ -134,8 +166,15 @@ export class PitanyachkaGateway
     this.currentQuestion = null;
   }
 
+  private activePool(): TPitanyachkaQuestion[] {
+    return PITANYACHKA_QUESTIONS.filter(
+      question =>
+        !this.selectedCategory || question.category === this.selectedCategory,
+    );
+  }
+
   private pickRandomQuestion(): TPitanyachkaQuestion | null {
-    const available = PITANYACHKA_QUESTIONS.filter(
+    const available = this.activePool().filter(
       question => !this.usedIds.has(question.id),
     );
     if (!available.length) return null;
@@ -151,6 +190,10 @@ export class PitanyachkaGateway
 
   private buildState(): TPitanyachkaPublicState {
     const reader = this.readerId ? this.players.get(this.readerId) : null;
+    const pool = this.activePool();
+    const usedInPool = pool.filter(question =>
+      this.usedIds.has(question.id),
+    ).length;
 
     return {
       started: this.started,
@@ -158,9 +201,10 @@ export class PitanyachkaGateway
       players: [...this.players.values()].filter(player => player.name),
       readerId: this.phase === PitanyachkaPhase.READING ? this.readerId : null,
       readerName: reader?.name ?? null,
-      usedCount: this.usedIds.size,
-      remaining: PITANYACHKA_QUESTIONS.length - this.usedIds.size,
-      total: PITANYACHKA_QUESTIONS.length,
+      selectedCategory: this.selectedCategory,
+      usedCount: usedInPool,
+      remaining: pool.length - usedInPool,
+      total: pool.length,
     };
   }
 

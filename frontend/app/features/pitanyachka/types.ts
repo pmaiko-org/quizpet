@@ -14,6 +14,7 @@ export type TPitanyachkaState = {
   players: TPitanyachkaPlayer[];
   readerId: string | null;
   readerName: string | null;
+  selectedCategory: string | null;
   usedCount: number;
   remaining: number;
   total: number;
@@ -26,15 +27,22 @@ export type TPitanyachkaQuestion = {
   hint: string;
 };
 
+export type TPitanyachkaCategory = {
+  name: string;
+  emoji: string;
+  count: number;
+};
+
 export type TPitanyachkaServerMessage =
   | { event: "welcome"; data: { playerId: string } } |
+  { event: "categories"; data: TPitanyachkaCategory[] } |
   { event: "state"; data: TPitanyachkaState } |
   { event: "question"; data: TPitanyachkaQuestion };
 
 export type TPitanyachkaClientEvent =
   | "join" |
   "start" |
-  "reset" |
+  "restart" |
   "generateQuestion" |
   "passTurn";
 
@@ -44,6 +52,7 @@ export const createEmptyPitanyachkaState = (): TPitanyachkaState => ({
   players: [],
   readerId: null,
   readerName: null,
+  selectedCategory: null,
   usedCount: 0,
   remaining: 0,
   total: 0,

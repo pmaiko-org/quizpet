@@ -3,6 +3,7 @@ import type { Ref } from "vue";
 import {
   createEmptyPitanyachkaState,
   PitanyachkaPhase,
+  type TPitanyachkaCategory,
   type TPitanyachkaClientEvent,
   type TPitanyachkaQuestion,
   type TPitanyachkaServerMessage,
@@ -19,6 +20,7 @@ export const usePitanyachka = (playerName: Ref<string>) => {
   const playerId = ref<string | null>(null);
   const state = ref(createEmptyPitanyachkaState());
   const myQuestion = ref<TPitanyachkaQuestion | null>(null);
+  const categories = ref<TPitanyachkaCategory[]>([]);
 
   let reconnectAttempts = 0;
   let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -57,6 +59,9 @@ export const usePitanyachka = (playerName: Ref<string>) => {
       case "welcome":
         playerId.value = message.data.playerId;
         sendJoin();
+        break;
+      case "categories":
+        categories.value = message.data;
         break;
       case "state":
         state.value = message.data;
@@ -120,8 +125,8 @@ export const usePitanyachka = (playerName: Ref<string>) => {
     socket.value?.close();
   });
 
-  const start = () => send("start");
-  const reset = () => send("reset");
+  const start = (category: string | null) => send("start", { category });
+  const restart = () => send("restart");
   const generateQuestion = () => send("generateQuestion");
   const passTurn = () => send("passTurn");
 
@@ -130,9 +135,10 @@ export const usePitanyachka = (playerName: Ref<string>) => {
     playerId,
     state,
     myQuestion,
+    categories,
     isReader,
     start,
-    reset,
+    restart,
     generateQuestion,
     passTurn,
   };
