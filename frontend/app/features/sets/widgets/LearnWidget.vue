@@ -1,4 +1,9 @@
 <template>
+  <SetStudyNav
+    class="mb-3"
+    :setId="route.params.id"
+    :active="RouteName.SETS_ID_LEARN"
+  />
   <BaseDataBoundary
     :pending="loading"
     :error="error"
@@ -52,8 +57,8 @@
         isFullscreen
           ? 'h-svh bg-default p-4'
           : `
-            h-[calc(100svh-var(--ui-header-height)-2.5rem)]
-            sm:h-[calc(100svh-var(--ui-header-height)-3rem)]
+            h-[calc(100svh-var(--ui-header-height)-5.5rem)]
+            sm:h-[calc(100svh-var(--ui-header-height)-6rem)]
           `
       "
     >
@@ -110,6 +115,9 @@
 <script setup lang="ts">
 import { useFullscreen } from "@vueuse/core";
 
+import { RouteName } from "~/shared/constants";
+
+const route = useRoute(RouteName.SETS_ID_LEARN);
 const learnStage = ref<HTMLElement | null>(null);
 const {
   isFullscreen,

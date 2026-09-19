@@ -82,7 +82,11 @@ const handleToggleSidebar = () => {
   open.value = !open.value;
 };
 
-const isLearning = computed(() => route.name === RouteName.SETS_ID_LEARN);
+const isLearning = computed(
+  () =>
+    route.name === RouteName.SETS_ID_LEARN ||
+    route.name === RouteName.SETS_ID_MATCH,
+);
 const sectionLabel = computed(() =>
   isLearning.value ? "Режим навчання" : "Навчальний простір",
 );

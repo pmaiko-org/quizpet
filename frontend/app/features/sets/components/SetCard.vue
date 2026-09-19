@@ -115,15 +115,26 @@
       </div>
     </div>
 
-    <div class="mt-4 flex items-center justify-between gap-2">
-      <UButton
-        :to="{ name: RouteName.SETS_ID_LEARN, params: { id: set.id } }"
-        icon="i-lucide-play"
-        size="lg"
-        class="min-w-32 justify-center"
-      >
-        Вчитись
-      </UButton>
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex flex-wrap gap-2">
+        <UButton
+          :to="{ name: RouteName.SETS_ID_LEARN, params: { id: set.id } }"
+          icon="i-lucide-play"
+          size="lg"
+          class="min-w-32 justify-center"
+        >
+          Вчитись
+        </UButton>
+
+        <UButton
+          :to="{ name: RouteName.SETS_ID_MATCH, params: { id: set.id } }"
+          icon="i-lucide-copy-check"
+          variant="soft"
+          size="lg"
+        >
+          Match
+        </UButton>
+      </div>
 
       <div
         v-if="canDelete"

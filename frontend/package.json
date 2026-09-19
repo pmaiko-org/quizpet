@@ -3,6 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "test:match": "node --import tsx --test tests/match-session.test.ts",
     "build": "nuxt build",
     "dev": "nuxt dev --public",
     "generate:api-types": "npm --prefix ../backend run generate:openapi && openapi-typescript ../backend/openapi.json -o ./app/shared/types/api.generated.ts && node ./scripts/append-openapi-aliases.mjs",
@@ -14,7 +15,7 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "type-check": "nuxi typecheck",
-    "precommit": "npm run generate:api-types && npm run type-check && npm run format:fix && npm run lint:fix"
+    "precommit": "npm run generate:api-types && npm run type-check && npm run test:match && npm run format:fix && npm run lint:fix"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.15.2",
@@ -40,6 +41,7 @@
     "prettier": "^3.8.3",
     "sass": "^1.98.0",
     "tailwind-csstree": "^0.3.1",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.7"
   }

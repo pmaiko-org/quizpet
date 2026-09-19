@@ -15,6 +15,7 @@ export const RouteName = {
   SETS_CREATE: "sets-create",
   SETS_ID_EDIT: "sets-id-edit",
   SETS_ID_LEARN: "sets-id-learn",
+  SETS_ID_MATCH: "sets-id-match",
 } as const;
 
 export const PROJECT_LINKS = {
