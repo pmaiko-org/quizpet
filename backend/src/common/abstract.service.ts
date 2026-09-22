@@ -3,12 +3,11 @@ import {
   PaginationMetaDto,
   PaginationResponseDto,
 } from "./dto/pagination.response.dto";
-import { PaginationQueryInterface } from "./interface/pagination.query.interface";
-
-export interface PaginationQuery {
-  page?: number;
-  perPage?: number;
-}
+import { IPaginationQuery } from "./interface/pagination.query.interface";
+import {
+  PAGINATION_DEFAULT_PAGE,
+  PAGINATION_DEFAULT_PER_PAGE,
+} from "./constants/pagination.constants";
 
 export class AbstractService<Entity extends ObjectLiteral, Dto> {
   constructor(
@@ -17,11 +16,11 @@ export class AbstractService<Entity extends ObjectLiteral, Dto> {
   ) {}
 
   async paginate(
-    query: PaginationQueryInterface,
+    query: IPaginationQuery,
     options?: FindManyOptions<Entity>,
   ): Promise<PaginationResponseDto<Dto>> {
-    const page = query.page ?? 1;
-    const perPage = query.perPage ?? 10;
+    const page = query.page ?? PAGINATION_DEFAULT_PAGE;
+    const perPage = query.perPage ?? PAGINATION_DEFAULT_PER_PAGE;
 
     const [entities, total] = await this.repository.findAndCount({
       ...options,

@@ -11,23 +11,17 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   const { $repository } = useNuxtApp();
 
   const {
-    data,
-    pending: requestPending,
+    items: sets,
+    meta,
+    page,
+    pending,
     error,
     refresh,
-    status,
-  } = useAsyncData("sets", () => $repository.sets.getSets(), {
-    default: () => null as ISetListResponse | null,
-    server: false,
-    dedupe: "defer",
+  } = usePaginatedData<ISetListItemResponse, ISetListResponse>({
+    key: "sets",
+    request: query => $repository.sets.getSets(query),
   });
-
-  const pending = computed(() => {
-    return status.value === "idle" || requestPending.value;
-  });
-
-  const sets = computed<ISetListItemResponse[]>(() => data.value?.data ?? []);
-  const totalSets = computed(() => data.value?.meta.total ?? sets.value.length);
+  const totalSets = computed(() => meta.value?.total ?? sets.value.length);
 
   const stats = computed(() => {
     const topicsCount = new Set(
@@ -112,6 +106,8 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
 
   return {
     sets,
+    meta,
+    page,
     stats,
     summaryText,
     canDelete,

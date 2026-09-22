@@ -24,8 +24,9 @@ import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 import { SetListQueryDto } from "./dto/set/list.query.dto";
 import { SetListResponseDto } from "./dto/set/list.response.dto";
 import { EnglishLevelResponseDto } from "./dto/english-level/response.dto";
+import { PaginationQueryDto } from "../../common/dto/pagination.query.dto";
 
-@ApiExtraModels(SetListQueryDto)
+@ApiExtraModels(PaginationQueryDto, SetListQueryDto)
 @Controller("sets")
 export class SetsController {
   constructor(private readonly setsService: SetsService) {}

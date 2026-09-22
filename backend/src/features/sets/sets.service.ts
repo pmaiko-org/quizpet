@@ -50,7 +50,12 @@ export class SetsService {
     return new AbstractService(
       this.setRepository,
       SetListItemResponseDto,
-    ).paginate(query);
+    ).paginate(query, {
+      order: {
+        createdAt: "DESC",
+        id: "DESC",
+      },
+    });
   }
 
   async getSet(setId: string) {

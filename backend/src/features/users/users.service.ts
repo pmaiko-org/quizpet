@@ -38,6 +38,12 @@ export class UsersService {
   async getUsers(query: UserListQueryDto): Promise<UserListResponseDto> {
     return new AbstractService(this.userRepository, UserResponseDto).paginate(
       query,
+      {
+        order: {
+          createdAt: "DESC",
+          id: "DESC",
+        },
+      },
     );
   }
 

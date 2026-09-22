@@ -22,7 +22,7 @@
           "
         >
           <div
-            v-for="i in perPage"
+            v-for="i in meta?.perPage ?? 6"
             :key="i"
             class="
               rounded-md border border-default bg-elevated/96 p-4 shadow-sm
@@ -78,16 +78,12 @@
       </div>
     </BaseDataBoundary>
 
-    <div
-      v-if="meta && meta.pages > 1"
-      class="flex justify-center pt-2"
-    >
-      <UPagination
-        v-model="page"
-        :total="meta.total"
-        :pageCount="perPage"
-      />
-    </div>
+    <BasePagination
+      v-if="meta"
+      v-model:page="page"
+      :meta="meta"
+      :disabled="pending"
+    />
   </section>
 </template>
 
@@ -102,13 +98,11 @@ import { pluralUsers } from "../utils";
 const {
   users,
   meta = null,
-  perPage,
   pending = false,
   error = null,
 } = defineProps<{
   users: IUserResponse[];
   meta?: IPaginationMeta | null;
-  perPage: number;
   pending?: boolean;
   error?: unknown;
 }>();

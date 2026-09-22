@@ -295,6 +295,12 @@ export interface components {
       data: components["schemas"]["UserResponseDto"][];
       meta: components["schemas"]["PaginationMetaDto"];
     };
+    PaginationQueryDto: {
+      /** @default 1 */
+      page: number;
+      /** @default 20 */
+      perPage: number;
+    };
     SetListQueryDto: {
       /** @default 1 */
       page: number;
@@ -820,6 +826,7 @@ export type ICardUpdate = ApiSchemas["CardUpdateDto"];
 export type IEnglishLevelResponse = ApiSchemas["EnglishLevelResponseDto"];
 export type IFileResponse = ApiSchemas["FileResponseDto"];
 export type IPaginationMeta = ApiSchemas["PaginationMetaDto"];
+export type IPaginationQuery = ApiSchemas["PaginationQueryDto"];
 export type IProfileStatsResponse = ApiSchemas["ProfileStatsResponseDto"];
 export type IProfileUpdate = ApiSchemas["ProfileUpdateDto"];
 export type IRefreshToken = ApiSchemas["RefreshTokenDto"];

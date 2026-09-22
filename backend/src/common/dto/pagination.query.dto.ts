@@ -1,21 +1,35 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsInt, Min, Max, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { PaginationQueryInterface } from "../interface/pagination.query.interface";
+import {
+  PAGINATION_DEFAULT_PAGE,
+  PAGINATION_DEFAULT_PER_PAGE,
+  PAGINATION_MAX_PER_PAGE,
+} from "../constants/pagination.constants";
+import { IPaginationQuery } from "../interface/pagination.query.interface";
 
-export class PaginationQueryDto implements PaginationQueryInterface {
-  @ApiPropertyOptional({ type: Number, default: 1, minimum: 1 })
+export class PaginationQueryDto implements IPaginationQuery {
+  @ApiPropertyOptional({
+    type: Number,
+    default: PAGINATION_DEFAULT_PAGE,
+    minimum: PAGINATION_DEFAULT_PAGE,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(PAGINATION_DEFAULT_PAGE)
+  page: number = PAGINATION_DEFAULT_PAGE;
+
+  @ApiPropertyOptional({
+    type: Number,
+    default: PAGINATION_DEFAULT_PER_PAGE,
+    minimum: 1,
+    maximum: PAGINATION_MAX_PER_PAGE,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  page: number = 1;
-
-  @ApiPropertyOptional({ type: Number, default: 20, minimum: 1, maximum: 50 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(50)
-  perPage: number = 20;
+  @Max(PAGINATION_MAX_PER_PAGE)
+  perPage: number = PAGINATION_DEFAULT_PER_PAGE;
 }

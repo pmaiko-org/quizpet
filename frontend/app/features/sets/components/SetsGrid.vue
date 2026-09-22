@@ -127,15 +127,26 @@
         />
       </div>
     </BaseDataBoundary>
+
+    <BasePagination
+      v-if="meta"
+      v-model:page="page"
+      :meta="meta"
+      :disabled="pending"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
 import { RouteName } from "~/shared/constants";
-import type { ISetListItemResponse } from "~/shared/types/api.generated";
+import type {
+  IPaginationMeta,
+  ISetListItemResponse,
+} from "~/shared/types/api.generated";
 
 const {
   sets,
+  meta = null,
   summaryText,
   pending = false,
   error = null,
@@ -143,12 +154,15 @@ const {
   canDelete,
 } = defineProps<{
   sets: ISetListItemResponse[];
+  meta?: IPaginationMeta | null;
   summaryText: string;
   pending?: boolean;
   error?: unknown;
   deletingId?: string | null;
   canDelete: (set: ISetListItemResponse) => boolean;
 }>();
+
+const page = defineModel<number>("page", { required: true });
 
 const emit = defineEmits<{
   refresh: [];

@@ -1,6 +1,8 @@
 <template>
   <SetsGrid
+    v-model:page="page"
     :sets="sets"
+    :meta="meta"
     :summaryText="summaryText"
     :pending="pending"
     :error="error"
@@ -16,6 +18,8 @@ const { email } = useCurrentUser();
 
 const {
   sets,
+  meta,
+  page,
   summaryText,
   pending,
   error,
