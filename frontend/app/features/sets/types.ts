@@ -3,7 +3,15 @@ import type {
   ICardDetailsResponse,
   IFileResponse,
   ISetDetailsResponse,
+  ISetListQuery,
 } from "~/shared/types/api.generated";
+
+export type TSetListScope = NonNullable<ISetListQuery["scope"]>;
+
+export interface ISetAuthorOption {
+  id: string;
+  label: string;
+}
 
 export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
   return {

@@ -4,7 +4,14 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, EntityManager, Repository } from "typeorm";
+import {
+  DeepPartial,
+  EntityManager,
+  FindOptionsWhere,
+  ILike,
+  In,
+  Repository,
+} from "typeorm";
 import { TopicEntity } from "./entity/topic.entity";
 import { SetEntity } from "./entity/set.entity";
 import { SetCreateDto } from "./dto/set/create.dto";
@@ -18,10 +25,12 @@ import { CardCreateDto } from "./dto/card/create.dto";
 import { TopicResponseDto } from "./dto/topic/response.dto";
 import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 import { AbstractService } from "../../common/abstract.service";
-import { SetListQueryDto } from "./dto/set/list.query.dto";
+import { SetListQueryDto, SetListScope } from "./dto/set/list.query.dto";
 import { SetListResponseDto } from "./dto/set/list.response.dto";
 import { EnglishLevelEntity } from "./entity/english-level.entity";
 import { EnglishLevelResponseDto } from "./dto/english-level/response.dto";
+import { UserEntity } from "../users/user.entity";
+import { UserResponseDto } from "../users/dto/user.response.dto";
 
 @Injectable()
 export class SetsService {
@@ -35,6 +44,8 @@ export class SetsService {
     private readonly setRepository: Repository<SetEntity>,
     @InjectRepository(CardEntity)
     private readonly cardRepository: Repository<CardEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async getCards(setId: string): Promise<CardDetailsResponseDto[]> {
@@ -46,16 +57,54 @@ export class SetsService {
     return cards.map(card => new CardDetailsResponseDto(card));
   }
 
-  async getSets(query: SetListQueryDto): Promise<SetListResponseDto> {
+  async getSets(
+    userId: string,
+    query: SetListQueryDto,
+  ): Promise<SetListResponseDto> {
+    const {
+      scope,
+      search,
+      topicIds,
+      englishLevelIds,
+      authorIds,
+      ...pagination
+    } = query;
+    const where: FindOptionsWhere<SetEntity> = {
+      ...(search ? { name: ILike(`%${search}%`) } : {}),
+      ...(topicIds?.length ? { topics: { id: In(topicIds) } } : {}),
+      ...(englishLevelIds?.length
+        ? { englishLevel: { id: In(englishLevelIds) } }
+        : {}),
+      ...(scope === SetListScope.MINE
+        ? { user: { id: userId } }
+        : authorIds?.length
+          ? { user: { id: In(authorIds) } }
+          : {}),
+    };
+
     return new AbstractService(
       this.setRepository,
       SetListItemResponseDto,
-    ).paginate(query, {
+    ).paginate(pagination, {
+      where,
       order: {
         createdAt: "DESC",
         id: "DESC",
       },
     });
+  }
+
+  async getAuthors(): Promise<UserResponseDto[]> {
+    const authors = await this.userRepository
+      .createQueryBuilder("user")
+      .innerJoin("user.sets", "set")
+      .distinct(true)
+      .orderBy("user.firstName", "ASC")
+      .addOrderBy("user.lastName", "ASC")
+      .addOrderBy("user.email", "ASC")
+      .getMany();
+
+    return authors.map(author => new UserResponseDto(author));
   }
 
   async getSet(setId: string) {

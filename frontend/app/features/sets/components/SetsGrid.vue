@@ -2,8 +2,32 @@
   <section class="space-y-3">
     <BaseSectionHeader
       eyebrow="Набори"
-      title="Ваша колекція карток"
+      :title="sectionTitle"
       :summary="summaryText"
+    />
+
+    <UTabs
+      v-model="scope"
+      :items="scopeTabs"
+      :content="false"
+      class="w-full"
+      :ui="{ list: 'w-full sm:w-fit', trigger: 'flex-1 sm:flex-none' }"
+    />
+
+    <SetsFilters
+      v-model:search="search"
+      v-model:topicIds="topicIds"
+      v-model:englishLevelIds="englishLevelIds"
+      v-model:authorIds="authorIds"
+      :scope="scope"
+      :topics="topics"
+      :englishLevels="englishLevels"
+      :authors="authors"
+      :hasActiveFilters="hasActiveFilters"
+      :optionsReady="filterOptionsReady"
+      :optionsError="filterOptionsError"
+      @clear="emit('clearFilters')"
+      @retryOptions="emit('retryFilterOptions')"
     />
 
     <BaseDataBoundary
@@ -89,18 +113,30 @@
             "
           >
             <UIcon
-              name="i-lucide-library"
+              :name="
+                hasActiveFilters ? 'i-lucide-search-x' : 'i-lucide-library'
+              "
               class="size-5"
             />
           </div>
           <h3 class="mt-4 text-xl font-semibold text-highlighted">
-            Поки що тут немає наборів
+            {{ emptyTitle }}
           </h3>
           <p class="mx-auto mt-3 max-w-xl text-sm/6 text-toned">
-            Почніть з першого набору: додайте тему, короткий опис і кілька
-            карток, щоб бібліотека одразу виглядала живою.
+            {{ emptyDescription }}
           </p>
           <UButton
+            v-if="hasActiveFilters"
+            type="button"
+            icon="i-lucide-rotate-ccw"
+            size="lg"
+            class="mt-5 justify-center"
+            @click="emit('clearFilters')"
+          >
+            Очистити фільтри
+          </UButton>
+          <UButton
+            v-else
             :to="{ name: RouteName.SETS_CREATE }"
             icon="i-lucide-plus"
             size="lg"
@@ -138,11 +174,17 @@
 </template>
 
 <script setup lang="ts">
+import type { TabsItem } from "@nuxt/ui";
+
 import { RouteName } from "~/shared/constants";
 import type {
+  IEnglishLevelResponse,
   IPaginationMeta,
   ISetListItemResponse,
+  ITopicResponse,
 } from "~/shared/types/api.generated";
+
+import type { ISetAuthorOption, TSetListScope } from "../types";
 
 const {
   sets,
@@ -152,6 +194,12 @@ const {
   error = null,
   deletingId = null,
   canDelete,
+  topics,
+  englishLevels,
+  authors,
+  hasActiveFilters = false,
+  filterOptionsReady = false,
+  filterOptionsError = null,
 } = defineProps<{
   sets: ISetListItemResponse[];
   meta?: IPaginationMeta | null;
@@ -160,12 +208,60 @@ const {
   error?: unknown;
   deletingId?: string | null;
   canDelete: (set: ISetListItemResponse) => boolean;
+  topics: ITopicResponse[];
+  englishLevels: IEnglishLevelResponse[];
+  authors: ISetAuthorOption[];
+  hasActiveFilters?: boolean;
+  filterOptionsReady?: boolean;
+  filterOptionsError?: unknown;
 }>();
 
 const page = defineModel<number>("page", { required: true });
+const scope = defineModel<TSetListScope>("scope", { required: true });
+const search = defineModel<string>("search", { required: true });
+const topicIds = defineModel<string[]>("topicIds", { required: true });
+const englishLevelIds = defineModel<string[]>("englishLevelIds", {
+  required: true,
+});
+const authorIds = defineModel<string[]>("authorIds", { required: true });
+
+const scopeTabs = [
+  {
+    label: "Мої набори",
+    value: "mine",
+    icon: "i-lucide-user-round",
+  },
+  {
+    label: "Усі набори",
+    value: "all",
+    icon: "i-lucide-library",
+  },
+] satisfies Array<TabsItem & { value: TSetListScope }>;
+
+const sectionTitle = computed(() =>
+  scope.value === "mine" ? "Ваша колекція карток" : "Усі доступні картки",
+);
+
+const emptyTitle = computed(() =>
+  hasActiveFilters
+    ? "Нічого не знайдено"
+    : scope.value === "mine"
+      ? "У вас ще немає наборів"
+      : "Поки що немає доступних наборів",
+);
+
+const emptyDescription = computed(() =>
+  hasActiveFilters
+    ? "Спробуйте змінити умови пошуку або очистити активні фільтри."
+    : scope.value === "mine"
+      ? "Створіть перший набір: додайте тему, короткий опис і кілька карток."
+      : "Створіть перший набір, щоб він з’явився у спільній бібліотеці.",
+);
 
 const emit = defineEmits<{
   refresh: [];
   delete: [set: ISetListItemResponse];
+  clearFilters: [];
+  retryFilterOptions: [];
 }>();
 </script>

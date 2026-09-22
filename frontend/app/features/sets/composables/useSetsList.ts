@@ -5,10 +5,55 @@ import type {
   ISetListResponse,
 } from "~/shared/types/api.generated";
 
+import type { TSetListScope } from "../types";
 import { canDeleteSet } from "../utils";
+import { useSetFilters } from "./useSetFilters";
 
 export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   const { $repository } = useNuxtApp();
+  const route = useRoute();
+  const resolvedDefaultScope = ref<TSetListScope | null>(null);
+  const loadedScope = ref<TSetListScope | null>(null);
+
+  const requestedScope = computed<TSetListScope | null>(() => {
+    const value = route.query.scope;
+
+    return value === "mine" || value === "all" ? value : null;
+  });
+
+  const activeScope = computed<TSetListScope>(() => {
+    return requestedScope.value ?? resolvedDefaultScope.value ?? "mine";
+  });
+
+  const {
+    search,
+    topicIds,
+    englishLevelIds,
+    authorIds,
+    apiQuery,
+    hasActiveFilters,
+    clearFilters,
+    topics,
+    englishLevels,
+    authors,
+    filterOptionsReady,
+    filterOptionsError,
+    refreshFilterOptions,
+  } = useSetFilters(activeScope);
+
+  const hasRequestedFilters = computed(() => {
+    return Object.values(apiQuery.value).some(value =>
+      Array.isArray(value) ? value.length : Boolean(value),
+    );
+  });
+  const appliedFilterQuery = computed(() => {
+    const isChoosingDefaultScope =
+      !requestedScope.value && !resolvedDefaultScope.value;
+
+    return isChoosingDefaultScope && hasRequestedFilters.value
+      ? {}
+      : apiQuery.value;
+  });
 
   const {
     items: sets,
@@ -19,22 +64,83 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     refresh,
   } = usePaginatedData<ISetListItemResponse, ISetListResponse>({
     key: "sets",
-    request: query => $repository.sets.getSets(query),
+    request: async (query) => {
+      const scope = activeScope.value;
+      const response = await $repository.sets.getSets({
+        ...query,
+        ...appliedFilterQuery.value,
+        scope,
+      });
+
+      loadedScope.value = scope;
+
+      return response;
+    },
+    watch: [activeScope, appliedFilterQuery],
   });
+  const isResolvingDefaultScope = ref(true);
+
+  watch(
+    [meta, pending, error],
+    ([currentMeta, isPending, currentError]) => {
+      if (requestedScope.value || currentError) {
+        isResolvingDefaultScope.value = false;
+        return;
+      }
+
+      if (
+        isPending ||
+        !currentMeta ||
+        loadedScope.value !== activeScope.value
+      ) {
+        return;
+      }
+
+      if (!resolvedDefaultScope.value) {
+        resolvedDefaultScope.value = currentMeta.total ? "mine" : "all";
+
+        if (resolvedDefaultScope.value === "all") {
+          return;
+        }
+      }
+
+      isResolvingDefaultScope.value = false;
+    },
+    { immediate: true },
+  );
+
+  const selectScope = (scope: TSetListScope) => {
+    if (scope === activeScope.value) {
+      return;
+    }
+
+    void navigateTo(
+      {
+        query: {
+          ...route.query,
+          page: undefined,
+          scope,
+          author: scope === "mine" ? undefined : route.query.author,
+        },
+      },
+      { replace: true },
+    );
+  };
+
   const totalSets = computed(() => meta.value?.total ?? sets.value.length);
 
   const stats = computed(() => {
     const topicsCount = new Set(
       sets.value.flatMap(set => set.topics.map(topic => topic.id)),
     ).size;
-
     const describedSets = sets.value.filter(set =>
       set.description?.trim(),
     ).length;
 
     return [
       {
-        label: "Усього наборів",
+        label:
+          activeScope.value === "mine" ? "Ваших наборів" : "Усього наборів",
         value: totalSets.value,
         icon: "i-lucide-library",
       },
@@ -54,12 +160,20 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   const summaryText = computed(() => {
     const total = totalSets.value;
 
+    if (!total && hasActiveFilters.value) {
+      return "За вибраними фільтрами наборів не знайдено.";
+    }
+
     if (!total) {
-      return "Почніть з першого набору та зберіть власну навчальну полицю.";
+      return activeScope.value === "mine"
+        ? "Створіть перший набір і почніть збирати власну навчальну полицю."
+        : "У бібліотеці поки немає доступних наборів.";
     }
 
     if (total === 1) {
-      return "1 набір уже готовий для повторення та подальшого наповнення.";
+      return activeScope.value === "mine"
+        ? "1 ваш набір уже готовий для повторення та подальшого наповнення."
+        : "1 набір уже доступний для повторення.";
     }
 
     const lastDigit = total % 10;
@@ -72,7 +186,9 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
             ? "набори"
             : "наборів";
 
-    return `${total} ${noun} зібрано в одній бібліотеці для швидкого доступу.`;
+    return activeScope.value === "mine"
+      ? `${total} ${noun} у вашій навчальній колекції.`
+      : `${total} ${noun} доступно в бібліотеці для швидкого повторення.`;
   });
 
   const canDelete = (set: ISetListItemResponse) => {
@@ -108,12 +224,27 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     sets,
     meta,
     page,
+    activeScope,
+    selectScope,
+    search,
+    topicIds,
+    englishLevelIds,
+    authorIds,
+    topics,
+    englishLevels,
+    authors,
+    hasActiveFilters,
+    clearFilters,
+    filterOptionsReady,
+    filterOptionsError,
+    refreshFilterOptions,
     stats,
     summaryText,
     canDelete,
     deletingSetId,
     deleteSet,
-    pending,
+    pending: computed(() => pending.value || isResolvingDefaultScope.value),
+    heroPending: computed(() => pending.value && loadedScope.value === null),
     error,
     refresh,
   };

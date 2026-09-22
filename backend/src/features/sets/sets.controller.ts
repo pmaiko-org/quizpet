@@ -25,6 +25,7 @@ import { SetListQueryDto } from "./dto/set/list.query.dto";
 import { SetListResponseDto } from "./dto/set/list.response.dto";
 import { EnglishLevelResponseDto } from "./dto/english-level/response.dto";
 import { PaginationQueryDto } from "../../common/dto/pagination.query.dto";
+import { UserResponseDto } from "../users/dto/user.response.dto";
 
 @ApiExtraModels(PaginationQueryDto, SetListQueryDto)
 @Controller("sets")
@@ -44,9 +45,18 @@ export class SetsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get("authors")
+  getAuthors(): Promise<UserResponseDto[]> {
+    return this.setsService.getAuthors();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
-  getSets(@Query() query: SetListQueryDto): Promise<SetListResponseDto> {
-    return this.setsService.getSets(query);
+  getSets(
+    @Req() req: AuthenticatedRequest,
+    @Query() query: SetListQueryDto,
+  ): Promise<SetListResponseDto> {
+    return this.setsService.getSets(req.user.sub, query);
   }
 
   @UseGuards(JwtAuthGuard)

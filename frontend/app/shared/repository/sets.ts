@@ -11,6 +11,7 @@ import type {
   ISetUpdate,
   ISuccessResponse,
   ITopicResponse,
+  IUserResponse,
 } from "~/shared/types/api.generated";
 
 export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
@@ -69,6 +70,13 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
 
     getEnglishLevels: (options?: TRequestOptions) => {
       return fetch<IEnglishLevelResponse[]>("/backend/sets/english-levels", {
+        method: "GET",
+        ...options,
+      });
+    },
+
+    getAuthors: (options?: TRequestOptions) => {
+      return fetch<IUserResponse[]>("/backend/sets/authors", {
         method: "GET",
         ...options,
       });

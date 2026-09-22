@@ -8,6 +8,7 @@ import { TopicEntity } from "./entity/topic.entity";
 import { CardEntity } from "./entity/card.entity";
 import { EnglishLevelEntity } from "./entity/english-level.entity";
 import { EnglishLevelsSeedService } from "./english-levels.seed.service";
+import { UserEntity } from "../users/user.entity";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EnglishLevelsSeedService } from "./english-levels.seed.service";
       TopicEntity,
       CardEntity,
       EnglishLevelEntity,
+      UserEntity,
     ]),
   ],
   controllers: [SetsController],

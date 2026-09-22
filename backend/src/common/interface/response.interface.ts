@@ -1,4 +1,4 @@
-export interface ResponseInterface<D, M = null> {
+export interface IResponse<D, M = null> {
   data: D;
   meta: M;
 }

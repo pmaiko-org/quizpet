@@ -1,19 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  PaginationResponseInterface,
-  PaginationMetaInterface,
+  IPaginationResponse,
+  IPaginationMeta,
 } from "../interface/pagination.response.interface";
 
-export class PaginationResponseDto<
-  T,
-> implements PaginationResponseInterface<T> {
+export class PaginationResponseDto<T> implements IPaginationResponse<T> {
   constructor(
     public data: T[],
     public meta: PaginationMetaDto,
   ) {}
 }
 
-export class PaginationMetaDto implements PaginationMetaInterface {
+export class PaginationMetaDto implements IPaginationMeta {
   @ApiProperty()
   page: number;
 
@@ -34,9 +32,9 @@ export class PaginationMetaDto implements PaginationMetaInterface {
   }
 }
 
-type Constructor = new (...args: any[]) => object;
+type TConstructor = new (...args: any[]) => object;
 
-export function PaginatedResponseDto<TItem extends Constructor>(
+export function PaginatedResponseDto<TItem extends TConstructor>(
   ItemDto: TItem,
 ) {
   class PaginatedDto extends PaginationResponseDto<InstanceType<TItem>> {

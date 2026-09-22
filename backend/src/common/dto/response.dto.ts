@@ -1,6 +1,6 @@
-import { ResponseInterface } from "../interface/response.interface";
+import { IResponse } from "../interface/response.interface";
 
-export class ResponseDto<D, M> implements ResponseInterface<D, M> {
+export class ResponseDto<D, M> implements IResponse<D, M> {
   constructor(
     public data: D,
     public meta: M,

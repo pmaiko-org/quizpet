@@ -132,6 +132,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/backend/sets/authors": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["SetsController_getAuthors"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/backend/sets": {
     parameters: {
       query?: never;
@@ -306,6 +322,15 @@ export interface components {
       page: number;
       /** @default 20 */
       perPage: number;
+      /**
+       * @default all
+       * @enum {string}
+       */
+      scope: "all" | "mine";
+      search?: string;
+      topicIds?: string[];
+      englishLevelIds?: string[];
+      authorIds?: string[];
     };
     TopicResponseDto: {
       id: string;
@@ -606,11 +631,35 @@ export interface operations {
       };
     };
   };
+  SetsController_getAuthors: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserResponseDto"][];
+        };
+      };
+    };
+  };
   SetsController_getSets: {
     parameters: {
       query?: {
         page?: number;
         perPage?: number;
+        scope?: "all" | "mine";
+        search?: string;
+        topicIds?: string[];
+        englishLevelIds?: string[];
+        authorIds?: string[];
       };
       header?: never;
       path?: never;

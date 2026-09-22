@@ -1,3 +1,5 @@
+import type { WatchSource } from "vue";
+
 import type {
   IPaginationMeta,
   IPaginationQuery,
@@ -14,6 +16,7 @@ interface IUsePaginatedDataOptions<
 > {
   key: string;
   request: (query: Partial<IPaginationQuery>) => Promise<TResponse>;
+  watch?: WatchSource[];
 }
 
 const parsePage = (value: unknown) => {
@@ -29,6 +32,7 @@ export const usePaginatedData = <
 >({
   key,
   request,
+  watch: requestWatchSources = [],
 }: IUsePaginatedDataOptions<TItem, TResponse>) => {
   const route = useRoute();
 
@@ -64,8 +68,8 @@ export const usePaginatedData = <
     () => request({ page: page.value }),
     {
       server: false,
-      watch: [page],
-      dedupe: "defer",
+      watch: [page, ...requestWatchSources],
+      dedupe: "cancel",
     },
   );
 
