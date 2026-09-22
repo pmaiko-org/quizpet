@@ -3,6 +3,7 @@ import type { $Fetch, NitroFetchRequest } from "nitropack";
 import type { TRequestOptions } from "~/shared/repository/types";
 import type {
   ICardDetailsResponse,
+  IEnglishLevelResponse,
   ISetCreate,
   ISetDetailsResponse,
   ISetListQuery,
@@ -61,6 +62,13 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
 
     getTopics: (options?: TRequestOptions) => {
       return fetch<ITopicResponse[]>("/backend/sets/topics", {
+        method: "GET",
+        ...options,
+      });
+    },
+
+    getEnglishLevels: (options?: TRequestOptions) => {
+      return fetch<IEnglishLevelResponse[]>("/backend/sets/english-levels", {
         method: "GET",
         ...options,
       });

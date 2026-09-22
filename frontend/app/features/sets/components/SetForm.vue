@@ -63,19 +63,77 @@
           </UFormField>
 
           <UFormField
+            label="Рівень англійської"
+            name="englishLevelId"
+            description="За потреби оберіть рівень складності набору."
+            size="lg"
+          >
+            <USkeleton
+              v-if="optionsPending"
+              class="h-10 w-full"
+            />
+
+            <div
+              v-else-if="optionsError"
+              class="
+                flex items-center justify-between gap-3 rounded-sm border
+                border-error/25 bg-error/5 px-3 py-2
+              "
+            >
+              <p class="text-sm text-error">
+                Не вдалося завантажити рівні
+              </p>
+              <UButton
+                type="button"
+                color="error"
+                variant="soft"
+                size="sm"
+                icon="i-lucide-refresh-cw"
+                @click="handleLoadSetOptions"
+              >
+                Повторити
+              </UButton>
+            </div>
+
+            <USelectMenu
+              v-else
+              v-model="state.englishLevelId"
+              :items="englishLevels"
+              labelKey="label"
+              valueKey="id"
+              :searchInput="{ placeholder: 'Знайти рівень' }"
+              size="lg"
+              class="w-full"
+            />
+
+            <UButton
+              v-if="state.englishLevelId"
+              type="button"
+              variant="link"
+              color="neutral"
+              size="xs"
+              class="mt-1 px-0"
+              @click="state.englishLevelId = ''"
+            >
+              Не вказувати рівень
+            </UButton>
+          </UFormField>
+
+          <UFormField
             label="Тематика"
             name="topicIds"
             description="Оберіть щонайменше одну категорію."
             required
             size="lg"
+            class="md:col-span-2"
           >
             <USkeleton
-              v-if="topicsPending"
+              v-if="optionsPending"
               class="h-10 w-full"
             />
 
             <div
-              v-else-if="topicsError"
+              v-else-if="optionsError"
               class="
                 flex items-center justify-between gap-3 rounded-sm border
                 border-error/25 bg-error/5 px-3 py-2
@@ -90,7 +148,7 @@
                 variant="soft"
                 size="sm"
                 icon="i-lucide-refresh-cw"
-                @click="handleLoadTopics"
+                @click="handleLoadSetOptions"
               >
                 Повторити
               </UButton>
@@ -251,10 +309,11 @@ const SET_FORM_DRAFT_STORAGE_KEY = "cards:set-form-draft";
 
 const {
   topics,
-  topicsPending,
-  topicsError,
+  englishLevels,
+  optionsPending,
+  optionsError,
   submitting,
-  loadTopics: handleLoadTopics,
+  loadSetOptions: handleLoadSetOptions,
   saveSet,
 } = useSetForm();
 
@@ -293,7 +352,7 @@ onMounted(() => {
     ...getInitialState(),
   });
 
-  void handleLoadTopics();
+  void handleLoadSetOptions();
 });
 
 const isEditMode = computed(() => Boolean(state.id));

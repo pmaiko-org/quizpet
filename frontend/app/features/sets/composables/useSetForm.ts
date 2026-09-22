@@ -2,6 +2,7 @@ import { FetchError } from "ofetch";
 
 import { RouteName } from "~/shared/constants";
 import type {
+  IEnglishLevelResponse,
   ISetCreate,
   ISetUpdate,
   ITopicResponse,
@@ -15,19 +16,23 @@ export const useSetForm = () => {
   const toast = useToast();
 
   const topics = ref<ITopicResponse[]>([]);
-  const topicsPending = ref(true);
-  const topicsError = shallowRef<unknown>(null);
+  const englishLevels = ref<IEnglishLevelResponse[]>([]);
+  const optionsPending = ref(true);
+  const optionsError = shallowRef<unknown>(null);
   const submitting = ref(false);
 
-  const loadTopics = async () => {
+  const loadSetOptions = async () => {
     try {
-      topicsPending.value = true;
-      topicsError.value = null;
-      topics.value = await $repository.sets.getTopics();
+      optionsPending.value = true;
+      optionsError.value = null;
+      [topics.value, englishLevels.value] = await Promise.all([
+        $repository.sets.getTopics(),
+        $repository.sets.getEnglishLevels(),
+      ]);
     } catch (error) {
-      topicsError.value = error;
+      optionsError.value = error;
     } finally {
-      topicsPending.value = false;
+      optionsPending.value = false;
     }
   };
 
@@ -40,6 +45,7 @@ export const useSetForm = () => {
       name: data.name,
       description: data.description,
       topicIds: data.topicIds,
+      englishLevelId: data.englishLevelId || null,
       cards: data.cards.map(card => ({
         position: card.position,
         term: card.term,
@@ -101,10 +107,11 @@ export const useSetForm = () => {
 
   return {
     topics,
-    topicsPending,
-    topicsError,
+    englishLevels,
+    optionsPending,
+    optionsError,
     submitting,
-    loadTopics,
+    loadSetOptions,
     saveSet,
   };
 };

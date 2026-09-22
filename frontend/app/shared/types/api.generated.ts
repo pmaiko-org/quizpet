@@ -116,6 +116,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/backend/sets/english-levels": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["SetsController_getEnglishLevels"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/backend/sets": {
     parameters: {
       query?: never;
@@ -292,11 +308,18 @@ export interface components {
       icon: string;
       description: string;
     };
+    EnglishLevelResponseDto: {
+      id: string;
+      label: string;
+      value: string;
+      description: string;
+    };
     SetListItemResponseDto: {
       id: string;
       name: string;
       description: string;
       topics: components["schemas"]["TopicResponseDto"][];
+      englishLevel: components["schemas"]["EnglishLevelResponseDto"] | null;
       user: components["schemas"]["UserResponseDto"];
       cardsCount: number;
     };
@@ -325,6 +348,7 @@ export interface components {
       name: string;
       description: string;
       topics: components["schemas"]["TopicResponseDto"][];
+      englishLevel: components["schemas"]["EnglishLevelResponseDto"] | null;
       user: components["schemas"]["UserResponseDto"];
       cards: components["schemas"]["CardDetailsResponseDto"][];
     };
@@ -342,6 +366,8 @@ export interface components {
       name: string;
       description: string;
       topicIds: string[];
+      /** Format: uuid */
+      englishLevelId?: string | null;
       cards: components["schemas"]["CardCreateDto"][];
     };
     CardUpdateDto: {
@@ -360,6 +386,8 @@ export interface components {
       name: string;
       description: string;
       topicIds: string[];
+      /** Format: uuid */
+      englishLevelId?: string | null;
       cards: components["schemas"]["CardUpdateDto"][];
     };
   };
@@ -549,6 +577,25 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["TopicResponseDto"][];
+        };
+      };
+    };
+  };
+  SetsController_getEnglishLevels: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["EnglishLevelResponseDto"][];
         };
       };
     };
@@ -770,6 +817,7 @@ export type IAccountDelete = ApiSchemas["AccountDeleteDto"];
 export type ICardCreate = ApiSchemas["CardCreateDto"];
 export type ICardDetailsResponse = ApiSchemas["CardDetailsResponseDto"];
 export type ICardUpdate = ApiSchemas["CardUpdateDto"];
+export type IEnglishLevelResponse = ApiSchemas["EnglishLevelResponseDto"];
 export type IFileResponse = ApiSchemas["FileResponseDto"];
 export type IPaginationMeta = ApiSchemas["PaginationMetaDto"];
 export type IProfileStatsResponse = ApiSchemas["ProfileStatsResponseDto"];

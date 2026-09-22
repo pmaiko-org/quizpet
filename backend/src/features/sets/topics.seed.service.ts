@@ -89,14 +89,18 @@ export class TopicsSeedService implements OnModuleInit {
   ) {}
 
   async onModuleInit(): Promise<void> {
-    for (const topic of TOPIC_OPTIONS) {
-      const exists = await this.topicsRepository.findOne({
+    for (const [position, topic] of TOPIC_OPTIONS.entries()) {
+      const existingTopic = await this.topicsRepository.findOne({
         where: { value: topic.value },
       });
 
-      if (!exists) {
-        await this.topicsRepository.save(this.topicsRepository.create(topic));
-      }
+      await this.topicsRepository.save(
+        this.topicsRepository.create({
+          ...existingTopic,
+          ...topic,
+          position,
+        }),
+      );
     }
   }
 }

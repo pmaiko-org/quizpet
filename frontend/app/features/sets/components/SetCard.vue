@@ -45,6 +45,16 @@
 
     <div class="mt-3 flex flex-wrap gap-1.5">
       <UBadge
+        v-if="set.englishLevel"
+        variant="soft"
+        color="secondary"
+        size="md"
+        class="rounded-full px-2.5 py-0.5"
+      >
+        {{ set.englishLevel.label }}
+      </UBadge>
+
+      <UBadge
         v-for="topic in set.topics"
         :key="topic.id"
         variant="soft"

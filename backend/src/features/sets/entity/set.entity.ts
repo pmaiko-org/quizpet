@@ -11,6 +11,7 @@ import { UserEntity } from "../../users/user.entity";
 import { CardEntity } from "./card.entity";
 import { TopicEntity } from "./topic.entity";
 import { AbstractEntity } from "../../../common/abstract.entity";
+import { EnglishLevelEntity } from "./english-level.entity";
 
 @Entity("sets")
 export class SetEntity extends AbstractEntity<SetEntity> {
@@ -27,6 +28,10 @@ export class SetEntity extends AbstractEntity<SetEntity> {
     inverseJoinColumn: { name: "topicId", referencedColumnName: "id" },
   })
   topics: TopicEntity[];
+
+  @ManyToOne(() => EnglishLevelEntity, { eager: true, nullable: true })
+  @JoinColumn({ name: "englishLevelId" })
+  englishLevel: EnglishLevelEntity | null;
 
   @ManyToOne(() => UserEntity, user => user.sets, {
     onDelete: "CASCADE",

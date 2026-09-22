@@ -24,6 +24,7 @@ export const cardSchema = z.object({
 export const setSchema = z.object({
   name: z.string().trim().min(2),
   topicIds: z.array(z.string().trim().min(1)).min(1),
+  englishLevelId: z.string().trim(),
   description: z.string().trim().max(280),
   cards: z.array(cardSchema).min(2),
 });

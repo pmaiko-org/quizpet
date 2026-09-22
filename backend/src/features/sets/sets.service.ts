@@ -20,6 +20,8 @@ import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 import { AbstractService } from "../../common/abstract.service";
 import { SetListQueryDto } from "./dto/set/list.query.dto";
 import { SetListResponseDto } from "./dto/set/list.response.dto";
+import { EnglishLevelEntity } from "./entity/english-level.entity";
+import { EnglishLevelResponseDto } from "./dto/english-level/response.dto";
 
 @Injectable()
 export class SetsService {
@@ -27,6 +29,8 @@ export class SetsService {
     private readonly entityManager: EntityManager,
     @InjectRepository(TopicEntity)
     private readonly topicRepository: Repository<TopicEntity>,
+    @InjectRepository(EnglishLevelEntity)
+    private readonly englishLevelRepository: Repository<EnglishLevelEntity>,
     @InjectRepository(SetEntity)
     private readonly setRepository: Repository<SetEntity>,
     @InjectRepository(CardEntity)
@@ -64,12 +68,16 @@ export class SetsService {
 
   async createSet(userId: string, createSetDto: SetCreateDto) {
     const topics = await this.getValidatedTopics(createSetDto.topicIds);
+    const englishLevel = await this.getValidatedEnglishLevel(
+      createSetDto.englishLevelId,
+    );
     const cards = this.mapCards(createSetDto.cards);
 
     const set = this.setRepository.create({
       name: createSetDto.name,
       description: createSetDto.description,
       topics,
+      englishLevel,
       user: { id: userId },
       cards,
     });
@@ -94,6 +102,9 @@ export class SetsService {
     }
 
     const topics = await this.getValidatedTopics(updateSetDto.topicIds);
+    const englishLevel = await this.getValidatedEnglishLevel(
+      updateSetDto.englishLevelId,
+    );
     const existingCardIds = new Set(set.cards.map(card => card.id));
     const incomingCardIds = updateSetDto.cards
       .map(card => card.id)
@@ -123,6 +134,7 @@ export class SetsService {
         name: updateSetDto.name,
         description: updateSetDto.description,
         topics,
+        englishLevel,
         user: set.user,
       });
 
@@ -167,8 +179,18 @@ export class SetsService {
 
   getTopics() {
     return this.topicRepository
-      .find()
+      .find({ order: { position: "ASC" } })
       .then(topics => topics.map(topic => new TopicResponseDto(topic)));
+  }
+
+  getEnglishLevels() {
+    return this.englishLevelRepository
+      .find({ order: { position: "ASC" } })
+      .then(englishLevels =>
+        englishLevels.map(
+          englishLevel => new EnglishLevelResponseDto(englishLevel),
+        ),
+      );
   }
 
   private async getValidatedTopics(topicIds: string[]) {
@@ -190,6 +212,24 @@ export class SetsService {
         index ===
         allTopics.findIndex(currentTopic => currentTopic.id === topic.id),
     );
+  }
+
+  private async getValidatedEnglishLevel(englishLevelId?: string | null) {
+    if (!englishLevelId) {
+      return null;
+    }
+
+    const englishLevel = await this.englishLevelRepository.findOneBy({
+      id: englishLevelId,
+    });
+
+    if (!englishLevel) {
+      throw new NotFoundException(
+        `English level "${englishLevelId}" not found`,
+      );
+    }
+
+    return englishLevel;
   }
 
   private mapCards(

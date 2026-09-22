@@ -12,6 +12,7 @@ export const initialSet = (set?: DeepPartial<ISetDetailsResponse>) => {
     description: set?.description || "",
     topicIds: (set?.topics?.map(topic => topic?.id).filter(Boolean) ||
       []) as string[],
+    englishLevelId: set?.englishLevel?.id || "",
     cards: set?.cards?.map((card, index) => initialCard(index, card)) || [
       initialCard(0),
       initialCard(1),

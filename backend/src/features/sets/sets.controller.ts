@@ -23,6 +23,7 @@ import { CardDetailsResponseDto } from "./dto/card/details.response.dto";
 import { SuccessResponseDto } from "../../common/dto/success.response.dto";
 import { SetListQueryDto } from "./dto/set/list.query.dto";
 import { SetListResponseDto } from "./dto/set/list.response.dto";
+import { EnglishLevelResponseDto } from "./dto/english-level/response.dto";
 
 @ApiExtraModels(SetListQueryDto)
 @Controller("sets")
@@ -33,6 +34,12 @@ export class SetsController {
   @Get("topics")
   getTopics(): Promise<TopicResponseDto[]> {
     return this.setsService.getTopics();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("english-levels")
+  getEnglishLevels(): Promise<EnglishLevelResponseDto[]> {
+    return this.setsService.getEnglishLevels();
   }
 
   @UseGuards(JwtAuthGuard)

@@ -2,6 +2,7 @@ import { Type } from "class-transformer";
 import {
   ArrayNotEmpty,
   IsArray,
+  IsOptional,
   IsString,
   IsUUID,
   ValidateNested,
@@ -19,6 +20,10 @@ export class SetUpdateDto {
   @ArrayNotEmpty()
   @IsUUID("4", { each: true })
   topicIds: string[];
+
+  @IsOptional()
+  @IsUUID("4")
+  englishLevelId?: string | null;
 
   @IsArray()
   @Type(() => CardUpdateDto)

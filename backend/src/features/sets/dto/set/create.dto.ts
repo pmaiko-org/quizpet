@@ -5,6 +5,7 @@ import {
   IsArray,
   ValidateNested,
   ArrayNotEmpty,
+  IsOptional,
   IsUUID,
 } from "class-validator";
 
@@ -19,6 +20,10 @@ export class SetCreateDto {
   @ArrayNotEmpty()
   @IsUUID("4", { each: true })
   topicIds: string[];
+
+  @IsOptional()
+  @IsUUID("4")
+  englishLevelId?: string | null;
 
   @IsArray()
   @Type(() => CardCreateDto)
