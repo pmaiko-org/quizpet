@@ -27,7 +27,8 @@ export default defineNuxtPlugin(() => {
     [() => user.value?.id, () => route.path],
     ([userId, pageId]) => {
       if (userId) {
-        Clarity.identify(userId, undefined, pageId);
+        Clarity.identify(userId, undefined, pageId, userId);
+        Clarity.setTag("player_id", userId);
       }
     },
     { immediate: true },
