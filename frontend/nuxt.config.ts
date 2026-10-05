@@ -74,6 +74,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: "/backend",
+      clarityProjectId: "ysw9udr76z",
     },
   },
   features: {

@@ -18,6 +18,7 @@
     "precommit": "npm run generate:api-types && npm run type-check && npm run test:match && npm run format:fix && npm run lint:fix"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.2",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.7.1",
