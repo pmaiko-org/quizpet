@@ -72,8 +72,11 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
 
   runtimeConfig: {
+    apiInternalUrl: process.env.NUXT_API_INTERNAL_URL,
+    cmsInternalUrl: process.env.NUXT_CMS_INTERNAL_URL,
     public: {
-      apiUrl: "/backend",
+      apiUrl: process.env.NUXT_PUBLIC_API_URL,
+      cmsUrl: process.env.NUXT_PUBLIC_CMS_URL,
       clarityProjectId: "ysw9udr76z",
     },
   },

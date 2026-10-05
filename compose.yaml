@@ -7,6 +7,7 @@ networks:
 
 volumes:
   db-data:
+  cms-uploads:
   redis_data:
 
 services:
@@ -15,12 +16,16 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
+      - cms
     networks:
       - shared_network
       - internal_network
     environment:
       NITRO_PORT: ${FRONTEND_PORT}
-      NUXT_API_URL: ${FRONTEND_API_URL}
+      NUXT_API_INTERNAL_URL: http://${PROJECT_PREFIX}-backend:${BACKEND_PORT}/backend
+      NUXT_PUBLIC_API_URL: /backend
+      NUXT_CMS_INTERNAL_URL: http://${PROJECT_PREFIX}-cms:${CMS_PORT}/api
+      NUXT_PUBLIC_CMS_URL: ${CMS_PUBLIC_URL}/api
 
   backend:
     container_name: "${PROJECT_PREFIX}-backend"
@@ -28,7 +33,8 @@ services:
     networks:
       - internal_network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     cap_add:
       - SYS_ADMIN
     devices:
@@ -41,14 +47,51 @@ services:
       PORT: ${BACKEND_PORT}
 
       DB_HOST: "${PROJECT_PREFIX}-db"
-      DB_PORT: 5432
+      DB_PORT: ${POSTGRES_INTERNAL_PORT}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_DATABASE: ${POSTGRES_DB}
+      CMS_DATABASE_NAME: ${CMS_DATABASE_NAME}
 
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+
+  cms:
+    container_name: "${PROJECT_PREFIX}-cms"
+    restart: unless-stopped
+    networks:
+      - internal_network
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - cms-uploads:/opt/app/public/uploads
+    environment:
+      HOST: ${CMS_HOST}
+      PORT: ${CMS_PORT}
+      PUBLIC_URL: ${CMS_PUBLIC_URL}
+      IS_PROXIED: ${CMS_IS_PROXIED}
+
+      DATABASE_CLIENT: ${CMS_DATABASE_CLIENT}
+      DATABASE_HOST: "${PROJECT_PREFIX}-db"
+      DATABASE_PORT: ${POSTGRES_INTERNAL_PORT}
+      DATABASE_NAME: ${CMS_DATABASE_NAME}
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_SSL: ${CMS_DATABASE_SSL}
+      DATABASE_SSL_REJECT_UNAUTHORIZED: ${CMS_DATABASE_SSL_REJECT_UNAUTHORIZED}
+      DATABASE_SCHEMA: ${CMS_DATABASE_SCHEMA}
+      DATABASE_POOL_MIN: ${CMS_DATABASE_POOL_MIN}
+      DATABASE_POOL_MAX: ${CMS_DATABASE_POOL_MAX}
+      DATABASE_CONNECTION_TIMEOUT: ${CMS_DATABASE_CONNECTION_TIMEOUT}
+
+      APP_KEYS: ${CMS_APP_KEYS}
+      API_TOKEN_SALT: ${CMS_API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${CMS_ADMIN_JWT_SECRET}
+      JWT_SECRET: ${CMS_JWT_SECRET}
+      TRANSFER_TOKEN_SALT: ${CMS_TRANSFER_TOKEN_SALT}
+      ENCRYPTION_KEY: ${CMS_ENCRYPTION_KEY}
 
   db:
     image: postgres:17-alpine
@@ -59,12 +102,19 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+      - CMS_DATABASE_NAME=${CMS_DATABASE_NAME:?CMS_DATABASE_NAME is required}
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d:ro
     networks:
       - internal_network
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_INTERNAL_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:latest

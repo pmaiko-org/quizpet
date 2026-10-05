@@ -2,15 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This is a Docker Compose monorepo with two apps. Each has its own `CLAUDE.md` with the details — **read the relevant one before any structural change**:
+This is a Docker Compose monorepo with three apps. The product apps have their own `CLAUDE.md` with the details — **read the relevant one before any structural change**:
 
 - **[`frontend/CLAUDE.md`](frontend/CLAUDE.md)** — Nuxt layered feature architecture, layer rules, auto-import wiring, API type generation.
 - **[`backend/CLAUDE.md`](backend/CLAUDE.md)** — NestJS feature layout, DTO naming convention, commands.
+- **`cms/`** — Strapi 5 for editorial content. It uses the `cms` database in the shared PostgreSQL container and must never connect to the NestJS `db` database.
 
 ## After every task
 
 Always run `make precommit` from the project root before reporting done.
-It runs type-check, format, and lint for both backend and frontend.
+It runs type-check, format, and lint for backend and frontend, then type-checks the CMS.
 Fix all errors before replying.
 
 ## Commands (from project root)
@@ -18,7 +19,8 @@ Fix all errors before replying.
 | Command | Description |
 |---|---|
 | `make dev` | Start all services (frontend, backend, db, redis) in dev mode with hot reload |
-| `make down` | Stop and remove all containers + volumes |
+| `make down` | Stop and remove containers while preserving volumes |
+| `make reset` | Stop containers and permanently remove their volumes |
 | `make logs` | Tail logs from all containers |
 | `make precommit` | Type-check, format, and lint both backend and frontend |
 | `make prod` | Build and deploy production stack |
@@ -29,6 +31,7 @@ Per-app commands (tests, dev server, codegen) live in each app's `CLAUDE.md`.
 
 - **Backend** (`backend/`): NestJS 11 + TypeORM + PostgreSQL 17. See [`backend/CLAUDE.md`](backend/CLAUDE.md).
 - **Frontend** (`frontend/`): Nuxt 4 + Vue 3 + Nuxt UI (Tailwind v4) + Pinia (setup stores) + Zod. See [`frontend/CLAUDE.md`](frontend/CLAUDE.md).
+- **CMS** (`cms/`): Strapi 5 + PostgreSQL. It owns only the `cms` database; uploaded media is persisted in the `cms-uploads` volume.
 
 ## Type Naming
 

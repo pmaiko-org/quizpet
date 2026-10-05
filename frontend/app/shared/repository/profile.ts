@@ -10,11 +10,11 @@ import type {
 export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
     getProfile: (options?: TRequestOptions) => {
-      return fetch<IUserResponse>("/backend/users/me", { ...options });
+      return fetch<IUserResponse>("/users/me", { ...options });
     },
 
     updateProfile: (body: IProfileUpdate, options?: TRequestOptions) => {
-      return fetch<IUserResponse>("/backend/users/me", {
+      return fetch<IUserResponse>("/users/me", {
         method: "PATCH",
         body,
         ...options,
@@ -25,7 +25,7 @@ export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
       body: { confirmEmail: string },
       options?: TRequestOptions,
     ) => {
-      return fetch<ISuccessResponse>("/backend/users/me", {
+      return fetch<ISuccessResponse>("/users/me", {
         method: "DELETE",
         body,
         ...options,

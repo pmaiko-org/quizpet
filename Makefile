@@ -3,7 +3,7 @@ COMPOSE_DEV  = compose.dev.yaml
 COMPOSE_PROD = compose.prod.yaml
 NETWORK_NAME = shared_network
 
-.PHONY: dev prod down rebuild logs ps precommit
+.PHONY: dev prod down reset rebuild logs ps precommit
 
 dev:
 	docker volume ls -qf dangling=true | xargs -r docker volume rm
@@ -19,6 +19,9 @@ prod: create-network
 	docker image prune -f
 
 down:
+	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -f $(COMPOSE_PROD) down --remove-orphans
+
+reset:
 	docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -f $(COMPOSE_PROD) down --remove-orphans --volumes
 
 rebuild:
@@ -33,6 +36,7 @@ ps:
 precommit:
 	npm --prefix ./backend run precommit
 	npm --prefix ./frontend run precommit
+	npm --prefix ./cms run typecheck
 
 create-network:
 	@docker network inspect $(NETWORK_NAME) > /dev/null 2>&1 || \

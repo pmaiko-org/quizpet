@@ -18,3 +18,14 @@ services:
       - /app/node_modules
     environment:
       NODE_ENV: "development"
+
+  cms:
+    build:
+      context: ./cms
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./cms:/opt/app
+      - /opt/app/node_modules
+      - cms-uploads:/opt/app/public/uploads
+    environment:
+      NODE_ENV: "development"

@@ -14,7 +14,7 @@ export const storageFilesRepository = <T>(
       const formData = new FormData();
       formData.append("file", file);
 
-      return fetch<IFileResponse>("/backend/storage/upload", {
+      return fetch<IFileResponse>("/storage/upload", {
         method: "POST",
         body: formData,
         ...options,
@@ -22,14 +22,14 @@ export const storageFilesRepository = <T>(
     },
 
     getFiles: (options?: TRequestOptions) => {
-      return fetch<IFileResponse[]>("/backend/storage/files", {
+      return fetch<IFileResponse[]>("/storage/files", {
         method: "GET",
         ...options,
       });
     },
 
     deleteFile: (id: string, options?: TRequestOptions) => {
-      return fetch<ISuccessResponse>(`/backend/storage/files/${id}`, {
+      return fetch<ISuccessResponse>(`/storage/files/${id}`, {
         method: "DELETE",
         ...options,
       });

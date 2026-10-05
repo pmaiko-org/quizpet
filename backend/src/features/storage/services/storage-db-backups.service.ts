@@ -5,6 +5,11 @@ import { spawn } from "child_process";
 import { EnvironmentVariables } from "../../../config/configuration";
 import { StorageFsService } from "./storage-fs.service";
 
+type TDatabaseBackupTarget = {
+  database: string;
+  filePrefix: "db" | "cms";
+};
+
 @Injectable()
 export class StorageDbBackupsService {
   private readonly logger = new Logger(StorageDbBackupsService.name);
@@ -22,22 +27,42 @@ export class StorageDbBackupsService {
   }
 
   async createBackup() {
-    const backupFileName = this.buildBackupFileName(new Date());
+    const db = this.configService.get("db", { infer: true });
+
+    if (!db) {
+      throw new Error("Database configuration is missing");
+    }
+
+    const targets: TDatabaseBackupTarget[] = [
+      { database: db.database, filePrefix: "db" },
+      { database: db.cmsDatabase, filePrefix: "cms" },
+    ];
+    const backupDate = new Date();
+    const backups: { fileName: string; path: string }[] = [];
 
     try {
-      const dump = await this.createDatabaseDump();
+      for (const target of targets) {
+        const backupFileName = this.buildBackupFileName(
+          target.filePrefix,
+          backupDate,
+        );
+        const path = `${this.backupDirectory}/${backupFileName}`;
+        const dump = await this.createDatabaseDump(target.database);
 
-      await this.storageFsService.set(
-        `${this.backupDirectory}/${backupFileName}`,
-        dump,
-      );
-      await this.removeOldBackups();
+        await this.storageFsService.set(path, dump);
+        await this.removeOldBackups(target.filePrefix);
 
-      this.logger.log(`Database backup created: ${backupFileName}`);
+        backups.push({ fileName: backupFileName, path });
+        this.logger.log(`Database backup created: ${backupFileName}`);
+      }
+
+      const [primaryBackup] = backups;
+
       return {
         success: true,
-        fileName: backupFileName,
-        path: `${this.backupDirectory}/${backupFileName}`,
+        fileName: primaryBackup.fileName,
+        path: primaryBackup.path,
+        backups,
       };
     } catch (error) {
       const message =
@@ -48,7 +73,10 @@ export class StorageDbBackupsService {
     }
   }
 
-  private buildBackupFileName(date: Date): string {
+  private buildBackupFileName(
+    filePrefix: TDatabaseBackupTarget["filePrefix"],
+    date: Date,
+  ): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -56,10 +84,10 @@ export class StorageDbBackupsService {
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const seconds = String(date.getSeconds()).padStart(2, "0");
 
-    return `db-backup-${year}-${month}-${day}_${hours}-${minutes}-${seconds}.sql`;
+    return `${filePrefix}-backup-${year}-${month}-${day}_${hours}-${minutes}-${seconds}.sql`;
   }
 
-  private async createDatabaseDump(): Promise<Buffer> {
+  private async createDatabaseDump(database: string): Promise<Buffer> {
     const db = this.configService.get("db", { infer: true });
 
     if (!db) {
@@ -77,7 +105,7 @@ export class StorageDbBackupsService {
         "--username",
         db.username,
         "--dbname",
-        db.database,
+        database,
         "--encoding",
         "UTF8",
         "--format=plain",
@@ -126,17 +154,20 @@ export class StorageDbBackupsService {
     });
   }
 
-  private async removeOldBackups(): Promise<void> {
+  private async removeOldBackups(
+    filePrefix: TDatabaseBackupTarget["filePrefix"],
+  ): Promise<void> {
     const storedFiles = await this.storageFsService.get(this.backupDirectory);
 
     if (!Array.isArray(storedFiles)) {
       return;
     }
 
+    const backupFilePattern = new RegExp(
+      `^${filePrefix}-backup-\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}\\.sql$`,
+    );
     const backupFiles = storedFiles
-      .filter(fileName =>
-        /^db-backup-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.sql$/.test(fileName),
-      )
+      .filter(fileName => backupFilePattern.test(fileName))
       .sort();
 
     const filesToDelete = backupFiles.slice(

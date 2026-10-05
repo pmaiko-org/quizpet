@@ -10,7 +10,7 @@ import type {
 export const usersRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
   return {
     getUsers: (query?: Partial<IUserListQuery>, options?: TRequestOptions) => {
-      return fetch<IUserListResponse>("/backend/users", {
+      return fetch<IUserListResponse>("/users", {
         method: "GET",
         query,
         ...options,
@@ -18,7 +18,7 @@ export const usersRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     },
 
     getMyStats: (options?: TRequestOptions) => {
-      return fetch<IProfileStatsResponse>("/backend/users/me/stats", {
+      return fetch<IProfileStatsResponse>("/users/me/stats", {
         method: "GET",
         ...options,
       });

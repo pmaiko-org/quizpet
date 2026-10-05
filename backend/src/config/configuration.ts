@@ -8,6 +8,7 @@ const vars = {
     username: String(process.env.DB_USER),
     password: String(process.env.DB_PASSWORD),
     database: String(process.env.DB_DATABASE),
+    cmsDatabase: String(process.env.CMS_DATABASE_NAME),
   },
 } as const;
 

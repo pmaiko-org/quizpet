@@ -1,3 +1,5 @@
 export const useApiUrl = () => {
-  return useRuntimeConfig().public.apiUrl;
+  const config = useRuntimeConfig();
+
+  return import.meta.server ? config.apiInternalUrl : config.public.apiUrl;
 };
