@@ -1,6 +1,7 @@
 FROM node:22-alpine AS build
 
 ARG PUBLIC_URL
+ARG DATABASE_CLIENT
 
 ENV NODE_OPTIONS=--max-old-space-size=2048
 
@@ -19,6 +20,7 @@ COPY . .
 
 ENV NODE_ENV=production
 ENV PUBLIC_URL=${PUBLIC_URL}
+ENV DATABASE_CLIENT=${DATABASE_CLIENT}
 RUN npm run build
 
 FROM node:22-alpine

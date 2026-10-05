@@ -17,5 +17,6 @@ services:
       dockerfile: Dockerfile
       args:
         PUBLIC_URL: ${CMS_PUBLIC_URL}
+        DATABASE_CLIENT: ${CMS_DATABASE_CLIENT}
     environment:
       NODE_ENV: "production"
