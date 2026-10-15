@@ -7,7 +7,6 @@ networks:
 
 volumes:
   db-data:
-  redis_data:
   frontend-static:
 
 services:
@@ -38,6 +37,8 @@ services:
         condition: service_started
       cms:
         condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - internal_network
     environment:
@@ -180,7 +181,7 @@ services:
       retries: 10
 
   redis:
-    image: redis:latest
+    image: redis:8-alpine
     container_name: "${PROJECT_PREFIX}-redis"
     restart: unless-stopped
     command:
@@ -189,13 +190,14 @@ services:
         "--bind", "0.0.0.0",
         "--save", "",
         "--appendonly", "no",
-        "--maxmemory", "100mb",
+        "--maxmemory", "64mb",
         "--maxmemory-policy", "allkeys-lru"
       ]
-    ports:
-      - "${REDIS_PORT}:6379"
     mem_limit: 128mb
-    volumes:
-      - redis_data:/data
     networks:
       - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

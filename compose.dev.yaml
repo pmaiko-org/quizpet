@@ -33,3 +33,7 @@ services:
       - /opt/app/node_modules
     environment:
       NODE_ENV: "development"
+
+  redis:
+    ports:
+      - "${REDIS_PORT}:6379"

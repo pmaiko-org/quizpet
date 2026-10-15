@@ -13,10 +13,20 @@ import { CMS_PREVIEW_TOKEN_HEADER } from "./cms-preview";
 const VERSION_KEY = "cms:content:version";
 const CACHE_TTL_SECONDS = 60 * 60;
 const MEMORY_CACHE_LIMIT = 256;
+const REDIS_COOLDOWN_MS = 30_000;
+const REDIS_TIMEOUT_MS = 2_000;
+const LOCAL_VERSION = "local";
+
+type TMemoryEntry = {
+  value: unknown;
+  expiresAt: number;
+};
 
 const memoryCache = new Map<string, unknown>();
 const staleCache = new Map<string, unknown>();
+
 let redisClient: Redis | undefined;
+let redisBlockedUntil = 0;
 
 const remember = (cache: Map<string, unknown>, key: string, value: unknown) => {
   cache.delete(key);
@@ -33,43 +43,118 @@ const remember = (cache: Map<string, unknown>, key: string, value: unknown) => {
   }
 };
 
+const rememberValue = (baseKey: string, cacheKey: string, value: unknown) => {
+  remember(memoryCache, cacheKey, {
+    value,
+    expiresAt: Date.now() + CACHE_TTL_SECONDS * 1000,
+  } satisfies TMemoryEntry);
+  remember(staleCache, baseKey, value);
+};
+
+const readMemory = <T>(cacheKey: string): T | undefined => {
+  const entry = memoryCache.get(cacheKey) as TMemoryEntry | undefined;
+
+  if (!entry) {
+    return undefined;
+  }
+
+  if (entry.expiresAt <= Date.now()) {
+    memoryCache.delete(cacheKey);
+    return undefined;
+  }
+
+  return entry.value as T;
+};
+
 type TCmsRuntimeConfig = {
   cmsInternalUrl: string;
   redisUrl: string;
 };
 
-const getRedis = (config: TCmsRuntimeConfig) => {
-  if (!config.redisUrl) {
-    throw new Error("NUXT_REDIS_URL is required for the CMS cache");
+const blockRedis = (error: unknown) => {
+  const wasAvailable = Date.now() >= redisBlockedUntil;
+  redisBlockedUntil = Date.now() + REDIS_COOLDOWN_MS;
+
+  if (wasAvailable) {
+    console.warn("Redis is unavailable, CMS cache falls back to memory", error);
   }
-
-  redisClient ??= new Redis(config.redisUrl, {
-    lazyConnect: true,
-    maxRetriesPerRequest: 1,
-  });
-
-  return redisClient;
 };
 
-const connectRedis = async (redis: Redis) => {
-  if (redis.status === "wait") {
-    await redis.connect();
+const createRedis = (url: string) => {
+  const client = new Redis(url, {
+    lazyConnect: true,
+    maxRetriesPerRequest: 1,
+    enableOfflineQueue: false,
+    connectTimeout: REDIS_TIMEOUT_MS,
+    commandTimeout: REDIS_TIMEOUT_MS,
+    retryStrategy: () => REDIS_COOLDOWN_MS,
+  });
+
+  client.on("error", blockRedis);
+
+  return client;
+};
+
+const useRedis = async (
+  config: TCmsRuntimeConfig,
+): Promise<Redis | undefined> => {
+  if (!config.redisUrl || Date.now() < redisBlockedUntil) {
+    return undefined;
+  }
+
+  redisClient ??= createRedis(config.redisUrl);
+
+  if (redisClient.status === "ready") {
+    return redisClient;
+  }
+
+  if (redisClient.status !== "wait" && redisClient.status !== "end") {
+    return undefined;
+  }
+
+  try {
+    await redisClient.connect();
+    return redisClient;
+  } catch (error) {
+    blockRedis(error);
+    return undefined;
+  }
+};
+
+const readRedis = async (redis: Redis, key: string) => {
+  try {
+    return await redis.get(key);
+  } catch (error) {
+    blockRedis(error);
+    return null;
+  }
+};
+
+const writeRedis = async (redis: Redis, key: string, value: string) => {
+  try {
+    await redis.set(key, value, "EX", CACHE_TTL_SECONDS);
+  } catch (error) {
+    blockRedis(error);
   }
 };
 
 const nextVersion = () => String(Date.now());
 
 const getVersion = async (config: TCmsRuntimeConfig): Promise<string> => {
-  const redis = getRedis(config);
-  await connectRedis(redis);
-  await redis.set(VERSION_KEY, nextVersion(), "NX");
-  const version = await redis.get(VERSION_KEY);
+  const redis = await useRedis(config);
 
-  if (!version) {
-    throw new Error("CMS content version is unavailable in Redis");
+  if (!redis) {
+    return LOCAL_VERSION;
   }
 
-  return version;
+  try {
+    await redis.set(VERSION_KEY, nextVersion(), "NX");
+
+    return (await redis.get(VERSION_KEY)) ?? LOCAL_VERSION;
+  } catch (error) {
+    blockRedis(error);
+    return LOCAL_VERSION;
+  }
 };
 
 const fetchCms = async <T>(
@@ -95,54 +180,40 @@ const cached = async <T>(
   baseKey: string,
   load: () => Promise<T>,
 ): Promise<T> => {
-  let version: string;
-
-  try {
-    version = await getVersion(config);
-  } catch (error) {
-    const stale = staleCache.get(baseKey) as T | undefined;
-    if (stale) {
-      console.warn(
-        `Redis unavailable, using stale CMS snapshot for ${baseKey}`,
-        error,
-      );
-      return stale;
-    }
-    throw error;
-  }
-
   for (let attempt = 0; attempt < 2; attempt += 1) {
+    const version = await getVersion(config);
     const cacheKey = `cms:${version}:${baseKey}`;
-    const memoryValue = memoryCache.get(cacheKey) as T | undefined;
+    const memoryValue = readMemory<T>(cacheKey);
 
-    if (memoryValue) {
+    if (memoryValue !== undefined) {
       return memoryValue;
     }
 
-    const redis = getRedis(config);
-    const stored = await redis.get(cacheKey);
+    const redis = await useRedis(config);
+    const stored = redis ? await readRedis(redis, cacheKey) : null;
+
     if (stored) {
       const value = JSON.parse(stored) as T;
-      remember(memoryCache, cacheKey, value);
-      remember(staleCache, baseKey, value);
+      rememberValue(baseKey, cacheKey, value);
       return value;
     }
 
     try {
       const value = await load();
-      const currentVersion = await getVersion(config);
 
-      if (currentVersion !== version) {
-        version = currentVersion;
+      if ((await getVersion(config)) !== version) {
         continue;
       }
 
-      await redis.set(cacheKey, JSON.stringify(value), "EX", CACHE_TTL_SECONDS);
-      remember(memoryCache, cacheKey, value);
-      remember(staleCache, baseKey, value);
+      if (redis) {
+        await writeRedis(redis, cacheKey, JSON.stringify(value));
+      }
+
+      rememberValue(baseKey, cacheKey, value);
       return value;
     } catch (error) {
       const stale = staleCache.get(baseKey) as T | undefined;
+
       if (stale) {
         console.warn(
           `Strapi unavailable, using stale CMS snapshot for ${baseKey}`,
@@ -150,6 +221,7 @@ const cached = async <T>(
         );
         return stale;
       }
+
       throw error;
     }
   }
@@ -200,13 +272,30 @@ export const getCmsRedirects = (
     fetchCms(config, "/redirects"),
   );
 
+export const closeCmsCache = () => {
+  redisClient?.disconnect();
+  redisClient = undefined;
+  redisBlockedUntil = 0;
+  memoryCache.clear();
+  staleCache.clear();
+};
+
 export const revalidateCms = async (
   config: TCmsRuntimeConfig,
 ): Promise<string> => {
-  const redis = getRedis(config);
-  await connectRedis(redis);
   const version = nextVersion();
-  await redis.set(VERSION_KEY, version);
+  const redis = await useRedis(config);
+
   memoryCache.clear();
-  return version;
+
+  if (redis) {
+    try {
+      await redis.set(VERSION_KEY, version);
+      return version;
+    } catch (error) {
+      blockRedis(error);
+    }
+  }
+
+  return LOCAL_VERSION;
 };
