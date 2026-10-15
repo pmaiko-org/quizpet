@@ -5,22 +5,27 @@ on:
     branches:
       - main
 
+concurrency:
+  group: quizpet-production
+  cancel-in-progress: true
+
 jobs:
   build-prod:
     runs-on: self-hosted
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Copy .env from server
-        run: cp /home/petya/projects/quizpet/.env .env
-
-      - name: Copy rclone.conf from server
-        run: cp /home/petya/projects/quizpet/rclone/rclone.conf rclone/rclone.conf
+        uses: actions/checkout@v4
 
       - name: Sync code to server folder
-        run: rsync -av --delete ./ /home/petya/projects/quizpet/
+        run: |
+          rsync -av --delete \
+            --exclude='.git/' \
+            --exclude='.env' \
+            --exclude='rclone/rclone.conf' \
+            ./ /home/petya/projects/quizpet/
 
       - name: Run make prod
+        working-directory: /home/petya/projects/quizpet
         run: make prod
