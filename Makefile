@@ -10,8 +10,13 @@ ALL_COMPOSE  = docker compose --env-file .env -f $(COMPOSE_BASE) -f $(COMPOSE_DE
 
 BUILD_TIMEOUT = 30m
 LOCK_FILE = /tmp/quizpet-prod.lock
+LOCK_TIMEOUT = 1800
+LOCK_BUSY_CODE = 9
 
-.PHONY: dev prod prod-deploy down reset rebuild logs ps \
+PROD_BUILD_SERVICES = backend cms frontend nginx
+SEQUENTIAL_ENV = COMPOSE_BAKE=false COMPOSE_PARALLEL_LIMIT=1 DOCKER_BUILDKIT=1
+
+.PHONY: dev prod prod-deploy prod-build down reset rebuild logs ps \
 	precommit generate-cms-types check-rclone rclone-auth \
 	cms-uploads-migrate create-network remove-network list-networks
 
@@ -24,16 +29,31 @@ dev: check-rclone
 
 # Production
 prod:
-	@flock -n $(LOCK_FILE) $(MAKE) --no-print-directory prod-deploy
+	@flock -E $(LOCK_BUSY_CODE) -w $(LOCK_TIMEOUT) $(LOCK_FILE) \
+		$(MAKE) --no-print-directory prod-deploy; \
+	status=$$?; \
+	if [ $$status -eq $(LOCK_BUSY_CODE) ]; then \
+		echo "Another production deploy is still holding $(LOCK_FILE) after $(LOCK_TIMEOUT)s"; \
+	fi; \
+	exit $$status
 
 prod-deploy: create-network check-rclone
 	$(PROD_COMPOSE) down --remove-orphans
-	COMPOSE_PARALLEL_LIMIT=1 timeout -k 30s $(BUILD_TIMEOUT) $(PROD_COMPOSE) build
-	$(PROD_COMPOSE) up -d --remove-orphans
+	$(MAKE) --no-print-directory prod-build
+	@echo "⚡ Starting containers..."
+	$(SEQUENTIAL_ENV) $(PROD_COMPOSE) up -d --no-build --remove-orphans
 	@echo "⚡ Cleaning old build cache (only unused layers older than 24h)..."
 	docker builder prune -f --filter "until=24h"
 	@echo "⚡ Removing dangling images..."
 	docker image prune -f
+
+prod-build:
+	@for service in $(PROD_BUILD_SERVICES); do \
+		echo "⚡ Building $$service..."; \
+		$(SEQUENTIAL_ENV) timeout -k 30s $(BUILD_TIMEOUT) \
+			$(PROD_COMPOSE) build $$service || exit 1; \
+	done
+	@echo "⚡ All images built"
 
 
 # Docker
