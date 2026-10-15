@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-5">
     <BaseHeroSection
-      eyebrow="Гра для компанії"
-      title="ПИТАНЯЧКА"
-      description="Усі, хто зайшов на цю сторінку, автоматично в грі. Будь-хто генерує питання, читає його вголос і передає хід далі."
+      :eyebrow="$t('pitanyachka.hero.eyebrow')"
+      :title="$t('pitanyachka.hero.title')"
+      :description="$t('pitanyachka.hero.description')"
     />
 
     <PitanyachkaControls
@@ -25,8 +25,8 @@
     <PitanyachkaStage
       v-else-if="isReading"
       icon="i-lucide-mic"
-      :title="`${state.readerName} читає своє питання`"
-      description="Слухайте уважно та чекайте, поки хід передадуть далі."
+      :title="$t('pitanyachka.reading.title', { name: state.readerName })"
+      :description="$t('pitanyachka.reading.description')"
     />
 
     <PitanyachkaCategoryPicker
@@ -39,15 +39,15 @@
     <PitanyachkaStage
       v-else-if="state.remaining === 0"
       icon="i-lucide-party-popper"
-      title="Питання закінчились"
-      description="Усі питання вже прозвучали. Натисніть «Почати заново», щоб зіграти зі свіжою колодою."
+      :title="$t('pitanyachka.finished.title')"
+      :description="$t('pitanyachka.finished.description')"
     />
 
     <PitanyachkaStage
       v-else
       icon="i-lucide-sparkles"
-      title="Хід вільний"
-      description="Будь-хто з гравців може згенерувати наступне питання."
+      :title="$t('pitanyachka.free.title')"
+      :description="$t('pitanyachka.free.description')"
     >
       <UButton
         color="primary"
@@ -57,7 +57,7 @@
         :disabled="!connected"
         @click="generateQuestion"
       >
-        Згенерувати питання
+        {{ $t("pitanyachka.generate") }}
       </UButton>
     </PitanyachkaStage>
 
@@ -76,8 +76,10 @@ const { user } = useCurrentUser();
 const playerName = computed(() => {
   const fullName =
     `${user.value?.firstName ?? ""} ${user.value?.lastName ?? ""}`.trim();
-  return fullName || user.value?.email || "Гравець";
+  return fullName || user.value?.email || t("pitanyachka.player");
 });
+
+const { t } = useI18n();
 
 const {
   connected,

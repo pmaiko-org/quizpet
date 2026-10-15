@@ -15,8 +15,12 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 RUN npm ci --omit=dev
 
-RUN apk add --no-cache rclone fuse3 bash postgresql-client
+RUN apk add --no-cache rclone fuse3 bash postgresql-client \
+  && echo user_allow_other >> /etc/fuse.conf
 RUN mkdir -p /storage
-VOLUME ["/storage"]
 
-CMD ["sh", "-c", "rclone mount gdrive: /storage --vfs-cache-mode=off --allow-other --allow-non-empty & node dist/main.js"]
+COPY docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["node", "dist/main.js"]

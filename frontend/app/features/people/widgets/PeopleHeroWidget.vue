@@ -1,7 +1,7 @@
 <template>
   <BaseHeroSection
-    eyebrow="Спільнота"
-    title="Навчатися легше разом"
-    description="Знайомтеся з учасниками QuizPet і стежте, як зростає навчальна спільнота."
+    :eyebrow="$t('people.hero.eyebrow')"
+    :title="$t('people.hero.title')"
+    :description="$t('people.hero.description')"
   />
 </template>

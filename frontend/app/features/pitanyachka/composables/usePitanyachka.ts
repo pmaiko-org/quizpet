@@ -13,7 +13,7 @@ const RECONNECT_BASE_DELAY = 1000;
 const RECONNECT_MAX_DELAY = 10000;
 
 export const usePitanyachka = (playerName: Ref<string>) => {
-  const apiUrl = useApiUrl();
+  const backendApiUrl = useBackendApiUrl();
 
   const socket = ref<WebSocket | null>(null);
   const connected = ref(false);
@@ -32,7 +32,7 @@ export const usePitanyachka = (playerName: Ref<string>) => {
 
   const buildUrl = () => {
     const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-    return `${protocol}//${location.host}${apiUrl}/pitanyachka`;
+    return `${protocol}//${location.host}${backendApiUrl}/pitanyachka`;
   };
 
   const send = (event: TPitanyachkaClientEvent, data: unknown = {}) => {

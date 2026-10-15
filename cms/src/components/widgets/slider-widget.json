@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_widgets_slider_widgets",
+  "info": {
+    "displayName": "Slider Widget"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "slides": {
+      "type": "component",
+      "component": "shared.slide-item",
+      "repeatable": true,
+      "required": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    }
+  }
+}

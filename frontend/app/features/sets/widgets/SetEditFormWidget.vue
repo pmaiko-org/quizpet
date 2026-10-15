@@ -2,8 +2,8 @@
   <BaseDataBoundary
     :pending="status === 'pending' || status === 'idle'"
     :error="error"
-    errorTitle="Не вдалося завантажити набір"
-    errorDescription="Спробуйте повторно відкрити редактор набору."
+    :errorTitle="$t('sets.edit.loadError.title')"
+    :errorDescription="$t('sets.edit.loadError.description')"
     @retry="handleRetry"
   >
     <template #loading>

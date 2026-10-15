@@ -14,10 +14,15 @@
           focus:outline-none
         "
       >
-        Round {{ roundNumber }} of {{ roundCount }}
+        {{ $t("match.round", { current: roundNumber, total: roundCount }) }}
       </h2>
       <p class="text-sm text-muted">
-        {{ matchedIds.size }} / {{ terms.length }} pairs
+        {{
+          $t("match.pairsProgress", {
+            matched: matchedIds.size,
+            total: terms.length,
+          })
+        }}
       </p>
     </div>
 
@@ -64,7 +69,7 @@
         size="lg"
         @click="emit('nextRound')"
       >
-        Next round
+        {{ $t("match.nextRound") }}
       </UButton>
     </div>
   </section>
@@ -104,9 +109,14 @@ const emit = defineEmits<{
 
 const board = useTemplateRef("board");
 const heading = useTemplateRef("heading");
+const { t } = useI18n();
 const columns = computed(() => [
-  { side: "term" as const, label: "Words", cards: terms },
-  { side: "definition" as const, label: "Definitions", cards: definitions },
+  { side: "term" as const, label: t("match.words"), cards: terms },
+  {
+    side: "definition" as const,
+    label: t("match.definitions"),
+    cards: definitions,
+  },
 ]);
 const isSelected = (cardId: string, side: TMatchSide) => {
   return [selected, compared].some(
@@ -114,12 +124,10 @@ const isSelected = (cardId: string, side: TMatchSide) => {
   );
 };
 const feedbackMessage = computed(() => {
-  if (feedback === "error") return "Not a match. Try another pair.";
-  if (feedback === "success") return "Correct match!";
-  if (roundComplete) return "All pairs in this round matched.";
-  return selected
-    ? "Now choose the matching item in the other column."
-    : "Choose a word or definition to begin.";
+  if (feedback === "error") return t("match.feedback.error");
+  if (feedback === "success") return t("match.feedback.success");
+  if (roundComplete) return t("match.feedback.roundComplete");
+  return selected ? t("match.feedback.choosePair") : t("match.feedback.start");
 });
 
 onMounted(() => heading.value?.focus());

@@ -44,7 +44,7 @@
       trailing
       @click="emit('pass')"
     >
-      Передати хід
+      {{ $t("pitanyachka.pass") }}
     </UButton>
   </section>
 </template>

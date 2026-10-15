@@ -13,7 +13,7 @@
     :disabled="matched && !feedback"
     :aria-pressed="selected"
     :aria-disabled="locked || matched"
-    :aria-label="matched ? `${text}: matched` : undefined"
+    :aria-label="matched ? $t('match.tileMatched', { text }) : undefined"
     @click="handleSelect"
   >
     <span class="min-w-0 wrap-anywhere whitespace-pre-wrap">{{ text }}</span>

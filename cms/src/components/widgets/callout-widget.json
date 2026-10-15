@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_widgets_callout_widgets",
+  "info": {
+    "displayName": "Callout Widget"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "blocks",
+      "required": true
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ],
+      "default": "info",
+      "required": true
+    },
+    "icon": {
+      "type": "string",
+      "customField": "global::icon"
+    },
+    "primaryLink": {
+      "type": "component",
+      "component": "shared.link"
+    },
+    "secondaryLink": {
+      "type": "component",
+      "component": "shared.link"
+    }
+  }
+}

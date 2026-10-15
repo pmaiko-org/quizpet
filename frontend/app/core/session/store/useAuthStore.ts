@@ -1,14 +1,14 @@
 import { useLocalStorage } from "@vueuse/core";
 import { skipHydrate } from "pinia";
 
-import { RouteName } from "~/shared/constants";
 import type {
   IRefreshToken,
   IRefreshTokenResponse,
 } from "~/shared/types/api.generated";
 
 export const useAuthStore = defineStore("auth", () => {
-  const apiUrl = useApiUrl();
+  const backendApiUrl = useBackendApiUrl();
+  const routes = usePageRoutes();
 
   const accessToken = skipHydrate(
     useCookie<string | null>("accessToken", {
@@ -49,8 +49,10 @@ export const useAuthStore = defineStore("auth", () => {
 
       const route = useRoute();
       try {
-        if (route.path !== "/login") {
-          await navigateTo({ name: RouteName.LOGIN });
+        const loginPath = routes.resolve("login");
+
+        if (route.path !== loginPath) {
+          await navigateTo(loginPath);
         }
       } finally {
         clearNuxtData();
@@ -81,7 +83,7 @@ export const useAuthStore = defineStore("auth", () => {
 
     promiseAuthRefreshToken.value =
       promiseAuthRefreshToken.value ||
-      $fetch<IRefreshTokenResponse>(`${apiUrl}/auth/refresh`, {
+      $fetch<IRefreshTokenResponse>(`${backendApiUrl}/auth/refresh`, {
         method: "POST",
         body: {
           refreshToken: refreshToken.value,

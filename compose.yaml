@@ -7,25 +7,57 @@ networks:
 
 volumes:
   db-data:
-  cms-uploads:
   redis_data:
+  frontend-static:
 
 services:
+  nginx:
+    container_name: "${PROJECT_PREFIX}-nginx"
+    restart: unless-stopped
+    depends_on:
+      frontend:
+        condition: service_healthy
+    networks:
+      - shared_network
+      - internal_network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:4999/api/health >/dev/null || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   frontend:
     container_name: "${PROJECT_PREFIX}-frontend"
     restart: unless-stopped
     depends_on:
-      - backend
-      - cms
+      backend:
+        condition: service_started
+      cms:
+        condition: service_healthy
     networks:
-      - shared_network
       - internal_network
     environment:
       NITRO_PORT: ${FRONTEND_PORT}
-      NUXT_API_INTERNAL_URL: http://${PROJECT_PREFIX}-backend:${BACKEND_PORT}/backend
-      NUXT_PUBLIC_API_URL: /backend
+      NUXT_BACKEND_API_INTERNAL_URL: http://${PROJECT_PREFIX}-backend:${BACKEND_PORT}/backend
+      NUXT_PUBLIC_BACKEND_API_URL: /backend
+      NUXT_PUBLIC_CMS_API_URL: ${NUXT_PUBLIC_CMS_API_URL:?NUXT_PUBLIC_CMS_API_URL is required}
       NUXT_CMS_INTERNAL_URL: http://${PROJECT_PREFIX}-cms:${CMS_PORT}/api
-      NUXT_PUBLIC_CMS_URL: ${CMS_PUBLIC_URL}/api
+      NUXT_REDIS_URL: redis://${PROJECT_PREFIX}-redis:6379
+      NUXT_REVALIDATE_SECRET: ${NUXT_REVALIDATE_SECRET:?NUXT_REVALIDATE_SECRET is required}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:${FRONTEND_PORT}/api/health >/dev/null || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
 
   backend:
     container_name: "${PROJECT_PREFIX}-backend"
@@ -46,6 +78,9 @@ services:
     environment:
       PORT: ${BACKEND_PORT}
 
+      RCLONE_STORAGE_REMOTE: ${RCLONE_STORAGE_REMOTE:-gdrive:}
+      RCLONE_VFS_CACHE_MODE: ${RCLONE_VFS_CACHE_MODE:-off}
+
       DB_HOST: "${PROJECT_PREFIX}-db"
       DB_PORT: ${POSTGRES_INTERNAL_PORT}
       DB_USER: ${POSTGRES_USER}
@@ -56,6 +91,12 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+    healthcheck:
+      test: ["CMD-SHELL", "grep -q ' /storage fuse' /proc/mounts || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
 
   cms:
     container_name: "${PROJECT_PREFIX}-cms"
@@ -65,9 +106,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse
+    security_opt:
+      - apparmor:unconfined
     volumes:
-      - cms-uploads:/opt/app/public/uploads
+      - ./rclone:/root/.config/rclone
     environment:
+      RCLONE_CMS_REMOTE: ${RCLONE_CMS_REMOTE:-gdrive:cms}
+      RCLONE_CMS_VFS_CACHE_MODE: ${RCLONE_CMS_VFS_CACHE_MODE:-off}
+
       HOST: ${CMS_HOST}
       PORT: ${CMS_PORT}
       PUBLIC_URL: ${CMS_PUBLIC_URL}
@@ -82,9 +132,9 @@ services:
       DATABASE_SSL: ${CMS_DATABASE_SSL}
       DATABASE_SSL_REJECT_UNAUTHORIZED: ${CMS_DATABASE_SSL_REJECT_UNAUTHORIZED}
       DATABASE_SCHEMA: ${CMS_DATABASE_SCHEMA}
-      DATABASE_POOL_MIN: ${CMS_DATABASE_POOL_MIN}
-      DATABASE_POOL_MAX: ${CMS_DATABASE_POOL_MAX}
-      DATABASE_CONNECTION_TIMEOUT: ${CMS_DATABASE_CONNECTION_TIMEOUT}
+      DATABASE_POOL_MIN: 0
+      DATABASE_POOL_MAX: 10
+      DATABASE_CONNECTION_TIMEOUT: 60000
 
       APP_KEYS: ${CMS_APP_KEYS}
       API_TOKEN_SALT: ${CMS_API_TOKEN_SALT}
@@ -92,6 +142,19 @@ services:
       JWT_SECRET: ${CMS_JWT_SECRET}
       TRANSFER_TOKEN_SALT: ${CMS_TRANSFER_TOKEN_SALT}
       ENCRYPTION_KEY: ${CMS_ENCRYPTION_KEY}
+      CMS_PREVIEW_SECRET: ${CMS_PREVIEW_SECRET:?CMS_PREVIEW_SECRET is required}
+      CMS_PREVIEW_URL: ${CMS_PREVIEW_URL:?CMS_PREVIEW_URL is required}
+      NUXT_REVALIDATE_SECRET: ${NUXT_REVALIDATE_SECRET:?NUXT_REVALIDATE_SECRET is required}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:${CMS_PORT}/_health >/dev/null || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 180s
 
   db:
     image: postgres:17-alpine

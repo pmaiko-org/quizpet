@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_widgets_hero_widgets",
+  "info": { "displayName": "Hero Widget" },
+  "options": {},
+  "attributes": {
+    "eyebrow": { "type": "string" },
+    "title": { "type": "string", "required": true },
+    "summary": { "type": "text", "required": true },
+    "imageUrl": { "type": "string", "required": true },
+    "imageAlt": { "type": "string", "required": true },
+    "primaryLink": { "type": "component", "component": "shared.link" },
+    "secondaryLink": { "type": "component", "component": "shared.link" }
+  }
+}

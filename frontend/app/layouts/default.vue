@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TheHeader />
+    <TheHeader :showSidebarToggle="false" />
 
     <UMain>
       <slot />
@@ -9,5 +9,3 @@
     <TheFooter />
   </div>
 </template>
-
-<script setup lang="ts"></script>

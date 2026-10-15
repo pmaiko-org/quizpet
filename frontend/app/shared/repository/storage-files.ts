@@ -1,20 +1,16 @@
-import type { $Fetch, NitroFetchRequest } from "nitropack";
-
-import type { TRequestOptions } from "~/shared/repository/types";
+import type { TApiFetch, TRequestOptions } from "~/shared/repository/types";
 import type {
   IFileResponse,
   ISuccessResponse,
 } from "~/shared/types/api.generated";
 
-export const storageFilesRepository = <T>(
-  fetch: $Fetch<T, NitroFetchRequest>,
-) => {
+export const storageFilesRepository = (backendApi: TApiFetch) => {
   return {
     upload: (file: File, options?: TRequestOptions) => {
       const formData = new FormData();
       formData.append("file", file);
 
-      return fetch<IFileResponse>("/storage/upload", {
+      return backendApi<IFileResponse>("/storage/upload", {
         method: "POST",
         body: formData,
         ...options,
@@ -22,14 +18,14 @@ export const storageFilesRepository = <T>(
     },
 
     getFiles: (options?: TRequestOptions) => {
-      return fetch<IFileResponse[]>("/storage/files", {
+      return backendApi<IFileResponse[]>("/storage/files", {
         method: "GET",
         ...options,
       });
     },
 
     deleteFile: (id: string, options?: TRequestOptions) => {
-      return fetch<ISuccessResponse>(`/storage/files/${id}`, {
+      return backendApi<ISuccessResponse>(`/storage/files/${id}`, {
         method: "DELETE",
         ...options,
       });

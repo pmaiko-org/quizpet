@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_widgets_heading_widgets",
+  "info": {
+    "displayName": "Heading Widget"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "align": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "center"
+      ],
+      "default": "left",
+      "required": true
+    }
+  }
+}

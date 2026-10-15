@@ -5,7 +5,7 @@
       sm:p-6
       lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.62fr)]
     "
-    aria-label="Завантаження профілю"
+    :aria-label="$t('common.profileLoading')"
   >
     <div class="space-y-5">
       <div class="space-y-3">

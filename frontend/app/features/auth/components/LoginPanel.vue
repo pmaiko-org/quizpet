@@ -21,7 +21,7 @@
           dark:text-amber-300
         "
       >
-        Вхід
+        {{ $t("login.eyebrow") }}
       </p>
       <h2
         class="
@@ -30,7 +30,7 @@
           dark:text-highlighted
         "
       >
-        Продовжити в QuizPet
+        {{ $t("login.title") }}
       </h2>
       <p
         class="
@@ -39,8 +39,7 @@
           dark:text-toned
         "
       >
-        Авторизуйся через Google, щоб зберегти прогрес, результати та
-        персональні добірки квізів на будь-якому пристрої.
+        {{ $t("login.description") }}
       </p>
 
       <div class="mt-8 space-y-4">
@@ -61,7 +60,7 @@
             alt="Google"
             class="size-5 rounded-full"
           >
-          Продовжити з Google
+          {{ $t("login.google") }}
         </a>
 
         <div
@@ -78,7 +77,7 @@
               dark:text-amber-300
             "
           />
-          Без паролів. Безпечний вхід через Google.
+          {{ $t("login.secure") }}
         </div>
 
         <p
@@ -87,10 +86,9 @@
             dark:text-muted
           "
         >
-          Реєструючись або продовжуючи через Google, ви підтверджуєте, що
-          ознайомилися з
+          {{ $t("login.agreement.prefix") }}
           <NuxtLink
-            :to="{ name: RouteName.PRIVACY }"
+            :to="routes.resolve('privacy')"
             class="
               font-medium text-amber-600 underline underline-offset-2
               hover:text-amber-700
@@ -98,7 +96,7 @@
               dark:hover:text-amber-200
             "
           >
-            Політикою конфіденційності та Умовами використання</NuxtLink>.
+            {{ $t("login.agreement.link") }}</NuxtLink>.
         </p>
 
         <p
@@ -109,14 +107,13 @@
           "
         >
           <span>
-            Проєкт з відкритим кодом. Повідомити про проблему або зв'язатися з
-            автором:
+            {{ $t("login.openSource") }}
           </span>
           <a
-            :href="PROJECT_LINKS.github"
+            :href="githubUrl"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="GitHub проєкту QuizPet (відкривається в новій вкладці)"
+            :aria-label="$t('login.githubAria')"
             class="
               rounded-sm font-medium text-slate-600 underline-offset-2
               transition-colors
@@ -129,10 +126,10 @@
           >GitHub</a>
           <span aria-hidden="true">·</span>
           <a
-            :href="PROJECT_LINKS.telegram"
+            :href="telegramUrl"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Telegram автора (відкривається в новій вкладці)"
+            :aria-label="$t('login.telegramAria')"
             class="
               rounded-sm font-medium text-slate-600 underline-offset-2
               transition-colors
@@ -168,7 +165,7 @@
               dark:text-muted
             "
           >
-            готових квізів
+            {{ $t("login.metric.quizzes") }}
           </p>
         </div>
         <div>
@@ -186,7 +183,7 @@
               dark:text-muted
             "
           >
-            рейтинги та дуелі
+            {{ $t("login.metric.live") }}
           </p>
         </div>
         <div>
@@ -204,7 +201,7 @@
               dark:text-muted
             "
           >
-            прогрес між пристроями
+            {{ $t("login.metric.sync") }}
           </p>
         </div>
       </div>
@@ -213,5 +210,16 @@
 </template>
 
 <script setup lang="ts">
-import { PROJECT_LINKS, RouteName } from "~/shared/constants";
+const routes = usePageRoutes();
+const { bootstrap } = useCmsBootstrap();
+const githubUrl = computed(
+  () =>
+    bootstrap.value?.global.socialLinks.find(link => link.label === "GitHub")
+      ?.path ?? "",
+);
+const telegramUrl = computed(
+  () =>
+    bootstrap.value?.global.socialLinks.find(link => link.label === "Telegram")
+      ?.path ?? "",
+);
 </script>

@@ -15,6 +15,15 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server =>
   webhooks: {
     populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
   },
+  openapi: {
+    'content-api': {
+      access: 'disabled',
+      cache: {
+        enabled: true,
+        filePath: '.strapi/openapi/content-api.json',
+      },
+    },
+  },
 });
 
 export default config;

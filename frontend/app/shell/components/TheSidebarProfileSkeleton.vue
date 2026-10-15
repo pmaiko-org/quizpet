@@ -1,7 +1,7 @@
 <template>
   <section
     class="mt-3 border-t border-default pt-3"
-    aria-label="Завантаження профілю"
+    :aria-label="$t('common.profileLoading')"
   >
     <div class="rounded-md border border-default bg-muted/45 p-3">
       <div class="mb-3 flex items-center justify-between">

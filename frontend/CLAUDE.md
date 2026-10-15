@@ -133,16 +133,19 @@ shell  →  pages  →  features  →  core  →  shared
 
 Инфраструктура, от которой зависит всё приложение. Один подкаталог = один модуль (`core/<name>/{store,composables,components}/`).
 
-| Модуль          | Статус    | Содержимое                                                                                                  |
-| --------------- | --------- | ----------------------------------------------------------------------------------------------------------- |
-| `core/session/` | ✅ есть   | Токены, refresh, logout (`useAuthStore`); **идентичность текущего юзера** (`composables/useCurrentUser.ts`) |
-| `core/ui/`      | ✅ каркас | Стейт UI-инфраструктуры (`useUiStore`) — дом для тем и модалок                                              |
-| `core/api/`     | 🔜 план   | HTTP-клиент: сейчас `plugins/api.ts` (перенос отложен — плагин живёт в `plugins/` по конвенции Nuxt)        |
-| `core/toast/`   | 🔜 план   | Тосты (обёртка над `useToast` из Nuxt UI)                                                                   |
-| `core/theme/`   | 🔜 план   | Переключение темы                                                                                           |
-| `core/modal/`   | 🔜 план   | Менеджер модалок                                                                                            |
+| Модуль          | Статус    | Содержимое                                                                                                                                             |
+| --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `core/cms/`     | ✅ есть   | Маршрутизация и контент CMS: локали (`locales.ts`), `useCmsBootstrap`, `useCmsPage`, `usePageRoutes`, `useCmsPageSeo`, `useLocaleSwitch`, типы `TCms*` |
+| `core/session/` | ✅ есть   | Токены, refresh, logout (`useAuthStore`); **идентичность текущего юзера** (`composables/useCurrentUser.ts`)                                            |
+| `core/ui/`      | ✅ каркас | Стейт UI-инфраструктуры (`useUiStore`) — дом для тем и модалок                                                                                         |
+| `core/api/`     | 🔜 план   | HTTP-клиент: сейчас `plugins/api.ts` (перенос отложен — плагин живёт в `plugins/` по конвенции Nuxt)                                                   |
+| `core/toast/`   | 🔜 план   | Тосты (обёртка над `useToast` из Nuxt UI)                                                                                                              |
+| `core/theme/`   | 🔜 план   | Переключение темы                                                                                                                                      |
+| `core/modal/`   | 🔜 план   | Менеджер модалок                                                                                                                                       |
 
 > `auth` раньше был фичей. Это инфраструктура сессии (от неё зависят все), поэтому она переехала в `core/session` — так её можно тянуть из любого слоя, не нарушая правило «фича не импортирует фичу».
+
+> **CMS-маршрут — это инфраструктура, а не фича.** От разрешённой CMS-страницы зависят `middleware` (layout + access), `layouts`, `shell` (шапки) и сами фичи (`sets` берёт `:id` из параметров пути). Поэтому состояние CMS-страницы, bootstrap, резолвинг маршрутов и локали живут в `core/cms`, а `features/cms` остаётся только контентной фичей (презентационные виджеты Dynamic Zone + реестр). Раньше это решалось связкой `provide/inject` в `[...slug].vue` — она была нужна лишь чтобы `features/sets` не импортировал `features/cms`; после переезда в `core` инъекция не нужна, параметры читаются из `useCmsPage().params`.
 
 > **«Кто я» — это сессия, а не фича `profile`.** Текущий юзер (`/users/me`) нужен пол-приложения (sidebar, права на удаление наборов, форма профиля), поэтому живёт в `core/session/composables/useCurrentUser.ts` (общий ключ `useAsyncData("current-user")` → один запрос на всех). Фича `profile` — это только **экран редактирования** профиля (форма + мутация), а не источник идентичности. Именно так снялся бывший кросс-фичевый клей (`sets` брал email из `profile`): теперь `sets` читает `useCurrentUser()` из `core`.
 
@@ -168,6 +171,8 @@ shell  →  pages  →  features  →  core  →  shared
 Виджеты авто-регистрируются паттерном `~/features/*/widgets/**/*.vue` (`pathPrefix: false`), имя глобально уникально. Виджет лежит **внутри** своей фичи → для ESLint это слой `features`, значит правило изоляции действует и на него (виджет фичи A не импортирует фичу B).
 
 > Хром приложения (`TheHeader`/`TheFooter`/`TheSidebar`) — это обвязка макета, а не виджет страницы; живёт в слое `shell/` (`shell/components/`) и монтируется в `layouts/`.
+
+> **Каркас выбирается полем `layout` страницы в CMS, а не `routeName` в коде.** Каждому значению enum соответствует файл в `layouts/`: `default` (`TheHeader`), `landing` (`LandingHeader`), `cabinet` (сайдбар), `empty`. Если экрану нужен другой хром — заводится новое значение enum и новый файл лейаута (схема Strapi + Zod-контракт + сид + миграция + OpenAPI/типы), а не ветвление `page.routeName === "..."` внутри лейаута.
 
 ## Слой `shell/` — каркас приложения (префикс `The*`)
 
@@ -204,7 +209,7 @@ shell/components/          # The* — по одному на макет
 Текущие фичи:
 
 - `features/profile/` — **экран редактирования** профиля: `widgets/ProfileWidget.vue` (форма + мутация через `$repository.profile`), статистика текущего юзера (`composables/useMyStats.ts` — потребляется сайдбаром). Идентичность юзера («кто я») тут **не живёт** — это `core/session/useCurrentUser`.
-- `features/sets/` — наборы, карточки, режим обучения (домен «карточки»; корень агрегата — `Set`, дочерняя сущность — `Card`): `types.ts`, `validation.ts`, `utils.ts`, `composables/{useCardSpeech,useSetsList,useLearnSession,useSetEdit,useSetForm}.ts`, presentational `components/{SetForm,CardForm,SetCsvTransfer,SetCard,SetsGrid,SetsHero,SetEditHero}.vue` + `components/learn/Learn*.vue`, виджеты `widgets/{SetsHeroWidget,SetsGridWidget,CreateSetWidget,SetEditFormWidget,SetEditHeroWidget,LearnWidget}.vue`
+- `features/sets/` — наборы, карточки и режимы обучения (домен «карточки»; корень агрегата — `Set`, дочерняя сущность — `Card`): `types.ts`, `validation.ts`, `utils.ts`, feature-композаблы, presentational-компоненты форм/списка/Learn/Match и page-level виджеты `widgets/{SetsList,CreateSet,SetEditForm,Learn,Match}Widget.vue`.
 - `features/people/` — список пользователей платформы: `utils.ts` (`pluralUsers`), `composables/usePeopleList.ts`, `components/{PersonCard,PeopleGrid}.vue`, виджеты `widgets/{PeopleHeroWidget,PeopleGridWidget}.vue`
 - `features/auth/` — UI экрана логина: `components/{LoginShowcase,LoginPanel}.vue`, виджет `widgets/LoginWidget.vue` (инфраструктура сессии/токенов живёт отдельно в `core/session`)
 
@@ -212,63 +217,49 @@ shell/components/          # The* — по одному на макет
 
 ## Страницы (тонкие)
 
-**Страница = `definePageMeta` + монтаж виджета(ов) фич. Больше ничего.** Ни `useAsyncData`, ни логики, ни собственной вёрстки — всё это внутри виджета. Если экран из нескольких виджетов — страница монтирует их все (допустим тонкий контейнер-обёртка для раскладки/отступов).
+В `pages/` находится только `[...slug].vue`: он разрешает CMS-маршрут, применяет layout,
+access и SEO, отображает breadcrumbs и динамически монтирует виджеты из реестра точных
+`widgets.*` UID. Отдельные route-файлы для CMS-страниц запрещены.
 
-```vue
-<!-- pages/sets/index.vue целиком -->
-<template>
-  <div class="space-y-8">
-    <SetsHeroWidget />
-    <SetsGridWidget />
-  </div>
-</template>
-
-<script setup lang="ts">
-definePageMeta({ layout: "cabinet" });
-</script>
-```
-
-- Фетч и производная логика — в section-композаблах фич (`features/<name>/composables/`), а не в странице.
-- **Внутри `pages/` НЕЛЬЗЯ держать компоненты** (`pages/<route>/components/` запрещено — каждый `.vue` в `pages/` это маршрут; конфиг Nuxt их и не сканирует). Presentational-блок → `features/<name>/components/`; целый экран → `features/<name>/widgets/*Widget.vue`.
-- Несколько виджетов одного экрана могут делить один section-композабл — Nuxt кэширует `useAsyncData` по ключу, поэтому запрос будет один (напр. `SetsHeroWidget` + `SetsGridWidget` делят ключ `"sets"`).
-
-Данные из маршрута виджет читает сам (`useRoute()`), поэтому странице нечего ему прокидывать.
+- Фетч и производная логика функционального виджета находятся в композаблах его фичи.
+- Presentational-блок → `features/<name>/components/`; page-level блок Dynamic Zone →
+  `features/<name>/widgets/*Widget.vue` или `features/cms/widgets/*Widget.vue`.
+- Все CMS-виджеты в реестре `features/cms/registry/widgetRegistry.ts` подключаются через
+  `defineAsyncComponent` и динамический `import()`.
+- Параметры совпавшего CMS-пути виджет получает через `useCmsPage().params`.
+- Bootstrap CMS (маршруты, глобальные настройки, переводы всех локалей) загружается один раз
+  в плагине `plugins/cms.ts`; страница его не фетчит.
+- Локали не хардкодятся: единственный источник правды — `core/cms/locales.ts`
+  (`CMS_LOCALES`, `DEFAULT_CMS_LOCALE`, `localizePath`, `localeFromPath`, `nextCmsLocale`),
+  его же использует `nuxt.config.ts` и `server/`.
 
 ## Навигация
 
-Включён `experimental.typedPages` (`nuxt.config.ts`): имена маршрутов, их `params` и `query` типизированы — Nuxt генерит `RouteNamedMap` из структуры `pages/`, компилятор проверяет каждую ссылку.
-
 Правила навигации по приложению:
 
-- **Только по именам, не по строковым путям.** Все внутренние переходы задаются объектом `{ name, params?, query? }`, а не литералом URL. Источник правды об URL-схеме — файловая структура `pages/`; строковый путь дублировал бы её и не ловился бы при рефакторинге.
-
-- **Имя маршрута берётся из `RouteName` (`~/constants`), а не пишется строкой.** Единый объект-константа со всеми именами маршрутов; в навигации и сравнениях используем `RouteName.X`, а не литерал `"sets-id-edit"`.
+- Источник правды о внутренних маршрутах — записи `page` в Strapi и их стабильный
+  `routeName`, а не файловая структура Nuxt.
+- Внутренние ссылки строятся через `usePageRoutes().resolve(routeName, params, locale)`;
+  URL страницы не хардкодится в компонентах.
 
   ```ts
-  // ✅
-  navigateTo({ name: RouteName.SETS_ID_EDIT, params: { id } });
-  <UButton :to="{ name: RouteName.SETS_CREATE }" />
-
-  // ❌ строковый путь / голый строковый литерал имени
-  navigateTo(`/sets/${id}/edit`);
-  <UButton to="/sets/create" />
-  navigateTo({ name: "sets-id-edit", params: { id } });
+  const routes = usePageRoutes();
+  await navigateTo(routes.resolve("sets-id-edit", { id }));
   ```
-
-  `RouteName` объявлен `as const`, поэтому значения остаются литеральными типами — `typedPages` продолжает проверять само имя и его `params`/`query`. Имена совпадают с автогенерируемыми Nuxt из пути файла: `pages/sets/[id]/edit.vue` → `"sets-id-edit"`, `pages/sets/index.vue` → `"sets"`, `pages/index.vue` → `"index"`. При добавлении/переименовании страницы обнови `RouteName`.
 
 - **Программный переход — только `navigateTo`, не `router.push`/`router.replace`.** `navigateTo` — SSR-безопасная обёртка Nuxt (умеет middleware, `external`, работает на сервере). Для замены записи в истории — второй аргумент:
 
   ```ts
-  await navigateTo({ name: RouteName.SETS }); // push
-  navigateTo({ name: RouteName.INDEX }, { replace: true }); // replace
+  await navigateTo(routes.resolve("sets"));
+  await navigateTo(routes.resolve("cabinet"), { replace: true });
   ```
 
   `useRouter()` для навигации не используем (оставлен только для чтения, если реально нужен).
 
-- **Тип для пропа/поля, принимающего цель перехода**, — `RouteLocationRaw` из `vue-router` (не `string`). См. `primaryTo`/`secondaryTo` в `BasePlaceholderPage`, `editLink` в `LearnFlashcard`, `TQuickLink.to` в `index.vue`.
-
-- **Типизированные `params` из текущего маршрута**: передавай имя маршрута в `useRoute(RouteName.SETS_ID_EDIT)` — тогда `route.params.id` типизирован как `string` без каста (см. `useSetEdit`, `useLearnSession`).
+- **Тип для пропа/поля, принимающего цель перехода**, — `RouteLocationRaw` из
+  `vue-router`; строка, возвращённая `usePageRoutes`, ему соответствует.
+- Параметры текущей CMS-страницы берутся через `useCmsRouteParams()`. `useRoute()`
+  остаётся допустимым только для query и другой информации реального URL.
 
 ## Правила слоёв (enforced by ESLint)
 

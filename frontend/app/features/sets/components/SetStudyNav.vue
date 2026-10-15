@@ -1,19 +1,19 @@
 <template>
   <nav
     class="flex flex-wrap items-center gap-2"
-    aria-label="Study modes"
+    :aria-label="$t('study.modes')"
   >
     <UButton
-      :to="{ name: RouteName.SETS }"
+      :to="routes.resolve('sets')"
       color="neutral"
       variant="ghost"
       icon="i-lucide-arrow-left"
-      aria-label="Back to sets"
+      :aria-label="$t('study.backToSets')"
     />
     <UButton
       v-for="mode in modes"
       :key="mode.name"
-      :to="{ name: mode.name, params: { id: setId } }"
+      :to="routes.resolve(mode.name, { id: setId })"
       :variant="active === mode.name ? 'soft' : 'ghost'"
       :color="active === mode.name ? 'primary' : 'neutral'"
       :aria-current="active === mode.name ? 'page' : undefined"
@@ -25,19 +25,27 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
-
 const { setId, active } = defineProps<{
   setId: string;
-  active: typeof RouteName.SETS_ID_LEARN | typeof RouteName.SETS_ID_MATCH;
+  active: "sets-id-learn" | "sets-id-match";
 }>();
 
-const modes = [
-  { name: RouteName.SETS_ID_LEARN, label: "Learn", icon: "i-lucide-layers-3" },
-  {
-    name: RouteName.SETS_ID_MATCH,
-    label: "Match",
-    icon: "i-lucide-copy-check",
-  },
-];
+const { t } = useI18n();
+const modes = computed(
+  () =>
+    [
+      {
+        name: "sets-id-learn",
+        label: t("study.learn"),
+        icon: "i-lucide-layers-3",
+      },
+      {
+        name: "sets-id-match",
+        label: t("study.match"),
+        icon: "i-lucide-copy-check",
+      },
+    ] as const,
+);
+
+const routes = usePageRoutes();
 </script>

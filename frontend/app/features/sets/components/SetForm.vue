@@ -35,8 +35,8 @@
           >
             {{
               isEditMode
-                ? "Зміни готові до збереження"
-                : "Чернетка зберігається"
+                ? $t("sets.form.changesReady")
+                : $t("sets.form.draftSaved")
             }}
           </UBadge>
         </div>
@@ -48,9 +48,9 @@
           "
         >
           <UFormField
-            label="Назва набору"
+            :label="$t('sets.form.name.label')"
             name="name"
-            description="Коротка назва, яку легко впізнати."
+            :description="$t('sets.form.name.description')"
             required
             size="lg"
           >
@@ -58,14 +58,14 @@
               v-model="state.name"
               size="lg"
               class="w-full"
-              placeholder="Наприклад, Basic Biology"
+              :placeholder="$t('sets.form.name.placeholder')"
             />
           </UFormField>
 
           <UFormField
-            label="Рівень англійської"
+            :label="$t('sets.form.level.label')"
             name="englishLevelId"
-            description="За потреби оберіть рівень складності набору."
+            :description="$t('sets.form.level.description')"
             size="lg"
           >
             <USkeleton
@@ -81,7 +81,7 @@
               "
             >
               <p class="text-sm text-error">
-                Не вдалося завантажити рівні
+                {{ $t("sets.form.level.error") }}
               </p>
               <UButton
                 type="button"
@@ -91,7 +91,7 @@
                 icon="i-lucide-refresh-cw"
                 @click="handleLoadSetOptions"
               >
-                Повторити
+                {{ $t("common.retry") }}
               </UButton>
             </div>
 
@@ -101,7 +101,7 @@
               :items="englishLevels"
               labelKey="label"
               valueKey="id"
-              :searchInput="{ placeholder: 'Знайти рівень' }"
+              :searchInput="{ placeholder: $t('sets.filters.levelSearch') }"
               size="lg"
               class="w-full"
             />
@@ -115,14 +115,14 @@
               class="mt-1 px-0"
               @click="state.englishLevelId = ''"
             >
-              Не вказувати рівень
+              {{ $t("sets.form.level.clear") }}
             </UButton>
           </UFormField>
 
           <UFormField
-            label="Тематика"
+            :label="$t('sets.form.topics.label')"
             name="topicIds"
-            description="Оберіть щонайменше одну категорію."
+            :description="$t('sets.form.topics.description')"
             required
             size="lg"
             class="md:col-span-2"
@@ -140,7 +140,7 @@
               "
             >
               <p class="text-sm text-error">
-                Не вдалося завантажити тематики
+                {{ $t("sets.form.topics.error") }}
               </p>
               <UButton
                 type="button"
@@ -150,7 +150,7 @@
                 icon="i-lucide-refresh-cw"
                 @click="handleLoadSetOptions"
               >
-                Повторити
+                {{ $t("common.retry") }}
               </UButton>
             </div>
 
@@ -161,7 +161,7 @@
               labelKey="label"
               valueKey="id"
               :multiple="true"
-              :searchInput="{ placeholder: 'Знайти тематику' }"
+              :searchInput="{ placeholder: $t('sets.filters.topicSearch') }"
               size="lg"
               class="w-full"
             >
@@ -175,9 +175,9 @@
           </UFormField>
 
           <UFormField
-            label="Опис"
+            :label="$t('sets.form.description.label')"
             name="description"
-            description="Що саме допоможе вивчити цей набір."
+            :description="$t('sets.form.description.description')"
             size="lg"
             class="md:col-span-2"
           >
@@ -187,7 +187,7 @@
               autoresize
               :rows="2"
               class="w-full"
-              placeholder="Коротко опишіть тему або навчальну мету"
+              :placeholder="$t('sets.form.description.placeholder')"
             />
           </UFormField>
         </div>
@@ -203,8 +203,7 @@
             class="mt-0.5 size-4 shrink-0 text-secondary"
           />
           <p>
-            Найкраще запам’ятовуються короткі картки: одна думка, одна відповідь
-            і лише необхідний контекст.
+            {{ $t("sets.form.tip") }}
           </p>
         </div>
       </div>
@@ -218,13 +217,19 @@
         "
       >
         <BaseSectionIntro
-          eyebrow="Наповнення"
-          title="Картки набору"
+          :eyebrow="$t('sets.form.cards.eyebrow')"
+          :title="$t('sets.form.cards.title')"
           titleTag="h2"
           size="section"
         />
         <p class="text-sm text-toned">
-          {{ state.cards.length }} картки
+          {{
+            $t(
+              "sets.form.cards.count",
+              { count: state.cards.length },
+              state.cards.length,
+            )
+          }}
         </p>
       </div>
 
@@ -268,7 +273,7 @@
         :class="!submitting && 'cursor-pointer'"
         @click="handleAddCard"
       >
-        Додати картку
+        {{ $t("sets.form.cards.add") }}
       </UButton>
 
       <UButton
@@ -300,6 +305,8 @@ import {
   type TSetFormData,
 } from "../types";
 import { setSchema } from "../validation";
+
+const { t } = useI18n();
 
 const { set } = defineProps<{
   set?: ISetDetailsResponse;
@@ -357,18 +364,18 @@ onMounted(() => {
 
 const isEditMode = computed(() => Boolean(state.id));
 const formEyebrow = computed(() =>
-  isEditMode.value ? "Редагування набору" : "Новий набір",
+  isEditMode.value ? t("sets.form.editEyebrow") : t("sets.form.newEyebrow"),
 );
 const formTitle = computed(() =>
-  isEditMode.value ? "Оновити набір" : "Створити набір карток",
+  isEditMode.value ? t("sets.form.editTitle") : t("sets.form.newTitle"),
 );
 const formDescription = computed(() =>
   isEditMode.value
-    ? "Змініть основні дані або відредагуйте окремі картки."
-    : "Додайте тему, короткий опис і щонайменше дві картки.",
+    ? t("sets.form.editDescription")
+    : t("sets.form.newDescription"),
 );
 const submitLabel = computed(() =>
-  isEditMode.value ? "Зберегти" : "Створити набір",
+  isEditMode.value ? t("common.save") : t("sets.create"),
 );
 
 watch(

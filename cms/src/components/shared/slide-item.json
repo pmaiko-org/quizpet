@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_slide_items",
+  "info": { "displayName": "Slide Item" },
+  "options": {},
+  "attributes": {
+    "eyebrow": { "type": "string" },
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "imageUrl": { "type": "string", "required": true },
+    "imageAlt": { "type": "string", "required": true },
+    "icon": { "type": "string", "required": true, "customField": "global::icon" }
+  }
+}

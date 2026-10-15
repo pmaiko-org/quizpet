@@ -17,7 +17,7 @@
           <p
             class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
-            Результати
+            {{ $t("learn.results.eyebrow") }}
           </p>
           <h2
             class="
@@ -48,7 +48,7 @@
               class="justify-center"
               @click="emit('restart')"
             >
-              Пройти ще раз
+              {{ $t("learn.results.restart") }}
             </UButton>
 
             <UButton
@@ -60,7 +60,7 @@
               :disabled="mistakeCards.length === 0"
               @click="emit('retryMistakes')"
             >
-              Повторити лише складні
+              {{ $t("learn.results.retryMistakes") }}
             </UButton>
           </div>
         </div>
@@ -89,15 +89,21 @@
           <p
             class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
-            Розбір карток
+            {{ $t("learn.results.reviewEyebrow") }}
           </p>
           <h3 class="mt-1 text-2xl font-semibold text-highlighted">
-            Де було легко, а де варто ще пройтись
+            {{ $t("learn.results.reviewTitle") }}
           </h3>
         </div>
 
         <p class="text-sm text-toned">
-          {{ reports.length }} карток у підсумку
+          {{
+            $t(
+              "learn.results.cardCount",
+              { count: reports.length },
+              reports.length,
+            )
+          }}
         </p>
       </div>
 
@@ -132,8 +138,8 @@
                 >
                   {{
                     report.mistakes
-                      ? `Було помилок: ${report.mistakes}`
-                      : "Без помилок"
+                      ? $t("learn.results.mistakes", { count: report.mistakes })
+                      : $t("learn.results.noMistakes")
                   }}
                 </UBadge>
               </div>
@@ -151,7 +157,7 @@
             >
               <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
-                  Спроб
+                  {{ $t("learn.results.attempts") }}
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
                   {{ report.attempts.length }}
@@ -160,7 +166,7 @@
 
               <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
-                  Час
+                  {{ $t("learn.results.time") }}
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
                   {{ formatDuration(report.totalDurationMs) }}
@@ -169,7 +175,7 @@
 
               <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
-                  Середнє
+                  {{ $t("learn.results.average") }}
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
                   {{ formatDuration(report.averageDurationMs) }}
@@ -194,6 +200,8 @@ const { reports, totalDurationMs } = defineProps<{
   reports: ILearningCardReport[];
   totalDurationMs: number;
 }>();
+
+const { t } = useI18n();
 
 const emit = defineEmits<{
   restart: [];
@@ -222,44 +230,48 @@ const averageTime = computed(() => {
 
 const heading = computed(() => {
   if (!reports.length) {
-    return "Підсумок з'явиться після проходження";
+    return t("learn.results.headingEmpty");
   }
 
   if (!mistakeCards.value.length) {
-    return "Ідеальний прохід без помилок";
+    return t("learn.results.headingPerfect");
   }
 
-  return "Сеанс завершено, є що закріпити";
+  return t("learn.results.headingReview");
 });
 
 const summary = computed(() => {
   if (!reports.length) {
-    return "Додайте картки в набір і поверніться до режиму навчання.";
+    return t("learn.results.summaryEmpty");
   }
 
   if (!mistakeCards.value.length) {
-    return "Усі картки були закриті без промахів. Можна або піти далі, або пройти набір ще раз для закріплення темпу.";
+    return t("learn.results.summaryPerfect");
   }
 
-  return `${mistakeCards.value.length} картки потребували повторення. У блоці нижче видно, де саме були затримки та як багато спроб знадобилося.`;
+  return t(
+    "learn.results.summaryReview",
+    { count: mistakeCards.value.length },
+    mistakeCards.value.length,
+  );
 });
 
 const stats = computed(() => {
   return [
     {
-      label: "Точність",
+      label: t("learn.results.accuracy"),
       value: `${accuracy.value}%`,
     },
     {
-      label: "З першого разу",
+      label: t("learn.results.firstTry"),
       value: knownFirstTry.value,
     },
     {
-      label: "Загальний час",
+      label: t("learn.results.totalTime"),
       value: formatDuration(totalDurationMs),
     },
     {
-      label: "Середній час",
+      label: t("learn.results.averageTime"),
       value: formatDuration(averageTime.value),
     },
   ];

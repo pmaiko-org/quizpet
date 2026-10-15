@@ -44,7 +44,7 @@
               name="i-lucide-image-plus"
               class="size-8"
             />
-            <span>Натисніть, щоб вибрати або завантажити зображення</span>
+            <span>{{ $t("filePicker.open") }}</span>
           </div>
         </div>
 
@@ -55,7 +55,7 @@
           "
         >
           <p class="min-w-0 truncate text-sm text-highlighted">
-            {{ modelValue?.name || "Зображення не вибране" }}
+            {{ modelValue?.name || $t("filePicker.notSelected") }}
           </p>
 
           <div class="inline-flex items-center gap-2 text-xs text-toned">
@@ -63,7 +63,7 @@
               name="i-lucide-pencil"
               class="size-4"
             />
-            <span>Змінити</span>
+            <span>{{ $t("common.change") }}</span>
           </div>
         </div>
       </button>
@@ -79,7 +79,7 @@
           icon="i-lucide-x"
           @click="handleClearImage"
         >
-          Очистити
+          {{ $t("common.clear") }}
         </UButton>
       </div>
 
@@ -93,8 +93,8 @@
 
     <UModal
       v-model:open="isOpen"
-      title="Вибір зображення"
-      description="Тут можна завантажити новий файл або вибрати вже існуюче зображення."
+      :title="$t('filePicker.title')"
+      :description="$t('filePicker.description')"
       :ui="{ content: 'sm:max-w-6xl' }"
     >
       <template #body>
@@ -110,10 +110,10 @@
                 <div class="mb-3 flex items-start justify-between gap-3">
                   <div>
                     <p class="text-sm font-medium text-highlighted">
-                      Завантаження
+                      {{ $t("filePicker.upload.title") }}
                     </p>
                     <p class="text-xs text-toned">
-                      Після вибору файл одразу відправляється на сервер.
+                      {{ $t("filePicker.upload.description") }}
                     </p>
                   </div>
 
@@ -122,7 +122,7 @@
                     color="primary"
                     variant="soft"
                   >
-                    Завантаження...
+                    {{ $t("filePicker.upload.progress") }}
                   </UBadge>
                 </div>
 
@@ -133,7 +133,7 @@
                   variant="area"
                   size="lg"
                   class="w-full"
-                  label="Натисніть або перетягніть зображення"
+                  :label="$t('filePicker.upload.label')"
                   description="PNG, JPG, WEBP, SVG"
                   :disabled="isUploading"
                 />
@@ -143,11 +143,10 @@
                 <div class="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <p class="text-sm font-medium text-highlighted">
-                      Бібліотека
+                      {{ $t("filePicker.library.title") }}
                     </p>
                     <p class="text-xs text-toned">
-                      Клік по картці вибирає файл. Видалення прибирає його з
-                      бібліотеки.
+                      {{ $t("filePicker.library.description") }}
                     </p>
                   </div>
 
@@ -159,7 +158,7 @@
                     :loading="isLoading"
                     @click="handleLoadImages"
                   >
-                    Оновити
+                    {{ $t("common.refresh") }}
                   </UButton>
                 </div>
 
@@ -206,10 +205,10 @@
                     />
                   </div>
                   <p class="mt-4 text-sm font-medium text-highlighted">
-                    Бібліотека порожня
+                    {{ $t("filePicker.library.emptyTitle") }}
                   </p>
                   <p class="mt-2 text-xs/5 text-toned">
-                    Завантажте перше зображення, і воно одразу з’явиться тут.
+                    {{ $t("filePicker.library.emptyDescription") }}
                   </p>
                 </div>
 
@@ -254,7 +253,7 @@
                             color="primary"
                             variant="solid"
                           >
-                            Вибрано
+                            {{ $t("filePicker.selected") }}
                           </UBadge>
                         </div>
                       </div>
@@ -288,7 +287,7 @@
                         icon="i-lucide-check"
                         @click="handleSelectImage(item)"
                       >
-                        Обрати
+                        {{ $t("common.select") }}
                       </UButton>
 
                       <UButton
@@ -332,7 +331,7 @@
                     name="i-lucide-image"
                     class="size-8"
                   />
-                  <span>Попередній перегляд з’явиться тут</span>
+                  <span>{{ $t("filePicker.preview.empty") }}</span>
                 </div>
               </div>
 
@@ -344,19 +343,20 @@
                       uppercase
                     "
                   >
-                    Активний файл
+                    {{ $t("filePicker.preview.active") }}
                   </p>
                   <p
                     class="
                       mt-2 text-base font-semibold break-all text-highlighted
                     "
                   >
-                    {{ currentPreview?.name || "Файл ще не вибраний" }}
+                    {{
+                      currentPreview?.name || $t("filePicker.preview.noFile")
+                    }}
                   </p>
                   <p class="mt-1 text-xs/5 break-all text-toned">
                     {{
-                      currentPreview?.src
-                        || "Після вибору тут з’явиться шлях до файлу."
+                      currentPreview?.src || $t("filePicker.preview.pathHint")
                     }}
                   </p>
                 </div>
@@ -368,7 +368,7 @@
                     text-sm text-toned
                   "
                 >
-                  Це зображення буде використане для поточного поля форми.
+                  {{ $t("filePicker.preview.usage") }}
                 </div>
               </div>
             </div>
@@ -396,6 +396,7 @@ const modelValue = defineModel<IFileResponse | undefined>({
 });
 
 const { $repository } = useNuxtApp();
+const { t } = useI18n();
 
 const isOpen = ref(false);
 const isLoading = ref(false);
@@ -431,7 +432,7 @@ const handleLoadImages = async () => {
     requestError.value = undefined;
     remoteItems.value = await $repository.storageFiles.getFiles();
   } catch {
-    requestError.value = "Не вдалося завантажити список зображень.";
+    requestError.value = t("filePicker.error.list");
   } finally {
     isLoading.value = false;
   }
@@ -446,7 +447,7 @@ const uploadFile = async (file: File) => {
     modelValue.value = response;
     await handleLoadImages();
   } catch {
-    requestError.value = "Не вдалося завантажити файл на сервер.";
+    requestError.value = t("filePicker.error.upload");
   } finally {
     isUploading.value = false;
     selectedFile.value = null;
@@ -455,7 +456,7 @@ const uploadFile = async (file: File) => {
 
 const handleDeleteFile = async (item: IFileResponse) => {
   const shouldDelete = window.confirm(
-    `Видалити файл "${item.name}" з бібліотеки?`,
+    t("filePicker.deleteConfirm", { name: item.name }),
   );
 
   if (!shouldDelete) {
@@ -474,7 +475,7 @@ const handleDeleteFile = async (item: IFileResponse) => {
 
     remoteItems.value = remoteItems.value.filter(({ id }) => id !== item.id);
   } catch {
-    requestError.value = "Не вдалося видалити файл.";
+    requestError.value = t("filePicker.error.delete");
   } finally {
     deletingFileId.value = null;
   }

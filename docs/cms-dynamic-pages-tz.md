@@ -114,29 +114,36 @@
 
 Два поля для адреса намеренно: `page` переживает смену пути, `url` — для внешних ресурсов.
 
-Итого: **2 компонента `shared`**.
+Дополнительно `shared.feature-item` хранит заголовок, описание и иконку карточки
+для контентных сеток, а `shared.slide-item` — контент и изображение слайда.
 
-### 5.2 Компоненты категории `sections` — виджеты
+Итого: **4 компонента `shared`**.
+
+### 5.2 Компоненты категории `widgets` — виджеты
 
 Каждый элемент Dynamic Zone — отдельный компонент Strapi, который напрямую
 соответствует одному Vue-виджету; поля-enum и второго уровня диспетчеризации нет.
 
 | Display name в CMS   | API ID                 | Strapi UID (`__component`)      | Vue-компонент       | Поля CMS                                                           | Параметр маршрута |
 | -------------------- | ---------------------- | ------------------------------- | ------------------- | ------------------------------------------------------------------ | ----------------- |
-| Heading Widget       | `heading-widget`       | `sections.heading-widget`       | `HeadingWidget`     | `eyebrow`, `title`, `summary`, `align`                             | —                 |
-| Rich Text Widget     | `rich-text-widget`     | `sections.rich-text-widget`     | `RichTextWidget`    | `body`, `width`                                                    | —                 |
-| Callout Widget       | `callout-widget`       | `sections.callout-widget`       | `CalloutWidget`     | `title`, `body`, `variant`, `icon`, `primaryLink`, `secondaryLink` | —                 |
-| Home Widget          | `home-widget`          | `sections.home-widget`          | `HomeWidget`        | —                                                                  | —                 |
-| Login Widget         | `login-widget`         | `sections.login-widget`         | `LoginWidget`       | —                                                                  | —                 |
-| People Hero Widget   | `people-hero-widget`   | `sections.people-hero-widget`   | `PeopleHeroWidget`  | —                                                                  | —                 |
-| People Grid Widget   | `people-grid-widget`   | `sections.people-grid-widget`   | `PeopleGridWidget`  | —                                                                  | —                 |
-| Pitanyachka Widget   | `pitanyachka-widget`   | `sections.pitanyachka-widget`   | `PitanyachkaWidget` | —                                                                  | —                 |
-| Profile Widget       | `profile-widget`       | `sections.profile-widget`       | `ProfileWidget`     | —                                                                  | —                 |
-| Sets List Widget     | `sets-list-widget`     | `sections.sets-list-widget`     | `SetsListWidget`    | —                                                                  | —                 |
-| Create Set Widget    | `create-set-widget`    | `sections.create-set-widget`    | `CreateSetWidget`   | —                                                                  | —                 |
-| Set Edit Form Widget | `set-edit-form-widget` | `sections.set-edit-form-widget` | `SetEditFormWidget` | —                                                                  | `:id`             |
-| Learn Widget         | `learn-widget`         | `sections.learn-widget`         | `LearnWidget`       | —                                                                  | `:id`             |
-| Match Widget         | `match-widget`         | `sections.match-widget`         | `MatchWidget`       | —                                                                  | `:id`             |
+| Heading Widget       | `heading-widget`       | `widgets.heading-widget`       | `HeadingWidget`     | `eyebrow`, `title`, `summary`, `align`                             | —                 |
+| Rich Text Widget     | `rich-text-widget`     | `widgets.rich-text-widget`     | `RichTextWidget`    | `body`, `width`                                                    | —                 |
+| Callout Widget       | `callout-widget`       | `widgets.callout-widget`       | `CalloutWidget`     | `title`, `body`, `variant`, `icon`, `primaryLink`, `secondaryLink` | —                 |
+| Hero Widget          | `hero-widget`          | `widgets.hero-widget`          | `HeroWidget`        | `eyebrow`, `title`, `summary`, `imageUrl`, ссылки                  | —                 |
+| Feature Grid Widget  | `feature-grid-widget`  | `widgets.feature-grid-widget`  | `FeatureGridWidget` | `eyebrow`, `title`, `summary`, `anchor`, `items`, `variant`, `tone` | —                |
+| Spotlight Widget     | `spotlight-widget`     | `widgets.spotlight-widget`     | `SpotlightWidget`   | `eyebrow`, `title`, `summary`, `imageUrl`, `orientation`, `accent`, `primaryLink` | —      |
+| Slider Widget        | `slider-widget`        | `widgets.slider-widget`        | `SliderWidget`      | `eyebrow`, `title`, `summary`, `slides`, `autoplay`               | —                 |
+| Home Widget          | `home-widget`          | `widgets.home-widget`          | `HomeWidget`        | —                                                                  | —                 |
+| Login Widget         | `login-widget`         | `widgets.login-widget`         | `LoginWidget`       | —                                                                  | —                 |
+| People Hero Widget   | `people-hero-widget`   | `widgets.people-hero-widget`   | `PeopleHeroWidget`  | —                                                                  | —                 |
+| People Grid Widget   | `people-grid-widget`   | `widgets.people-grid-widget`   | `PeopleGridWidget`  | —                                                                  | —                 |
+| Pitanyachka Widget   | `pitanyachka-widget`   | `widgets.pitanyachka-widget`   | `PitanyachkaWidget` | —                                                                  | —                 |
+| Profile Widget       | `profile-widget`       | `widgets.profile-widget`       | `ProfileWidget`     | —                                                                  | —                 |
+| Sets List Widget     | `sets-list-widget`     | `widgets.sets-list-widget`     | `SetsListWidget`    | —                                                                  | —                 |
+| Create Set Widget    | `create-set-widget`    | `widgets.create-set-widget`    | `CreateSetWidget`   | —                                                                  | —                 |
+| Set Edit Form Widget | `set-edit-form-widget` | `widgets.set-edit-form-widget` | `SetEditFormWidget` | —                                                                  | `:id`             |
+| Learn Widget         | `learn-widget`         | `widgets.learn-widget`         | `LearnWidget`       | —                                                                  | `:id`             |
+| Match Widget         | `match-widget`         | `widgets.match-widget`         | `MatchWidget`       | —                                                                  | `:id`             |
 
 #### Единый контракт именования виджетов
 
@@ -147,27 +154,27 @@
 | --------------------------- | ------------------------------ | ----------------------------------------------------- |
 | Display name в Strapi       | `<Words> Widget`               | `People Hero Widget`                                  |
 | API ID                      | `<kebab-name>-widget`          | `people-hero-widget`                                  |
-| Strapi UID / `__component`  | `sections.<kebab-name>-widget` | `sections.people-hero-widget`                         |
-| Файл схемы Strapi           | `<api-id>.json`                | `cms/src/components/sections/people-hero-widget.json` |
+| Strapi UID / `__component`  | `widgets.<kebab-name>-widget` | `widgets.people-hero-widget`                         |
+| Файл схемы Strapi           | `<api-id>.json`                | `cms/src/components/widgets/people-hero-widget.json` |
 | Vue-компонент и имя файла   | `<PascalName>Widget`           | `PeopleHeroWidget.vue`                                |
-| Ключ frontend-реестра       | точный Strapi UID              | `sections.people-hero-widget`                         |
-| Литерал в Zod/OpenAPI union | точный Strapi UID              | `sections.people-hero-widget`                         |
-| Ссылка в seed страницы      | точный Strapi UID              | `sections.people-hero-widget`                         |
+| Ключ frontend-реестра       | точный Strapi UID              | `widgets.people-hero-widget`                         |
+| Литерал в Zod/OpenAPI union | точный Strapi UID              | `widgets.people-hero-widget`                         |
+| Ссылка в seed страницы      | точный Strapi UID              | `widgets.people-hero-widget`                         |
 
 Обязательные правила:
 
-- все компоненты категории `sections` заканчиваются на `-widget`, а соответствующие Vue-компоненты — на `Widget`;
+- все компоненты категории `widgets` заканчиваются на `-widget`, а соответствующие Vue-компоненты — на `Widget`;
 - префикс `Cms` не используется ни в Strapi, ни во Vue;
-- короткий API ID используется только как имя schema-файла и в колонке API ID; в Dynamic Zone, контрактах, frontend-реестре и seed всегда используется полный UID `sections.*`;
+- короткий API ID используется только как имя schema-файла и в колонке API ID; в Dynamic Zone, контрактах, frontend-реестре и seed всегда используется полный UID `widgets.*`;
 - после публикации UID считается стабильным. Переименование Display name допустимо, а смена UID выполняется только через новый компонент, миграцию всех `blocks` и последующее удаление старого компонента;
 - обычные внутренние Vue-компоненты не регистрируются в CMS. В CMS попадают только page-level виджеты, которые разрешено добавлять в Dynamic Zone страницы.
 
 Существующий `SetEditHeroWidget.vue` не используется ни одной страницей и не входит
 в Dynamic Zone. Он и обслуживающий его `SetEditHero.vue` удаляются на этапе очистки;
-CMS-компонент `sections.set-edit-hero-widget` для них не создаётся.
+CMS-компонент `widgets.set-edit-hero-widget` для них не создаётся.
 
 Добавляется команда `npm --prefix ./cms run check:widgets`. Она проверяет равенство
-набора UID в `cms/src/components/sections/*.json`, разрешённых компонентов Dynamic
+набора UID в `cms/src/components/widgets/*.json`, разрешённых компонентов Dynamic
 Zone, литералов Zod `blocks` union и ключей frontend-реестра, а также проверяет
 Display name, API ID, имя Vue-файла и все ссылки из seed по правилам выше. Лишнее или
 отсутствующее имя завершает проверку ошибкой. Команда входит в корневой
@@ -178,20 +185,24 @@ Display name, API ID, имя Vue-файла и все ссылки из seed п�
 
 | Компонент                   | Поля                                                                                                                                                   |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `sections.heading-widget`   | `eyebrow`, `title`, `summary`, `align` (enum: `left`/`center`)                                                                                         |
-| `sections.rich-text-widget` | `body` (Blocks), `width` (enum: `narrow`/`default`/`full`)                                                                                             |
-| `sections.callout-widget`   | `title`, `body` (Blocks), `variant` (enum: `info`/`success`/`warning`/`error`), `icon`, `primaryLink` (`shared.link`), `secondaryLink` (`shared.link`) |
+| `widgets.heading-widget`   | `eyebrow`, `title`, `summary`, `align` (enum: `left`/`center`)                                                                                         |
+| `widgets.rich-text-widget` | `body` (Blocks), `width` (enum: `narrow`/`default`/`full`)                                                                                             |
+| `widgets.callout-widget`   | `title`, `body` (Blocks), `variant` (enum: `info`/`success`/`warning`/`error`), `icon`, `primaryLink` (`shared.link`), `secondaryLink` (`shared.link`) |
+| `widgets.hero-widget`      | `eyebrow`, `title`, `summary`, `imageUrl`, `imageAlt`, `primaryLink` (`shared.link`), `secondaryLink` (`shared.link`)                            |
+| `widgets.feature-grid-widget` | `eyebrow`, `title`, `summary`, `anchor`, `items` (`shared.feature-item`), `variant` (`cards`/`steps`), `tone` (`default`/`tinted`)             |
+| `widgets.spotlight-widget` | `eyebrow`, `title`, `summary`, `imageUrl`, `imageAlt`, `orientation` (`image-left`/`image-right`), `accent`, `primaryLink` (`shared.link`) |
+| `widgets.slider-widget` | `eyebrow`, `title`, `summary`, `slides` (`shared.slide-item`), `autoplay` |
 
-Файл схемы строится из API ID: `cms/src/components/sections/<api-id>.json`.
-Три контентных Vue-компонента создаются в
-`frontend/app/features/cms/components/sections/`. Функциональные виджеты уже
+Файл схемы строится из API ID: `cms/src/components/widgets/<api-id>.json`.
+Семь контентных Vue-компонентов создаются в
+`frontend/app/features/cms/widgets/`. Функциональные виджеты уже
 существуют; `HomeWidget` извлекается из текущей авторизованной главной страницы и
 переносится на `/cabinet` без изменения поведения. Публичный лендинг `/` собирается
-из трёх контентных виджетов. У функциональных компонентов нет полей CMS: сам факт их
+из двенадцати экземпляров контентных виджетов. У функциональных компонентов нет полей CMS: сам факт их
 добавления в Dynamic Zone определяет состав и порядок страницы, а тексты их
 интерфейса берутся из `translation`.
 
-Итого: **14 компонентов `sections`**. Новые типы добавляются только при появлении
+Итого: **18 компонентов `widgets`**. Новые типы добавляются только при появлении
 подтверждённого сценария, который нельзя собрать из этих компонентов.
 
 ### 5.3 Collection type `page`
@@ -204,8 +215,9 @@ Display name, API ID, имя Vue-файла и все ссылки из seed п�
 | `access`     | Enumeration                 | нет          | `public` / `authenticated` / `guestOnly`           |
 | `redirectTo` | Relation → `page`           | нет          | куда отправлять при отказе                         |
 | `parent`     | Relation → `page`           | да           | родительская страница для хлебных крошек, optional |
-| `layout`     | Enumeration                 | нет          | `default` / `cabinet` / `empty`                    |
-| `blocks`     | Dynamic Zone (`sections.*`) | да           | —                                                  |
+| `layout`     | Enumeration                 | нет          | `default` / `landing` / `cabinet` / `empty`        |
+| `showBreadcrumbs` | Boolean                  | нет          | required, default true                             |
+| `blocks`     | Dynamic Zone (`widgets.*`) | да           | —                                                  |
 | `seo`        | Component `shared.seo`      | да           | required                                           |
 | `priority`   | Integer                     | нет          | default 0                                          |
 
@@ -381,7 +393,7 @@ origin админки Strapi. В объём входит обычный Preview;
 
 ```
 features/cms/
-  components/sections/   — 3 Vue-компонента контента
+  widgets/   — 7 Vue-компонентов контента
   composables/useCmsPage.ts
   composables/usePageRoutes.ts
   types.ts
@@ -412,7 +424,7 @@ features/cms/
 ### 7.4 Параметры маршрута в виджетах
 
 `params` из `resolve` кладутся в `provide`/`inject`. Целевой функциональный
-виджет берёт нужный параметр; например, `sections.learn-widget` получает
+виджет берёт нужный параметр; например, `widgets.learn-widget` получает
 `setId` из `params.id`.
 
 ### 7.5 Контроль доступа
@@ -577,21 +589,21 @@ Zod request/response schemas
 
 | `routeName`     | `path`                    | `parent`  | `access`      | `layout` | `blocks` UID                                                                      |
 | --------------- | ------------------------- | --------- | ------------- | -------- | --------------------------------------------------------------------------------- |
-| `index`         | `/`                       | —         | **public**    | default  | `sections.heading-widget`, `sections.rich-text-widget`, `sections.callout-widget` |
-| `login`         | `/login`                  | `index`   | **guestOnly** | empty    | `sections.login-widget`                                                           |
-| `privacy`       | `/privacy`                | `index`   | **public**    | empty    | `sections.heading-widget`, `sections.rich-text-widget`                            |
-| `cabinet`       | `/cabinet`                | `index`   | authenticated | cabinet  | `sections.home-widget`                                                            |
-| `folders`       | `/cabinet/folders`        | `cabinet` | authenticated | cabinet  | `sections.callout-widget`                                                         |
-| `statistic`     | `/cabinet/statistic`      | `cabinet` | authenticated | cabinet  | `sections.callout-widget`                                                         |
-| `people`        | `/cabinet/people`         | `cabinet` | authenticated | cabinet  | `sections.people-hero-widget`, `sections.people-grid-widget`                      |
-| `pitanyachka`   | `/cabinet/pitanyachka`    | `cabinet` | authenticated | cabinet  | `sections.pitanyachka-widget`                                                     |
-| `profile`       | `/cabinet/profile`        | `cabinet` | authenticated | cabinet  | `sections.profile-widget`                                                         |
-| `sets`          | `/cabinet/sets`           | `cabinet` | authenticated | cabinet  | `sections.sets-list-widget`                                                       |
-| `sets-create`   | `/cabinet/sets/create`    | `sets`    | authenticated | cabinet  | `sections.create-set-widget`                                                      |
-| `sets-id-edit`  | `/cabinet/sets/:id/edit`  | `sets`    | authenticated | cabinet  | `sections.set-edit-form-widget`                                                   |
-| `sets-id-learn` | `/cabinet/sets/:id/learn` | `sets`    | authenticated | cabinet  | `sections.learn-widget`                                                           |
-| `sets-id-match` | `/cabinet/sets/:id/match` | `sets`    | authenticated | cabinet  | `sections.match-widget`                                                           |
-| `not-found`     | `/404`                    | `index`   | public        | default  | `sections.heading-widget`, `sections.callout-widget`                              |
+| `index`         | `/`                       | —         | **public**    | default  | `widgets.hero-widget`, четыре `widgets.feature-grid-widget`, три `widgets.spotlight-widget`, `widgets.slider-widget`, `widgets.rich-text-widget`, два `widgets.callout-widget` |
+| `login`         | `/login`                  | `index`   | **guestOnly** | empty    | `widgets.login-widget`                                                           |
+| `privacy`       | `/privacy`                | `index`   | **public**    | empty    | `widgets.heading-widget`, `widgets.rich-text-widget`                            |
+| `cabinet`       | `/cabinet`                | —         | authenticated | cabinet  | `widgets.home-widget`                                                            |
+| `folders`       | `/cabinet/folders`        | `cabinet` | authenticated | cabinet  | `widgets.callout-widget`                                                         |
+| `statistic`     | `/cabinet/statistic`      | `cabinet` | authenticated | cabinet  | `widgets.callout-widget`                                                         |
+| `people`        | `/cabinet/people`         | `cabinet` | authenticated | cabinet  | `widgets.people-hero-widget`, `widgets.people-grid-widget`                      |
+| `pitanyachka`   | `/cabinet/pitanyachka`    | `cabinet` | authenticated | cabinet  | `widgets.pitanyachka-widget`                                                     |
+| `profile`       | `/cabinet/profile`        | `cabinet` | authenticated | cabinet  | `widgets.profile-widget`                                                         |
+| `sets`          | `/cabinet/sets`           | `cabinet` | authenticated | cabinet  | `widgets.sets-list-widget`                                                       |
+| `sets-create`   | `/cabinet/sets/create`    | `sets`    | authenticated | cabinet  | `widgets.create-set-widget`                                                      |
+| `sets-id-edit`  | `/cabinet/sets/:id/edit`  | `sets`    | authenticated | cabinet  | `widgets.set-edit-form-widget`                                                   |
+| `sets-id-learn` | `/cabinet/sets/:id/learn` | `sets`    | authenticated | cabinet  | `widgets.learn-widget`                                                           |
+| `sets-id-match` | `/cabinet/sets/:id/match` | `sets`    | authenticated | cabinet  | `widgets.match-widget`                                                           |
+| `not-found`     | `/404`                    | `index`   | public        | default  | `widgets.heading-widget`, `widgets.callout-widget`                              |
 
 Публичны лендинг `/`, `/privacy` и страница 404. `/login` доступен только гостю;
 `/cabinet` и все вложенные страницы требуют авторизации. После успешного входа и
@@ -608,7 +620,7 @@ Zod request/response schemas
 | Изменение в задаче                               | Что AI-агент обязан сделать в этой же задаче                                                                                                                                                                                                |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Создана новая страница фронтенда                 | Создать страницу Strapi для `uk` и `en`, задать `routeName`, `path`, `parent`, `access`, `layout`, SEO и `blocks`; добавить её в идемпотентный seed/migration и реестр маршрутов                                                            |
-| Создан новый или изменён существующий Vue-виджет | По контракту раздела 5.2 создать или обновить компонент `sections.*-widget`, Dynamic Zone `blocks`, frontend-маппер, discriminated union, Zod-контракт, OpenAPI и сгенерированные TypeScript-типы; подключить точный UID к нужным страницам |
+| Создан новый или изменён существующий Vue-виджет | По контракту раздела 5.2 создать или обновить компонент `widgets.*-widget`, Dynamic Zone `blocks`, frontend-маппер, discriminated union, Zod-контракт, OpenAPI и сгенерированные TypeScript-типы; подключить точный UID к нужным страницам |
 | Добавлен, переименован или удалён текстовый ключ | Синхронно обновить записи `translation` для `uk` и `en` и seed/migration; обе локали получают полноценный текст без заглушек                                                                                                                |
 | Удалена страница или виджет                      | Сначала убрать его использование из страниц CMS, затем удалить запись/схему, регистрацию, контракт и неиспользуемые переводы                                                                                                                |
 
@@ -629,7 +641,7 @@ CMS как ручной TODO.
 
 ### Этап 1 — CMS (ничего не ломает, фронт продолжает работать)
 
-- 2 компонента `shared`, 14 компонентов `sections`
+- 4 компонента `shared`, 18 компонентов `widgets`
 - Типы `page`, `translation`, `redirect`, `global`
 - Локали `uk`, `en`
 - Контроллеры `bootstrap`, `resolve`, `redirects`
@@ -658,7 +670,7 @@ CMS как ручной TODO.
 
 ### Этап 3 — рендер
 
-- `[...slug].vue`, реестр рендеринга, `BaseBreadcrumbs`, 3 Vue-компонента контента и `HomeWidget`
+- `[...slug].vue`, реестр рендеринга, `BaseBreadcrumbs`, 7 Vue-компонентов контента и `HomeWidget`
 
 **Приёмка:** 13 перенесённых страниц, новый публичный лендинг и страница 404 открываются через динамический маршрут; `/hovermap` возвращает 404; на каждой странице есть корректная локализованная цепочка хлебных крошек; перенесённые страницы визуально совпадают со старой версией.
 
@@ -693,7 +705,7 @@ CMS как ручной TODO.
 ### Принятые заказчиком компромиссы
 
 1. **Нет локальных файлов переводов.** Добавляя строку в код, сначала нужно завести ключ в админке. TypeScript такие ключи не проверяет.
-2. **Объём работ.** Это переделка фронтенда, а не настройка CMS: 16 компонентов Strapi, 3 Vue-компонента контента, `HomeWidget`, i18n с нуля, слой кеширования, вынос строк интерфейса в CMS.
+2. **Объём работ.** Это переделка фронтенда, а не настройка CMS: 18 компонентов Strapi, 7 Vue-компонентов контента, `HomeWidget`, i18n с нуля, слой кеширования, вынос строк интерфейса в CMS.
 
 ---
 

@@ -11,11 +11,18 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "strapi": "strapi",
-    "typecheck": "tsc --noEmit",
+    "seed": "tsx scripts/seed.ts",
+    "generate:types": "strapi ts:generate-types",
+    "generate:openapi": "strapi openapi generate --output ./openapi.json",
+    "check:translations": "node scripts/check-translations.mjs",
+    "check:widgets": "node scripts/check-widgets.mjs",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p src/admin/tsconfig.json",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "test": "node --import tsx --test tests/*.test.ts"
   },
   "dependencies": {
+    "@iconify-json/lucide": "^1.2.98",
     "@strapi/database": "5.56.0",
     "@strapi/plugin-cloud": "5.56.0",
     "@strapi/plugin-users-permissions": "5.56.0",
@@ -24,12 +31,14 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.30.3",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   },
   "engines": {

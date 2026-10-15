@@ -7,9 +7,10 @@ RUN npm ci && npm cache clean --force
 
 COPY . .
 
-RUN apk add --no-cache rclone fuse3 bash postgresql-client
+RUN apk add --no-cache rclone fuse3 bash postgresql-client \
+  && echo user_allow_other >> /etc/fuse.conf
 RUN mkdir -p /storage
-VOLUME ["/storage"]
+RUN chmod +x docker-entrypoint.sh
 
-CMD ["sh", "-c", "rclone mount gdrive: /storage --vfs-cache-mode=off --allow-other --allow-non-empty & npm run start:dev"]
-#CMD sh -c 'rclone mount gdrive: /storage --vfs-cache-mode=off --allow-other --allow-non-empty & NODE_OPTIONS="--trace-deprecation" npm run start:dev'
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["npm", "run", "start:dev"]

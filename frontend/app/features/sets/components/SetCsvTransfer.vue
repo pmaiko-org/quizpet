@@ -20,11 +20,12 @@
         </span>
         <div>
           <h3 class="text-sm font-semibold text-highlighted">
-            Робота з CSV
+            {{ $t("sets.csv.title") }}
           </h3>
           <p class="mt-0.5 max-w-xl text-xs/5 text-toned">
-            Колонки: <code>term</code>, <code>termDescription</code> і
-            <code>definition</code>. Імпорт замінює поточні картки.
+            {{ $t("sets.csv.columnsPrefix") }} <code>term</code>,
+            <code>termDescription</code> {{ $t("sets.csv.and") }}
+            <code>definition</code>. {{ $t("sets.csv.replaces") }}
           </p>
         </div>
       </div>
@@ -44,7 +45,7 @@
           :disabled="!cards.length"
           @click="handleExportCsv"
         >
-          Експорт
+          {{ $t("sets.csv.export") }}
         </UButton>
 
         <UButton
@@ -55,7 +56,7 @@
           icon="i-lucide-upload"
           @click="handleOpenFilePicker"
         >
-          Імпорт
+          {{ $t("sets.csv.import") }}
         </UButton>
       </div>
     </div>
@@ -88,6 +89,7 @@ const emit = defineEmits<{
 }>();
 
 const toast = useToast();
+const { t } = useI18n();
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const handleOpenFilePicker = () => {
@@ -133,9 +135,7 @@ const handleFileChange = async (event: Event) => {
     const importedRows = parseCsv(csv);
 
     if (!importedRows.length) {
-      throw new Error(
-        "CSV не містить жодного рядка з term, termDescription і definition.",
-      );
+      throw new Error(t("sets.csv.error.empty"));
     }
 
     emit(
@@ -149,14 +149,18 @@ const handleFileChange = async (event: Event) => {
     );
 
     toast.add({
-      title: "CSV імпортовано",
-      description: `Завантажено ${importedRows.length} карток.`,
+      title: t("sets.csv.toast.imported"),
+      description: t(
+        "sets.csv.toast.count",
+        { count: importedRows.length },
+        importedRows.length,
+      ),
     });
   } catch (error) {
     toast.add({
-      title: "Не вдалося імпортувати CSV",
+      title: t("sets.csv.toast.error"),
       description:
-        error instanceof Error ? error.message : "Перевірте формат файлу.",
+        error instanceof Error ? error.message : t("sets.csv.error.format"),
       color: "error",
     });
   } finally {
@@ -197,9 +201,7 @@ const parseCsv = (input: string): ICsvRow[] => {
     termDescriptionIndex === undefined ||
     definitionIndex === undefined
   ) {
-    throw new Error(
-      "CSV має містити заголовки term, termDescription і definition.",
-    );
+    throw new Error(t("sets.csv.error.headers"));
   }
 
   return dataRows
@@ -253,7 +255,7 @@ const parseCsvRows = (input: string): string[][] => {
   }
 
   if (insideQuotes) {
-    throw new Error("CSV містить незакриті лапки.");
+    throw new Error(t("sets.csv.error.quotes"));
   }
 
   if (currentCell.length || currentRow.length) {

@@ -1,4 +1,11 @@
 services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4999:4999"
+
   frontend:
     build:
       context: ./frontend
@@ -6,8 +13,6 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    ports:
-      - "4999:4999"
 
   backend:
     build:
@@ -26,6 +31,5 @@ services:
     volumes:
       - ./cms:/opt/app
       - /opt/app/node_modules
-      - cms-uploads:/opt/app/public/uploads
     environment:
       NODE_ENV: "development"

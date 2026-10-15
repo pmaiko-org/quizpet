@@ -7,7 +7,7 @@
         color="neutral"
         variant="ghost"
         class="rounded-full! bg-elevated/70 p-2 backdrop-blur-sm"
-        aria-label="Підказки та керування з клавіатури"
+        :aria-label="$t('learn.hints.controlsAria')"
         @click.stop
         @keydown.enter.stop
         @keydown.space.stop
@@ -16,21 +16,21 @@
       <template #content>
         <div class="max-w-xs space-y-3 p-3 text-sm">
           <p class="text-highlighted">
-            Натисніть картку, щоб побачити іншу сторону
+            {{ $t("learn.hints.flip") }}
           </p>
 
           <div class="space-y-1.5 text-muted">
             <div class="flex items-center gap-2">
               <UKbd>←</UKbd>
-              <span>Не знаю</span>
+              <span>{{ $t("learn.missed") }}</span>
             </div>
             <div class="flex items-center gap-2">
               <UKbd>→</UKbd>
-              <span>Знаю, далі</span>
+              <span>{{ $t("learn.knownNext") }}</span>
             </div>
             <div class="flex items-center gap-2">
-              <UKbd>Пробіл</UKbd>
-              <span>Перевернути картку</span>
+              <UKbd>{{ $t("learn.hints.space") }}</UKbd>
+              <span>{{ $t("learn.hints.flipCard") }}</span>
             </div>
           </div>
 
@@ -40,21 +40,21 @@
                 name="i-lucide-move-horizontal"
                 class="size-4 shrink-0"
               />
-              <span>Свайп вправо — не знаю, вліво — знаю</span>
+              <span>{{ $t("learn.hints.swipe") }}</span>
             </div>
           </div>
 
           <div class="space-y-1.5 border-t border-default pt-3 text-muted">
             <p class="text-xs font-medium text-highlighted">
-              Кут картки
+              {{ $t("learn.hints.corner") }}
             </p>
             <div class="flex items-center gap-2">
               <span class="size-3 shrink-0 rounded-[3px] bg-sky-500/80" />
-              <span>Термін</span>
+              <span>{{ $t("learn.term") }}</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="size-3 shrink-0 rounded-[3px] bg-emerald-500/80" />
-              <span>Відповідь</span>
+              <span>{{ $t("learn.answer") }}</span>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
         color="neutral"
         variant="ghost"
         class="rounded-full! bg-elevated/70 p-2 text-amber-500 backdrop-blur-sm"
-        aria-label="Підказка: перша літера відповіді"
+        :aria-label="$t('learn.hints.answerAria')"
         @click.stop
         @keydown.enter.stop
         @keydown.space.stop
@@ -82,7 +82,7 @@
               class="size-4 text-amber-500"
             />
             <p class="text-sm font-medium">
-              Підказка
+              {{ $t("learn.hints.title") }}
             </p>
           </div>
 
@@ -109,7 +109,7 @@
           </div>
 
           <p class="text-xs text-muted">
-            Перша літера відповіді — решту згадайте самі.
+            {{ $t("learn.hints.description") }}
           </p>
         </div>
       </template>

@@ -24,7 +24,7 @@
         focus:outline-none
       "
     >
-      Every pair matched!
+      {{ $t("match.results.title") }}
     </h2>
     <p class="mt-2 text-sm text-toned">
       {{ setName }}
@@ -40,25 +40,26 @@
         size="lg"
         @click="emit('restart')"
       >
-        Play again
+        {{ $t("match.results.playAgain") }}
       </UButton>
       <UButton
-        :to="{ name: RouteName.SETS_ID_LEARN, params: { id: setId } }"
+        :to="routes.resolve('sets-id-learn', { id: setId })"
         icon="i-lucide-layers-3"
         variant="outline"
         color="neutral"
         size="lg"
       >
-        Continue with Learn
+        {{ $t("match.results.continueLearn") }}
       </UButton>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
-
 import { formatTime } from "../../utils";
+
+const routes = usePageRoutes();
+const { t } = useI18n();
 
 const { setId, setName, matchedCount, mistakes, elapsedMs, accuracy } =
   defineProps<{
@@ -72,10 +73,10 @@ const { setId, setName, matchedCount, mistakes, elapsedMs, accuracy } =
 const emit = defineEmits<{ restart: [] }>();
 const heading = useTemplateRef("heading");
 const metrics = computed(() => [
-  { label: "Pairs matched", value: matchedCount },
-  { label: "Time", value: formatTime(elapsedMs) },
-  { label: "Mistakes", value: mistakes },
-  { label: "Accuracy", value: `${accuracy}%` },
+  { label: t("match.metrics.matched"), value: matchedCount },
+  { label: t("match.metrics.time"), value: formatTime(elapsedMs) },
+  { label: t("match.metrics.mistakes"), value: mistakes },
+  { label: t("match.metrics.accuracy"), value: `${accuracy}%` },
 ]);
 onMounted(() => heading.value?.focus());
 </script>

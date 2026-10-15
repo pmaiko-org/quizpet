@@ -15,7 +15,7 @@
             uppercase
           "
         >
-          Набір карток
+          {{ $t("sets.card.eyebrow") }}
         </p>
         <h3 class="truncate text-xl font-semibold text-highlighted">
           {{ set.name }}
@@ -37,10 +37,7 @@
     </div>
 
     <p class="mt-3 line-clamp-2 min-h-10 text-sm/5 text-toned">
-      {{
-        set.description
-          || "Опис ще не доданий, але набір уже готовий до наповнення."
-      }}
+      {{ set.description || $t("sets.card.noDescription") }}
     </p>
 
     <div class="mt-3 flex flex-wrap gap-1.5">
@@ -78,7 +75,7 @@
         size="md"
         class="rounded-full px-2.5 py-0.5"
       >
-        Без тематики
+        {{ $t("sets.card.noTopics") }}
       </UBadge>
     </div>
 
@@ -90,7 +87,7 @@
               text-[10px] font-semibold tracking-widest text-muted uppercase
             "
           >
-            Карток
+            {{ $t("sets.card.cards") }}
           </p>
           <p class="mt-0.5 text-base font-semibold text-highlighted">
             {{ set.cardsCount }}
@@ -103,7 +100,7 @@
               text-[10px] font-semibold tracking-widest text-muted uppercase
             "
           >
-            Тем
+            {{ $t("sets.card.topics") }}
           </p>
           <p class="mt-0.5 text-base font-semibold text-highlighted">
             {{ set.topics.length }}
@@ -116,7 +113,7 @@
               text-[10px] font-semibold tracking-widest text-muted uppercase
             "
           >
-            Створив
+            {{ $t("sets.card.author") }}
           </p>
           <p class="mt-0.5 truncate text-sm font-semibold text-highlighted">
             {{ getAuthorName(set) }}
@@ -128,16 +125,16 @@
     <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
       <div class="flex flex-wrap gap-2">
         <UButton
-          :to="{ name: RouteName.SETS_ID_LEARN, params: { id: set.id } }"
+          :to="routes.resolve('sets-id-learn', { id: set.id })"
           icon="i-lucide-play"
           size="lg"
           class="min-w-32 justify-center"
         >
-          Вчитись
+          {{ $t("sets.card.learn") }}
         </UButton>
 
         <UButton
-          :to="{ name: RouteName.SETS_ID_MATCH, params: { id: set.id } }"
+          :to="routes.resolve('sets-id-match', { id: set.id })"
           icon="i-lucide-copy-check"
           variant="soft"
           size="lg"
@@ -151,12 +148,12 @@
         class="flex items-center gap-1"
       >
         <UButton
-          :to="{ name: RouteName.SETS_ID_EDIT, params: { id: set.id } }"
+          :to="routes.resolve('sets-id-edit', { id: set.id })"
           variant="ghost"
           color="neutral"
           icon="i-lucide-pencil"
           size="lg"
-          aria-label="Редагувати набір"
+          :aria-label="$t('sets.card.edit')"
         />
         <UButton
           :loading="deleting"
@@ -164,7 +161,7 @@
           variant="ghost"
           icon="i-lucide-trash-2"
           size="lg"
-          aria-label="Видалити набір"
+          :aria-label="$t('sets.card.delete')"
           @click="emit('delete', set)"
         />
       </div>
@@ -173,10 +170,11 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
 import type { ISetListItemResponse } from "~/shared/types/api.generated";
 
 import { getAuthorName } from "../utils";
+
+const routes = usePageRoutes();
 
 const {
   set,

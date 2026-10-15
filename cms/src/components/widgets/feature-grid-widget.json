@@ -1,0 +1,46 @@
+{
+  "collectionName": "components_widgets_feature_grid_widgets",
+  "info": {
+    "displayName": "Feature Grid Widget"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "anchor": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.feature-item",
+      "repeatable": true,
+      "required": true
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "cards",
+        "steps"
+      ],
+      "default": "cards",
+      "required": true
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": [
+        "default",
+        "tinted"
+      ],
+      "default": "default",
+      "required": true
+    }
+  }
+}

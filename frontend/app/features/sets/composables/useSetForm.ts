@@ -1,6 +1,5 @@
 import { FetchError } from "ofetch";
 
-import { RouteName } from "~/shared/constants";
 import type {
   IEnglishLevelResponse,
   ISetCreate,
@@ -14,6 +13,8 @@ import type { setSchema } from "../validation";
 export const useSetForm = () => {
   const { $repository } = useNuxtApp();
   const toast = useToast();
+  const { t } = useI18n();
+  const routes = usePageRoutes();
 
   const topics = ref<ITopicResponse[]>([]);
   const englishLevels = ref<IEnglishLevelResponse[]>([]);
@@ -78,24 +79,24 @@ export const useSetForm = () => {
         };
 
         await $repository.sets.updateSet(id, payload);
-        await navigateTo({ name: RouteName.SETS });
-        toast.add({ title: "Набір оновлено", description: "" });
+        await navigateTo(routes.resolve("sets"));
+        toast.add({ title: t("sets.toast.updated"), description: "" });
 
         return false;
       }
 
       await $repository.sets.createSet(basePayload);
-      await navigateTo({ name: RouteName.SETS });
-      toast.add({ title: "Набір створено", description: "" });
+      await navigateTo(routes.resolve("sets"));
+      toast.add({ title: t("sets.toast.created"), description: "" });
 
       return true;
     } catch (error) {
       toast.add({
-        title: "Не вдалося зберегти набір",
+        title: t("sets.toast.saveError"),
         description:
           error instanceof FetchError
-            ? "Перевірте введені дані та спробуйте ще раз."
-            : "Спробуйте повторити дію.",
+            ? t("sets.toast.validationError")
+            : t("sets.toast.retryError"),
         color: "error",
       });
 

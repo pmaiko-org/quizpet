@@ -1,15 +1,16 @@
-import type { $Fetch, NitroFetchRequest } from "nitropack";
-
+import { cmsRepository } from "~/shared/repository/cms";
 import { profileRepository } from "~/shared/repository/profile";
 import { setsRepository } from "~/shared/repository/sets";
 import { storageFilesRepository } from "~/shared/repository/storage-files";
+import type { TApiFetch } from "~/shared/repository/types";
 import { usersRepository } from "~/shared/repository/users";
 
-export const createRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
+export const createRepository = (backendApi: TApiFetch, cmsApi: TApiFetch) => {
   return {
-    profile: profileRepository(fetch),
-    sets: setsRepository(fetch),
-    storageFiles: storageFilesRepository(fetch),
-    users: usersRepository(fetch),
+    cms: cmsRepository(cmsApi),
+    profile: profileRepository(backendApi),
+    sets: setsRepository(backendApi),
+    storageFiles: storageFilesRepository(backendApi),
+    users: usersRepository(backendApi),
   };
 };

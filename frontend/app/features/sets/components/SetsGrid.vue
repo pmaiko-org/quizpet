@@ -1,7 +1,7 @@
 <template>
   <section class="space-y-3">
     <BaseSectionHeader
-      eyebrow="Набори"
+      :eyebrow="$t('sets.grid.eyebrow')"
       :title="sectionTitle"
       :summary="summaryText"
     />
@@ -34,8 +34,8 @@
       :pending="pending"
       :error="error"
       :empty="!sets.length"
-      errorTitle="Не вдалося завантажити набори"
-      errorDescription="Спробуйте ще раз. Якщо проблема повторюється, варто перевірити доступність бекенду."
+      :errorTitle="$t('sets.grid.errorTitle')"
+      :errorDescription="$t('sets.grid.errorDescription')"
       @retry="emit('refresh')"
     >
       <template #loading>
@@ -133,16 +133,16 @@
             class="mt-5 justify-center"
             @click="emit('clearFilters')"
           >
-            Очистити фільтри
+            {{ $t("sets.filters.clear") }}
           </UButton>
           <UButton
             v-else
-            :to="{ name: RouteName.SETS_CREATE }"
+            :to="routes.resolve('sets-create')"
             icon="i-lucide-plus"
             size="lg"
             class="mt-5 justify-center"
           >
-            Створити перший набір
+            {{ $t("sets.grid.createFirst") }}
           </UButton>
         </div>
       </template>
@@ -176,7 +176,6 @@
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
 
-import { RouteName } from "~/shared/constants";
 import type {
   IEnglishLevelResponse,
   IPaginationMeta,
@@ -185,6 +184,9 @@ import type {
 } from "~/shared/types/api.generated";
 
 import type { ISetAuthorOption, TSetListScope } from "../types";
+
+const routes = usePageRoutes();
+const { t } = useI18n();
 
 const {
   sets,
@@ -225,37 +227,40 @@ const englishLevelIds = defineModel<string[]>("englishLevelIds", {
 });
 const authorIds = defineModel<string[]>("authorIds", { required: true });
 
-const scopeTabs = [
-  {
-    label: "Мої набори",
-    value: "mine",
-    icon: "i-lucide-user-round",
-  },
-  {
-    label: "Усі набори",
-    value: "all",
-    icon: "i-lucide-library",
-  },
-] satisfies Array<TabsItem & { value: TSetListScope }>;
+const scopeTabs = computed(
+  () =>
+    [
+      {
+        label: t("sets.scope.mine"),
+        value: "mine",
+        icon: "i-lucide-user-round",
+      },
+      {
+        label: t("sets.scope.all"),
+        value: "all",
+        icon: "i-lucide-library",
+      },
+    ] satisfies Array<TabsItem & { value: TSetListScope }>,
+);
 
 const sectionTitle = computed(() =>
-  scope.value === "mine" ? "Ваша колекція карток" : "Усі доступні картки",
+  scope.value === "mine" ? t("sets.grid.mineTitle") : t("sets.grid.allTitle"),
 );
 
 const emptyTitle = computed(() =>
   hasActiveFilters
-    ? "Нічого не знайдено"
+    ? t("sets.grid.filteredEmptyTitle")
     : scope.value === "mine"
-      ? "У вас ще немає наборів"
-      : "Поки що немає доступних наборів",
+      ? t("sets.grid.mineEmptyTitle")
+      : t("sets.grid.allEmptyTitle"),
 );
 
 const emptyDescription = computed(() =>
   hasActiveFilters
-    ? "Спробуйте змінити умови пошуку або очистити активні фільтри."
+    ? t("sets.grid.filteredEmptyDescription")
     : scope.value === "mine"
-      ? "Створіть перший набір: додайте тему, короткий опис і кілька карток."
-      : "Створіть перший набір, щоб він з’явився у спільній бібліотеці.",
+      ? t("sets.grid.mineEmptyDescription")
+      : t("sets.grid.allEmptyDescription"),
 );
 
 const emit = defineEmits<{

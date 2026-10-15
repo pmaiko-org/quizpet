@@ -1,16 +1,18 @@
 <template>
   <section class="space-y-3">
     <BaseSectionHeader
-      eyebrow="Користувачі"
-      title="Усі учасники"
-      :summary="meta ? `${meta.total} ${pluralUsers(meta.total)}` : ''"
+      :eyebrow="$t('people.grid.eyebrow')"
+      :title="$t('people.grid.title')"
+      :summary="
+        meta ? t('people.grid.count', { count: meta.total }, meta.total) : ''
+      "
     />
 
     <BaseDataBoundary
       :pending="pending"
       :error="error"
       :empty="!users.length"
-      errorTitle="Не вдалося завантажити користувачів"
+      :errorTitle="$t('people.grid.error')"
       @retry="emit('refresh')"
     >
       <template #loading>
@@ -58,7 +60,7 @@
             />
           </div>
           <h3 class="mt-4 text-xl font-semibold text-highlighted">
-            Користувачів поки немає
+            {{ $t("people.grid.empty") }}
           </h3>
         </div>
       </template>
@@ -93,8 +95,6 @@ import type {
   IUserResponse,
 } from "~/shared/types/api.generated";
 
-import { pluralUsers } from "../utils";
-
 const {
   users,
   meta = null,
@@ -106,6 +106,8 @@ const {
   pending?: boolean;
   error?: unknown;
 }>();
+
+const { t } = useI18n();
 
 const page = defineModel<number>("page", { required: true });
 

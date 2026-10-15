@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "redirects",
+  "info": {
+    "singularName": "redirect",
+    "pluralName": "redirects",
+    "displayName": "Redirect"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "from": { "type": "string", "required": true, "unique": true },
+    "to": { "type": "string", "required": true },
+    "statusCode": {
+      "type": "integer",
+      "min": 301,
+      "max": 302,
+      "default": 301,
+      "required": true
+    }
+  }
+}

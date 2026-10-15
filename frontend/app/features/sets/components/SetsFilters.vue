@@ -3,10 +3,10 @@
     <div class="flex items-center justify-between gap-3">
       <div>
         <p class="text-sm font-semibold text-highlighted">
-          Фільтри
+          {{ $t("sets.filters.title") }}
         </p>
         <p class="mt-0.5 text-xs text-toned">
-          Звузьте бібліотеку за потрібними параметрами.
+          {{ $t("sets.filters.description") }}
         </p>
       </div>
 
@@ -19,21 +19,21 @@
         icon="i-lucide-rotate-ccw"
         @click="emit('clear')"
       >
-        Очистити
+        {{ $t("sets.filters.clearShort") }}
       </UButton>
     </div>
 
     <div :class="filtersGridClass">
-      <UFormField label="Назва набору">
+      <UFormField :label="$t('sets.filters.name')">
         <UInput
           v-model="search"
           icon="i-lucide-search"
-          placeholder="Знайти набір"
+          :placeholder="$t('sets.filters.namePlaceholder')"
           class="w-full"
         />
       </UFormField>
 
-      <UFormField label="Тематика">
+      <UFormField :label="$t('sets.filters.topic')">
         <USkeleton
           v-if="!optionsReady"
           class="h-8 w-full"
@@ -45,8 +45,8 @@
           :items="topics"
           labelKey="label"
           valueKey="id"
-          placeholder="Усі тематики"
-          :searchInput="{ placeholder: 'Знайти тематику' }"
+          :placeholder="$t('sets.filters.allTopics')"
+          :searchInput="{ placeholder: $t('sets.filters.topicSearch') }"
           :multiple="true"
           class="w-full"
         >
@@ -59,7 +59,7 @@
         </USelectMenu>
       </UFormField>
 
-      <UFormField label="Рівень англійської">
+      <UFormField :label="$t('sets.filters.englishLevel')">
         <USkeleton
           v-if="!optionsReady"
           class="h-8 w-full"
@@ -71,8 +71,8 @@
           :items="englishLevels"
           labelKey="label"
           valueKey="id"
-          placeholder="Усі рівні"
-          :searchInput="{ placeholder: 'Знайти рівень' }"
+          :placeholder="$t('sets.filters.allLevels')"
+          :searchInput="{ placeholder: $t('sets.filters.levelSearch') }"
           :multiple="true"
           class="w-full"
         />
@@ -80,7 +80,7 @@
 
       <UFormField
         v-if="scope === 'all'"
-        label="Автор"
+        :label="$t('sets.filters.author')"
       >
         <USkeleton
           v-if="!optionsReady"
@@ -93,8 +93,8 @@
           :items="authors"
           labelKey="label"
           valueKey="id"
-          placeholder="Усі автори"
-          :searchInput="{ placeholder: 'Знайти автора' }"
+          :placeholder="$t('sets.filters.allAuthors')"
+          :searchInput="{ placeholder: $t('sets.filters.authorSearch') }"
           :multiple="true"
           class="w-full"
         />
@@ -105,7 +105,7 @@
       v-if="optionsError"
       class="mt-3 flex items-center justify-between gap-3 text-sm text-error"
     >
-      <span>Не вдалося завантажити параметри фільтрів.</span>
+      <span>{{ $t("sets.filters.error") }}</span>
       <UButton
         type="button"
         color="error"
@@ -114,7 +114,7 @@
         class="px-0"
         @click="emit('retryOptions')"
       >
-        Повторити
+        {{ $t("common.retry") }}
       </UButton>
     </div>
   </div>

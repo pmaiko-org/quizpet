@@ -57,12 +57,17 @@ const {
   totalTime: string;
 }>();
 
+const { t } = useI18n();
+
 const title = computed(() => {
   if (!totalCards) {
-    return "Немає карток для проходження";
+    return t("learn.progress.empty");
   }
 
-  return `Крок ${Math.min(currentStep + 1, queueLength)} з ${queueLength}`;
+  return t("learn.progress.step", {
+    current: Math.min(currentStep + 1, queueLength),
+    total: queueLength,
+  });
 });
 
 const learnedPercent = computed(() => {
@@ -128,17 +133,17 @@ onBeforeUnmount(() => {
 
 const stats = computed(() => [
   {
-    label: "Засвоєно",
+    label: t("learn.progress.learned"),
     value: `${learnedCount}/${totalCards}`,
     pulseClass: knownPulse.value ? "learn-stat-pulse-known" : "",
   },
   {
-    label: "Повтори",
+    label: t("learn.progress.repeats"),
     value: mistakesCount,
     pulseClass: repeatPulse.value ? "learn-stat-pulse-missed" : "",
   },
   {
-    label: "Сеанс",
+    label: t("learn.progress.session"),
     value: totalTime,
     pulseClass: "",
   },

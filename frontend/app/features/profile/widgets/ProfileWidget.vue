@@ -2,8 +2,8 @@
   <BaseDataBoundary
     :pending="pending"
     :error="error"
-    errorTitle="Не вдалося завантажити профіль"
-    errorDescription="Спробуйте оновити дані профілю ще раз."
+    :errorTitle="$t('profile.loadError.title')"
+    :errorDescription="$t('profile.loadError.description')"
     @retry="refresh"
   >
     <template #loading>
@@ -31,9 +31,9 @@
           >
             <div class="space-y-5">
               <BaseSectionIntro
-                eyebrow="Профіль"
-                title="Ваш профіль"
-                description="Оновіть ім’я та аватар, які бачать інші учасники QuizPet."
+                :eyebrow="$t('profile.eyebrow')"
+                :title="$t('profile.title')"
+                :description="$t('profile.description')"
                 titleTag="h1"
                 size="hero"
               />
@@ -45,9 +45,9 @@
                 "
               >
                 <UFormField
-                  label="Ім'я"
+                  :label="$t('profile.firstName.label')"
                   name="firstName"
-                  description="Використовується в профілі та списках користувачів."
+                  :description="$t('profile.firstName.description')"
                   required
                   size="lg"
                 >
@@ -55,14 +55,14 @@
                     v-model="state.firstName"
                     size="lg"
                     class="w-full"
-                    placeholder="Наприклад, Петро"
+                    :placeholder="$t('profile.firstName.placeholder')"
                   />
                 </UFormField>
 
                 <UFormField
-                  label="Прізвище"
+                  :label="$t('profile.lastName.label')"
                   name="lastName"
-                  description="Допомагає показувати повне ім’я в інтерфейсі."
+                  :description="$t('profile.lastName.description')"
                   required
                   size="lg"
                 >
@@ -70,7 +70,7 @@
                     v-model="state.lastName"
                     size="lg"
                     class="w-full"
-                    placeholder="Наприклад, Мельник"
+                    :placeholder="$t('profile.lastName.placeholder')"
                   />
                 </UFormField>
               </div>
@@ -78,7 +78,7 @@
               <UFormField
                 label="Email"
                 name="email"
-                description="Поле доступне лише для перегляду, бо авторизація йде через Google."
+                :description="$t('profile.email.description')"
                 size="lg"
               >
                 <UInput
@@ -100,8 +100,8 @@
               <BaseFilePicker
                 v-model="state.avatar"
                 name="avatar"
-                label="Аватар"
-                description="Оберіть квадратне або близьке до квадратного зображення для кращого вигляду."
+                :label="$t('profile.avatar.label')"
+                :description="$t('profile.avatar.description')"
                 hint="PNG, JPG, WEBP, SVG"
               />
             </UCard>
@@ -117,7 +117,7 @@
                 sm:w-auto sm:min-w-40
               "
             >
-              Зберегти профіль
+              {{ $t("profile.save") }}
             </UButton>
           </div>
         </UCard>
@@ -137,11 +137,10 @@
         >
           <div class="space-y-1">
             <h2 class="text-base font-semibold text-error">
-              Видалення акаунта
+              {{ $t("profile.delete.sectionTitle") }}
             </h2>
             <p class="max-w-xl text-sm text-muted">
-              Ця дія незворотна. Буде видалено ваш акаунт, аватар і всі створені
-              вами набори карток.
+              {{ $t("profile.delete.sectionDescription") }}
             </p>
           </div>
 
@@ -152,7 +151,7 @@
             class="shrink-0"
             @click="handleOpenDeleteModal"
           >
-            Видалити акаунт
+            {{ $t("profile.delete.action") }}
           </UButton>
         </div>
       </UCard>
@@ -160,20 +159,20 @@
 
     <UModal
       v-model:open="deleteModalOpen"
-      title="Видалити акаунт?"
-      description="Відновити дані буде неможливо."
+      :title="$t('profile.delete.modalTitle')"
+      :description="$t('profile.delete.modalDescription')"
     >
       <template #body>
         <div class="space-y-4">
           <p class="text-sm text-muted">
-            Для підтвердження введіть свій email
+            {{ $t("profile.delete.confirmPrompt") }}
             <strong class="text-default">{{ user?.email }}</strong>.
           </p>
-          <UFormField label="Підтвердження email">
+          <UFormField :label="$t('profile.delete.confirmLabel')">
             <UInput
               v-model="deleteConfirmEmail"
               class="w-full"
-              placeholder="Ваш email"
+              :placeholder="$t('profile.delete.confirmPlaceholder')"
               autocomplete="off"
             />
           </UFormField>
@@ -188,7 +187,7 @@
             :disabled="deleting"
             @click="handleCloseDeleteModal"
           >
-            Скасувати
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="error"
@@ -196,7 +195,7 @@
             :disabled="!canDelete"
             @click="handleDeleteAccount"
           >
-            Видалити назавжди
+            {{ $t("profile.delete.forever") }}
           </UButton>
         </div>
       </template>
@@ -205,13 +204,12 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
 import type {
   IFileResponse,
   IUserResponse,
 } from "~/shared/types/api.generated";
 
-import { profileSchema } from "../validation";
+import { createProfileSchema } from "../validation";
 
 interface IProfileFormState {
   firstName: string;
@@ -221,6 +219,8 @@ interface IProfileFormState {
 }
 
 const { $repository } = useNuxtApp();
+const { t } = useI18n();
+const profileSchema = createProfileSchema(t);
 const { user, pending, error, refresh } = useCurrentUser();
 const { clearTokens } = useAuthStore();
 
@@ -233,6 +233,7 @@ const state = reactive<IProfileFormState>({
 
 const submitting = ref(false);
 const toast = useToast();
+const routes = usePageRoutes();
 
 const deleteModalOpen = ref(false);
 const deleteConfirmEmail = ref("");
@@ -266,12 +267,12 @@ const handleDeleteAccount = async () => {
     clearTokens();
     clearNuxtData();
 
-    toast.add({ title: "Акаунт видалено", description: "" });
+    toast.add({ title: t("profile.toast.deleted"), description: "" });
 
-    await navigateTo({ name: RouteName.LOGIN });
+    await navigateTo(routes.resolve("login"));
   } catch {
     toast.add({
-      title: "Не вдалося видалити акаунт",
+      title: t("profile.toast.deleteError"),
       description: "",
       color: "error",
     });
@@ -311,12 +312,12 @@ const handleSubmit = async (event: {
     await refresh();
 
     toast.add({
-      title: "Профіль оновлено",
+      title: t("profile.toast.updated"),
       description: "",
     });
   } catch {
     toast.add({
-      title: "Не вдалося зберегти профіль",
+      title: t("profile.toast.updateError"),
       description: "",
       color: "error",
     });

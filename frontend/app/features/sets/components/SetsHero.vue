@@ -1,8 +1,8 @@
 <template>
   <BaseHeroSection
-    eyebrow="Бібліотека карток"
-    title="Набори для швидкого повторення"
-    description="Перемикайтеся між власними наборами та всією доступною бібліотекою, відкривайте навчання або створюйте нову тему."
+    :eyebrow="$t('sets.hero.eyebrow')"
+    :title="$t('sets.hero.title')"
+    :description="$t('sets.hero.description')"
   >
     <div
       class="
@@ -11,12 +11,12 @@
       "
     >
       <UButton
-        :to="{ name: RouteName.SETS_CREATE }"
+        :to="routes.resolve('sets-create')"
         icon="i-lucide-plus"
         size="lg"
         class="justify-center"
       >
-        Створити набір
+        {{ $t("sets.create") }}
       </UButton>
     </div>
 
@@ -33,13 +33,13 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
-
 interface IHeroStat {
   label: string;
   value: number;
   icon: string;
 }
+
+const routes = usePageRoutes();
 
 const { stats, pending = false } = defineProps<{
   stats: IHeroStat[];

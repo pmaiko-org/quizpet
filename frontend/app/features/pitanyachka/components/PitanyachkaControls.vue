@@ -15,7 +15,9 @@
           class="size-2 rounded-full"
           :class="connected ? 'bg-primary' : 'bg-muted'"
         />
-        {{ connected ? "На звʼязку" : "Підключення…" }}
+        {{
+          connected ? $t("pitanyachka.connected") : $t("pitanyachka.connecting")
+        }}
       </span>
 
       <span class="flex items-center gap-1.5 text-sm text-muted">
@@ -48,7 +50,7 @@
           name="i-lucide-tag"
           class="size-3.5"
         />
-        {{ categoryLabel ?? "Всі категорії" }}
+        {{ categoryLabel ?? $t("pitanyachka.category.all") }}
       </span>
     </div>
 
@@ -60,7 +62,7 @@
       :disabled="!connected"
       @click="emit('restart')"
     >
-      Почати заново
+      {{ $t("pitanyachka.restart") }}
     </UButton>
   </section>
 </template>

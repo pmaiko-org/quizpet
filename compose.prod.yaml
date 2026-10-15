@@ -1,8 +1,19 @@
 services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - frontend-static:/app/.output/public:ro
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    environment:
+      STATIC_DIR: /static
+    volumes:
+      - frontend-static:/static
 
   backend:
     build:

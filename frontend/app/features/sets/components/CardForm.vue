@@ -17,10 +17,10 @@
         </span>
         <div>
           <p class="text-sm font-semibold text-highlighted">
-            Картка {{ index + 1 }}
+            {{ $t("sets.cardForm.number", { number: index + 1 }) }}
           </p>
           <p class="text-xs text-muted">
-            Термін і правильна відповідь
+            {{ $t("sets.cardForm.subtitle") }}
           </p>
         </div>
       </div>
@@ -33,7 +33,7 @@
           size="sm"
           icon="i-lucide-arrow-up"
           :disabled="isFirst"
-          aria-label="Перемістити картку вище"
+          :aria-label="$t('sets.cardForm.moveUp')"
           @click="emit('moveUp')"
         />
         <UButton
@@ -43,7 +43,7 @@
           size="sm"
           icon="i-lucide-arrow-down"
           :disabled="isLast"
-          aria-label="Перемістити картку нижче"
+          :aria-label="$t('sets.cardForm.moveDown')"
           @click="emit('moveDown')"
         />
         <UButton
@@ -53,7 +53,7 @@
           variant="ghost"
           size="sm"
           icon="i-lucide-trash-2"
-          aria-label="Видалити картку"
+          :aria-label="$t('sets.cardForm.delete')"
           @click="emit('remove')"
         />
       </div>
@@ -67,8 +67,8 @@
     >
       <UFormField
         :name="fieldName('term')"
-        label="Термін"
-        description="Слово, поняття або питання."
+        :label="$t('sets.cardForm.term.label')"
+        :description="$t('sets.cardForm.term.description')"
         required
         size="lg"
       >
@@ -76,28 +76,28 @@
           v-model="modelValue.term"
           size="lg"
           class="w-full"
-          placeholder="Наприклад, Photosynthesis"
+          :placeholder="$t('sets.cardForm.term.placeholder')"
         />
       </UFormField>
 
       <UFormField
         :name="fieldName('termDescription')"
-        label="Підказка"
-        description="Коротке уточнення до терміна."
+        :label="$t('sets.cardForm.hint.label')"
+        :description="$t('sets.cardForm.hint.description')"
         size="lg"
       >
         <UInput
           v-model="modelValue.termDescription"
           size="lg"
           class="w-full"
-          placeholder="Необов’язковий контекст"
+          :placeholder="$t('sets.cardForm.hint.placeholder')"
         />
       </UFormField>
 
       <UFormField
         :name="fieldName('definition')"
-        label="Визначення"
-        description="Пояснення, переклад або правильна відповідь."
+        :label="$t('sets.cardForm.definition.label')"
+        :description="$t('sets.cardForm.definition.description')"
         required
         size="lg"
         class="col-span-full"
@@ -108,7 +108,7 @@
           autoresize
           :rows="2"
           class="w-full"
-          placeholder="Дайте коротку й точну відповідь"
+          :placeholder="$t('sets.cardForm.definition.placeholder')"
         />
       </UFormField>
     </div>
@@ -130,7 +130,7 @@
             name="i-lucide-palette"
             class="size-4 text-primary"
           />
-          Зображення та оформлення
+          {{ $t("sets.cardForm.appearance") }}
         </span>
         <UIcon
           name="i-lucide-chevron-down"
@@ -150,29 +150,29 @@
         <BaseFilePicker
           v-model="modelValue.termImage"
           :name="fieldName('termImage')"
-          label="Зображення терміна"
-          description="Необов’язкова візуальна підказка."
+          :label="$t('sets.cardForm.termImage.label')"
+          :description="$t('sets.cardForm.termImage.description')"
         />
 
         <BaseFilePicker
           v-model="modelValue.definitionImage"
           :name="fieldName('definitionImage')"
-          label="Зображення відповіді"
-          description="Окрема ілюстрація для визначення."
+          :label="$t('sets.cardForm.definitionImage.label')"
+          :description="$t('sets.cardForm.definitionImage.description')"
         />
 
         <BaseColorChooser
           v-model="modelValue.textColor"
           :name="fieldName('textColor')"
-          label="Колір тексту"
-          description="Залиште порожнім для кольору теми."
+          :label="$t('sets.cardForm.textColor.label')"
+          :description="$t('sets.cardForm.textColor.description')"
         />
 
         <BaseColorChooser
           v-model="modelValue.backgroundColor"
           :name="fieldName('backgroundColor')"
-          label="Колір фону"
-          description="Залиште порожнім для стандартної поверхні."
+          :label="$t('sets.cardForm.backgroundColor.label')"
+          :description="$t('sets.cardForm.backgroundColor.description')"
         />
       </div>
     </details>

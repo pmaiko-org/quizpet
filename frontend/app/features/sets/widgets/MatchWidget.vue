@@ -2,21 +2,21 @@
   <div class="mx-auto max-w-4xl space-y-5">
     <SetStudyNav
       :setId="setId"
-      :active="RouteName.SETS_ID_MATCH"
+      active="sets-id-match"
     />
     <BaseDataBoundary
       :pending="loading"
       :error="error"
       :empty="!availableCount"
-      errorTitle="Unable to load this set"
-      errorDescription="Please try again."
-      retryLabel="Try again"
+      :errorTitle="$t('match.loadError.title')"
+      :errorDescription="$t('match.loadError.description')"
+      :retryLabel="$t('common.retryAgain')"
       @retry="handleRetry"
     >
       <template #loading>
         <div
           class="space-y-5"
-          aria-label="Loading matching session"
+          :aria-label="$t('match.loading')"
           aria-busy="true"
         >
           <USkeleton class="h-8 w-48" />
@@ -35,18 +35,18 @@
           class="rounded-md border border-dashed border-default p-8 text-center"
         >
           <h1 class="text-xl font-semibold text-highlighted">
-            No words to match yet
+            {{ $t("match.empty.title") }}
           </h1>
           <p class="mt-2 text-sm text-toned">
-            Add cards with both a word and a definition to start matching.
+            {{ $t("match.empty.description") }}
           </p>
           <UButton
             v-if="canEdit"
-            :to="{ name: RouteName.SETS_ID_EDIT, params: { id: setId } }"
+            :to="routes.resolve('sets-id-edit', { id: setId })"
             class="mt-5"
             icon="i-lucide-plus"
           >
-            Add cards
+            {{ $t("match.empty.action") }}
           </UButton>
         </section>
       </template>
@@ -74,7 +74,7 @@
               mt-5 text-xs font-semibold tracking-widest text-primary uppercase
             "
           >
-            Word match
+            {{ $t("match.eyebrow") }}
           </p>
           <h1
             class="
@@ -85,9 +85,12 @@
             {{ setName }}
           </h1>
           <p class="mx-auto mt-4 max-w-lg text-sm/6 text-toned">
-            Match each word with its definition. Work through
-            {{ availableCount }} pairs in rounds of up to
-            {{ MATCH_ROUND_SIZE }}. Your timer starts when you play.
+            {{
+              $t("match.intro", {
+                count: availableCount,
+                size: MATCH_ROUND_SIZE,
+              })
+            }}
           </p>
           <UButton
             class="mt-6"
@@ -95,10 +98,10 @@
             size="xl"
             @click="handleStart"
           >
-            Start matching
+            {{ $t("match.start") }}
           </UButton>
           <p class="mt-4 text-xs text-muted">
-            Tap to select, or use Tab and Enter on your keyboard.
+            {{ $t("match.keyboardHint") }}
           </p>
         </section>
       </template>
@@ -125,7 +128,7 @@
                 text-xs font-semibold tracking-widest text-primary uppercase
               "
             >
-              Word match
+              {{ $t("match.eyebrow") }}
             </p>
             <h1
               class="
@@ -139,10 +142,10 @@
             icon="i-lucide-rotate-ccw"
             color="neutral"
             variant="ghost"
-            aria-label="Restart matching"
+            :aria-label="$t('match.restart')"
             @click="handleStart"
           >
-            Restart
+            {{ $t("match.restart") }}
           </UButton>
         </div>
         <div
@@ -151,7 +154,7 @@
           <dl class="grid grid-cols-3 gap-3 text-center">
             <div>
               <dt class="text-xs text-muted">
-                Matched
+                {{ $t("match.metrics.matched") }}
               </dt>
               <dd class="mt-1 font-semibold text-highlighted">
                 {{ matchedCount }} / {{ totalCards }}
@@ -159,7 +162,7 @@
             </div>
             <div>
               <dt class="text-xs text-muted">
-                Time
+                {{ $t("match.metrics.time") }}
               </dt>
               <dd class="mt-1 font-semibold text-highlighted tabular-nums">
                 {{ formatTime(elapsedMs) }}
@@ -167,7 +170,7 @@
             </div>
             <div>
               <dt class="text-xs text-muted">
-                Mistakes
+                {{ $t("match.metrics.mistakes") }}
               </dt>
               <dd class="mt-1 font-semibold text-highlighted">
                 {{ mistakes }}
@@ -177,7 +180,7 @@
           <UProgress
             :modelValue="matchedCount"
             :max="totalCards"
-            aria-label="Pairs matched"
+            :aria-label="$t('match.metrics.matched')"
           />
         </div>
         <MatchBoard
@@ -199,10 +202,10 @@
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
-
 import { MATCH_ROUND_SIZE } from "../matching";
 import { formatTime } from "../utils";
+
+const routes = usePageRoutes();
 
 const { email } = useCurrentUser();
 const {

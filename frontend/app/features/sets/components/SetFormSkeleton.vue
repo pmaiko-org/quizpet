@@ -1,7 +1,7 @@
 <template>
   <div
     class="space-y-5 pb-20"
-    aria-label="Завантаження редактора набору"
+    :aria-label="$t('sets.form.loading')"
   >
     <section
       class="

@@ -11,6 +11,7 @@ import { useSetFilters } from "./useSetFilters";
 
 export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   const { $repository } = useNuxtApp();
+  const { t } = useI18n();
   const route = useRoute();
   const resolvedDefaultScope = ref<TSetListScope | null>(null);
   const loadedScope = ref<TSetListScope | null>(null);
@@ -140,17 +141,19 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     return [
       {
         label:
-          activeScope.value === "mine" ? "Ваших наборів" : "Усього наборів",
+          activeScope.value === "mine"
+            ? t("sets.stats.mine")
+            : t("sets.stats.all"),
         value: totalSets.value,
         icon: "i-lucide-library",
       },
       {
-        label: "Тем на сторінці",
+        label: t("sets.stats.topics"),
         value: topicsCount,
         icon: "i-lucide-tags",
       },
       {
-        label: "З описом на сторінці",
+        label: t("sets.stats.described"),
         value: describedSets,
         icon: "i-lucide-file-text",
       },
@@ -161,34 +164,24 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     const total = totalSets.value;
 
     if (!total && hasActiveFilters.value) {
-      return "За вибраними фільтрами наборів не знайдено.";
+      return t("sets.summary.filteredEmpty");
     }
 
     if (!total) {
       return activeScope.value === "mine"
-        ? "Створіть перший набір і почніть збирати власну навчальну полицю."
-        : "У бібліотеці поки немає доступних наборів.";
+        ? t("sets.summary.mineEmpty")
+        : t("sets.summary.allEmpty");
     }
 
     if (total === 1) {
       return activeScope.value === "mine"
-        ? "1 ваш набір уже готовий для повторення та подальшого наповнення."
-        : "1 набір уже доступний для повторення.";
+        ? t("sets.summary.mine", { count: total }, total)
+        : t("sets.summary.all", { count: total }, total);
     }
 
-    const lastDigit = total % 10;
-    const lastTwoDigits = total % 100;
-    const noun =
-      lastDigit === 1 && lastTwoDigits !== 11
-        ? "набір"
-        : [2, 3, 4].includes(lastDigit) &&
-          (lastTwoDigits < 12 || lastTwoDigits > 14)
-            ? "набори"
-            : "наборів";
-
     return activeScope.value === "mine"
-      ? `${total} ${noun} у вашій навчальній колекції.`
-      : `${total} ${noun} доступно в бібліотеці для швидкого повторення.`;
+      ? t("sets.summary.mine", { count: total }, total)
+      : t("sets.summary.all", { count: total }, total);
   });
 
   const canDelete = (set: ISetListItemResponse) => {
@@ -203,7 +196,7 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     }
 
     const shouldDelete = window.confirm(
-      `Видалити набір "${set.name}"? Цю дію не можна скасувати.`,
+      t("sets.deleteConfirm", { name: set.name }),
     );
 
     if (!shouldDelete) {

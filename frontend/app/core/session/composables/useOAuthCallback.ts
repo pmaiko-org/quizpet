@@ -1,7 +1,6 @@
-import { RouteName } from "~/shared/constants";
-
 export const useOAuthCallback = () => {
   const { setTokens } = useAuthStore();
+  const routes = usePageRoutes();
 
   onMounted(() => {
     const hash = window.location.hash.startsWith("#")
@@ -17,7 +16,7 @@ export const useOAuthCallback = () => {
     if (accessToken && refreshToken) {
       setTokens(accessToken, refreshToken);
       history.replaceState(null, "", window.location.pathname);
-      navigateTo({ name: RouteName.INDEX }, { replace: true });
+      navigateTo(routes.resolve("cabinet"), { replace: true });
     }
   });
 };

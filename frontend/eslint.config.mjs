@@ -184,6 +184,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default withNuxt()
+  .append({ ignores: ["app/core/cms/types/api.generated.ts"] })
   .append({
     files: ["app/**/*.{ts,mts,vue}"],
     plugins: {

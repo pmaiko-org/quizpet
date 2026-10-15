@@ -24,7 +24,7 @@
               />
             </template>
 
-            {{ modelValue || "Оберіть колір" }}
+            {{ modelValue || $t("common.color.choose") }}
           </UButton>
 
           <template #content>
@@ -47,7 +47,7 @@
                   variant="soft"
                   @click="handleApplyDraftColor"
                 >
-                  Застосувати
+                  {{ $t("common.apply") }}
                 </UButton>
               </div>
             </div>
@@ -62,7 +62,7 @@
           icon="i-lucide-eraser"
           @click="handleClearColor"
         >
-          Очистити
+          {{ $t("common.clear") }}
         </UButton>
       </div>
 
@@ -85,7 +85,7 @@
           "
           :class="modelValue === preset ? 'ring-2 ring-primary' : ''"
           :style="{ backgroundColor: preset }"
-          :aria-label="`Обрати колір ${preset}`"
+          :aria-label="$t('common.color.select', { color: preset })"
           @click="modelValue = preset"
         >
           <span class="sr-only">{{ preset }}</span>

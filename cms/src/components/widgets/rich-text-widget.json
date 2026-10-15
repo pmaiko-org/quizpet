@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_widgets_rich_text_widgets",
+  "info": {
+    "displayName": "Rich Text Widget"
+  },
+  "options": {},
+  "attributes": {
+    "body": {
+      "type": "blocks",
+      "required": true
+    },
+    "width": {
+      "type": "enumeration",
+      "enum": [
+        "narrow",
+        "default",
+        "full"
+      ],
+      "default": "default",
+      "required": true
+    }
+  }
+}

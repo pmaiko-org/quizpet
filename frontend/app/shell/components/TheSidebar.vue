@@ -11,7 +11,7 @@
   >
     <section class="mb-auto flex flex-col gap-4">
       <NuxtLink
-        :to="{ name: RouteName.SETS_CREATE }"
+        :to="routes.resolve('sets-create')"
         class="
           group flex items-center gap-3 rounded-md border border-default
           bg-linear-to-br from-primary/10 to-transparent p-3 transition-colors
@@ -33,10 +33,10 @@
         </span>
         <span class="min-w-0">
           <span class="block truncate text-sm font-semibold text-highlighted">
-            Новий набір
+            {{ $t("common.newSet") }}
           </span>
           <span class="block truncate text-[11px] text-muted">
-            Створити картки для навчання
+            {{ $t("common.createStudyCards") }}
           </span>
         </span>
       </NuxtLink>
@@ -47,7 +47,7 @@
             px-3 text-[11px] font-semibold tracking-wider text-dimmed uppercase
           "
         >
-          Меню
+          {{ $t("common.menu") }}
         </p>
         <UNavigationMenu
           :items="items"
@@ -80,15 +80,15 @@
         <div class="rounded-md border border-default bg-muted/45 p-3">
           <div class="mb-2 flex items-center justify-between gap-2">
             <p class="text-xs font-medium text-muted">
-              Профіль
+              {{ $t("common.profile") }}
             </p>
             <UButton
-              :to="{ name: RouteName.PROFILE }"
+              :to="routes.resolve('profile')"
               color="neutral"
               variant="ghost"
               icon="i-lucide-settings-2"
               size="sm"
-              aria-label="Редагувати профіль"
+              :aria-label="$t('common.editProfile')"
               @click="handleCloseOnMobile"
             />
           </div>
@@ -135,7 +135,7 @@
               :loading="isLoggingOut"
               @click="handleLogout"
             >
-              Вийти
+              {{ $t("common.logout") }}
             </UButton>
           </div>
         </div>
@@ -150,10 +150,12 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "#ui/components/NavigationMenu.vue";
-import { RouteName } from "~/shared/constants";
 
 const open = defineModel<boolean>({ required: true });
 const authStore = useAuthStore();
+const routes = usePageRoutes();
+const { bootstrap } = useCmsBootstrap();
+const { t } = useI18n();
 const { isLoggingOut } = storeToRefs(authStore);
 const { doLogout: handleLogout } = authStore;
 
@@ -163,46 +165,21 @@ const handleCloseOnMobile = () => {
   }
 };
 
-const items = ref<NavigationMenuItem[]>([
-  {
-    label: "Головна",
-    to: { name: RouteName.INDEX },
-    icon: "i-lucide-home",
-  },
-  {
-    label: "Папки",
-    to: { name: RouteName.FOLDERS },
-    icon: "i-lucide-folder",
-  },
-  {
-    label: "Картки",
-    to: { name: RouteName.SETS },
-    icon: "i-lucide-layers",
-  },
-  {
-    label: "Статистика",
-    to: { name: RouteName.STATISTIC },
-    icon: "i-lucide-bar-chart-3",
-  },
-  {
-    label: "Люди",
-    to: { name: RouteName.PEOPLES },
-    icon: "i-lucide-users",
-  },
-  {
-    label: "ПИТАНЯЧКА",
-    to: { name: RouteName.PITANYACHKA },
-    icon: "i-lucide-dices",
-  },
-]);
+const items = computed<NavigationMenuItem[]>(() =>
+  (bootstrap.value?.global.sidebarLinks ?? []).map(link => ({
+    label: link.label,
+    to: link.path,
+    icon: link.icon ?? undefined,
+  })),
+);
 
 const { user: profile, pending: profilePending } = useCurrentUser();
 
 const { stats, pending: statsPending } = useMyStats();
 
 const metrics = computed(() => [
-  { value: stats.value.peopleCount, label: "Люди" },
-  { value: stats.value.mySetsCount, label: "Набори" },
-  { value: stats.value.myTopicsCount, label: "Теми" },
+  { value: stats.value.peopleCount, label: t("home.metric.people") },
+  { value: stats.value.mySetsCount, label: t("home.metric.sets") },
+  { value: stats.value.myTopicsCount, label: t("home.metric.topics") },
 ]);
 </script>

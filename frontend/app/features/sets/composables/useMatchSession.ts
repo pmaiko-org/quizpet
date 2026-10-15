@@ -1,12 +1,11 @@
-import { RouteName } from "~/shared/constants";
 import type { ICardDetailsResponse } from "~/shared/types/api.generated";
 
 import { canEditSet } from "../utils";
 
 export const useMatchSession = (currentUserEmail: Ref<string | undefined>) => {
-  const route = useRoute(RouteName.SETS_ID_MATCH);
+  const cmsPage = useCmsPage();
   const { $repository } = useNuxtApp();
-  const setId = computed(() => route.params.id);
+  const setId = computed(() => cmsPage.params.value.id ?? "");
   const {
     data: set,
     status,

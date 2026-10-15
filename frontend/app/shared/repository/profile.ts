@@ -1,20 +1,18 @@
-import type { $Fetch, NitroFetchRequest } from "nitropack";
-
-import type { TRequestOptions } from "~/shared/repository/types";
+import type { TApiFetch, TRequestOptions } from "~/shared/repository/types";
 import type {
   IProfileUpdate,
   ISuccessResponse,
   IUserResponse,
 } from "~/shared/types/api.generated";
 
-export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
+export const profileRepository = (backendApi: TApiFetch) => {
   return {
     getProfile: (options?: TRequestOptions) => {
-      return fetch<IUserResponse>("/users/me", { ...options });
+      return backendApi<IUserResponse>("/users/me", { ...options });
     },
 
     updateProfile: (body: IProfileUpdate, options?: TRequestOptions) => {
-      return fetch<IUserResponse>("/users/me", {
+      return backendApi<IUserResponse>("/users/me", {
         method: "PATCH",
         body,
         ...options,
@@ -25,7 +23,7 @@ export const profileRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
       body: { confirmEmail: string },
       options?: TRequestOptions,
     ) => {
-      return fetch<ISuccessResponse>("/users/me", {
+      return backendApi<ISuccessResponse>("/users/me", {
         method: "DELETE",
         body,
         ...options,

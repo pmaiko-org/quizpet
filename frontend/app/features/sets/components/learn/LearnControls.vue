@@ -10,7 +10,7 @@
         :disabled="locked"
         @click="emit('missed')"
       >
-        Не знаю
+        {{ $t("learn.missed") }}
       </UButton>
 
       <UButton
@@ -23,7 +23,7 @@
         :disabled="locked"
         @click="emit('known')"
       >
-        Знаю, далі
+        {{ $t("learn.knownNext") }}
       </UButton>
     </div>
   </section>

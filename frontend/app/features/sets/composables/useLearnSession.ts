@@ -1,7 +1,5 @@
 import { useNow } from "@vueuse/core";
-import type { RouteLocationRaw } from "vue-router";
 
-import { RouteName } from "~/shared/constants";
 import type { ICardDetailsResponse } from "~/shared/types/api.generated";
 
 import type {
@@ -22,10 +20,11 @@ interface ICardSessionState {
 }
 
 export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
-  const route = useRoute(RouteName.SETS_ID_LEARN);
+  const cmsPage = useCmsPage();
+  const routes = usePageRoutes();
   const { $repository } = useNuxtApp();
 
-  const setId = computed(() => route.params.id);
+  const setId = computed(() => cmsPage.params.value.id ?? "");
   const asyncDataKey = computed(() => `set-learning-${setId.value}`);
 
   const {
@@ -66,9 +65,9 @@ export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
 
   let advanceTimeout: number | null = null;
 
-  const editSetLink = computed<RouteLocationRaw>(() => {
-    return { name: RouteName.SETS_ID_EDIT, params: { id: setId.value } };
-  });
+  const editSetLink = computed(() =>
+    routes.resolve("sets-id-edit", { id: setId.value }),
+  );
 
   const cardMap = computed<Map<string, ICardDetailsResponse>>(() => {
     return new Map(cards.value.map(card => [card.id, card]));
@@ -86,12 +85,11 @@ export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
     return cardMap.value.get(currentCardId.value) ?? null;
   });
 
-  const currentCardEditLink = computed<RouteLocationRaw>(() => {
-    return {
-      name: RouteName.SETS_ID_EDIT,
-      params: { id: setId.value },
-      ...(currentCard.value ? { query: { card: currentCard.value.id } } : {}),
-    };
+  const currentCardEditLink = computed(() => {
+    const path = routes.resolve("sets-id-edit", { id: setId.value });
+    return currentCard.value
+      ? { path, query: { card: currentCard.value.id } }
+      : path;
   });
 
   const isShowingResults = computed(() => {
@@ -365,6 +363,7 @@ export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
   });
 
   return {
+    setId,
     cards,
     canEdit,
     loading,

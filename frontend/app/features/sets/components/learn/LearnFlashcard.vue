@@ -6,7 +6,7 @@
         color="primary"
         class="shrink-0 rounded-sm"
       >
-        Картка {{ currentStep }}
+        {{ $t("sets.cardForm.number", { number: currentStep }) }}
       </UBadge>
 
       <span
@@ -30,7 +30,9 @@
           color="neutral"
           variant="ghost"
           :icon="isSpeaking ? 'i-lucide-square' : 'i-lucide-volume-2'"
-          :aria-label="isSpeaking ? 'Зупинити озвучення' : 'Озвучити картку'"
+          :aria-label="
+            isSpeaking ? $t('learn.speech.stop') : $t('learn.speech.start')
+          "
           @click.stop="handleSpeakCurrentSide"
         />
 
@@ -41,7 +43,7 @@
           color="neutral"
           icon="i-lucide-pencil"
           :to="editLink"
-          aria-label="Редагувати картку"
+          :aria-label="$t('learn.editCard')"
         />
 
         <UButton
@@ -50,7 +52,11 @@
           variant="ghost"
           color="neutral"
           :icon="isFullscreen ? 'i-lucide-minimize' : 'i-lucide-maximize'"
-          :aria-label="isFullscreen ? 'Вийти з повного екрана' : 'Повний екран'"
+          :aria-label="
+            isFullscreen
+              ? $t('learn.fullscreen.exit')
+              : $t('learn.fullscreen.enter')
+          "
           @click="emit('toggleFullscreen')"
         />
       </div>
@@ -67,7 +73,7 @@
         focus-visible:ring-2 focus-visible:ring-primary/70
       "
       :aria-pressed="flipped"
-      :aria-label="flipped ? 'Показати термін' : 'Показати відповідь'"
+      :aria-label="flipped ? $t('learn.showTerm') : $t('learn.showAnswer')"
       @click="handleCardClick"
       @keydown.enter.prevent="emit('flip')"
     >
@@ -86,7 +92,7 @@
           :key="flipped ? 'definition' : 'term'"
           class="learn-side"
           :side="flipped ? 'definition' : 'term'"
-          :badge="flipped ? 'Відповідь' : 'Термін'"
+          :badge="flipped ? $t('learn.answer') : $t('learn.term')"
           :title="flipped ? card.definition : card.term"
           :description="flipped ? null : card.termDescription"
           :image="flipped ? card.definitionImage : card.termImage"
@@ -108,7 +114,9 @@
             "
             class="size-9"
           />
-          <span>{{ swipeHint === "known" ? "Знаю" : "Не знаю" }}</span>
+          <span>{{
+            swipeHint === "known" ? $t("learn.known") : $t("learn.missed")
+          }}</span>
         </div>
       </div>
 
@@ -126,7 +134,9 @@
               "
               class="size-9"
             />
-            <span>{{ outcome === "known" ? "Знаю" : "Не знаю" }}</span>
+            <span>{{
+              outcome === "known" ? $t("learn.known") : $t("learn.missed")
+            }}</span>
           </div>
         </div>
       </Transition>

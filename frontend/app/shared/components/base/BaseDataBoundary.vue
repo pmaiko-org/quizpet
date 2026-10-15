@@ -36,10 +36,10 @@
             <p
               class="text-sm font-medium tracking-[0.2em] text-error uppercase"
             >
-              Помилка
+              {{ $t("common.error") }}
             </p>
             <h3 class="text-xl font-semibold text-highlighted">
-              {{ errorTitle }}
+              {{ resolvedErrorTitle }}
             </h3>
             <p
               v-if="errorDescription"
@@ -56,7 +56,7 @@
             size="lg"
             @click="emit('retry')"
           >
-            {{ retryLabel }}
+            {{ resolvedRetryLabel }}
           </UButton>
         </div>
       </div>
@@ -77,9 +77,9 @@ const {
   pending = false,
   error = null,
   empty = false,
-  errorTitle = "Не вдалося завантажити дані",
+  errorTitle = "",
   errorDescription = "",
-  retryLabel = "Спробувати знову",
+  retryLabel = "",
   skeletonCount = 4,
 } = defineProps<{
   pending?: boolean;
@@ -90,6 +90,12 @@ const {
   retryLabel?: string;
   skeletonCount?: number;
 }>();
+
+const { t } = useI18n();
+const resolvedErrorTitle = computed(
+  () => errorTitle || t("common.dataLoadError"),
+);
+const resolvedRetryLabel = computed(() => retryLabel || t("common.retryAgain"));
 
 const emit = defineEmits<{
   retry: [];

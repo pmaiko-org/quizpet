@@ -12,7 +12,7 @@
           sm:flex-row sm:items-center sm:gap-3
         "
       >
-        <p>QuizPet © {{ new Date().getFullYear() }}</p>
+        <p>{{ global?.siteName }} © {{ new Date().getFullYear() }}</p>
         <span
           class="
             hidden
@@ -20,59 +20,54 @@
           "
           aria-hidden="true"
         >·</span>
-        <p>Маленькі кроки, сильна пам’ять.</p>
+        <p>{{ global?.footerTagline }}</p>
       </div>
 
       <nav
         class="flex flex-wrap items-center gap-x-3 gap-y-1"
-        aria-label="Посилання проєкту"
+        :aria-label="$t('common.projectLinks')"
       >
-        <a
-          :href="PROJECT_LINKS.github"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub проєкту QuizPet (відкривається в новій вкладці)"
-          class="
-            rounded-sm transition-colors
-            hover:text-default
-            focus-visible:ring-2 focus-visible:ring-primary
-            focus-visible:outline-none
-          "
+        <template
+          v-for="link in links"
+          :key="`${link.label}:${link.path}`"
         >
-          GitHub
-        </a>
-        <span aria-hidden="true">·</span>
-        <a
-          :href="PROJECT_LINKS.telegram"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Telegram автора (відкривається в новій вкладці)"
-          class="
-            rounded-sm transition-colors
-            hover:text-default
-            focus-visible:ring-2 focus-visible:ring-primary
-            focus-visible:outline-none
-          "
-        >
-          Telegram
-        </a>
-        <span aria-hidden="true">·</span>
-        <NuxtLink
-          :to="{ name: RouteName.PRIVACY }"
-          class="
-            rounded-sm transition-colors
-            hover:text-default
-            focus-visible:ring-2 focus-visible:ring-primary
-            focus-visible:outline-none
-          "
-        >
-          Конфіденційність та умови
-        </NuxtLink>
+          <a
+            v-if="link.isExternal"
+            :href="link.path"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="
+              rounded-sm transition-colors
+              hover:text-default
+              focus-visible:ring-2 focus-visible:ring-primary
+              focus-visible:outline-none
+            "
+          >
+            {{ link.label }}
+          </a>
+          <NuxtLink
+            v-else
+            :to="link.path"
+            class="
+              rounded-sm transition-colors
+              hover:text-default
+              focus-visible:ring-2 focus-visible:ring-primary
+              focus-visible:outline-none
+            "
+          >
+            {{ link.label }}
+          </NuxtLink>
+        </template>
       </nav>
     </UContainer>
   </footer>
 </template>
 
 <script setup lang="ts">
-import { PROJECT_LINKS, RouteName } from "~/shared/constants";
+const { bootstrap } = useCmsBootstrap();
+const global = computed(() => bootstrap.value?.global);
+const links = computed(() => [
+  ...(global.value?.socialLinks ?? []),
+  ...(global.value?.footerLinks ?? []),
+]);
 </script>

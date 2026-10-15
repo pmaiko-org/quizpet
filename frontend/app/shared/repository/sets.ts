@@ -1,6 +1,4 @@
-import type { $Fetch, NitroFetchRequest } from "nitropack";
-
-import type { TRequestOptions } from "~/shared/repository/types";
+import type { TApiFetch, TRequestOptions } from "~/shared/repository/types";
 import type {
   ICardDetailsResponse,
   IEnglishLevelResponse,
@@ -14,10 +12,10 @@ import type {
   IUserResponse,
 } from "~/shared/types/api.generated";
 
-export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
+export const setsRepository = (backendApi: TApiFetch) => {
   return {
     getSets: (query?: Partial<ISetListQuery>, options?: TRequestOptions) => {
-      return fetch<ISetListResponse>("/sets", {
+      return backendApi<ISetListResponse>("/sets", {
         method: "GET",
         query,
         ...options,
@@ -25,21 +23,21 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     },
 
     getSet: (setId: string, options?: TRequestOptions) => {
-      return fetch<ISetDetailsResponse>(`/sets/${setId}`, {
+      return backendApi<ISetDetailsResponse>(`/sets/${setId}`, {
         method: "GET",
         ...options,
       });
     },
 
     getSetCards: (setId: string, options?: TRequestOptions) => {
-      return fetch<ICardDetailsResponse[]>(`/sets/${setId}/cards`, {
+      return backendApi<ICardDetailsResponse[]>(`/sets/${setId}/cards`, {
         method: "GET",
         ...options,
       });
     },
 
     createSet: (data: ISetCreate, options?: TRequestOptions) => {
-      return fetch("/sets", {
+      return backendApi("/sets", {
         method: "POST",
         body: data,
         ...options,
@@ -47,7 +45,7 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     },
 
     updateSet: (setId: string, data: ISetUpdate, options?: TRequestOptions) => {
-      return fetch(`/sets/${setId}`, {
+      return backendApi(`/sets/${setId}`, {
         method: "PATCH",
         body: data,
         ...options,
@@ -55,28 +53,28 @@ export const setsRepository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => {
     },
 
     deleteSet: (setId: string, options?: TRequestOptions) => {
-      return fetch<ISuccessResponse>(`/sets/${setId}`, {
+      return backendApi<ISuccessResponse>(`/sets/${setId}`, {
         method: "DELETE",
         ...options,
       });
     },
 
     getTopics: (options?: TRequestOptions) => {
-      return fetch<ITopicResponse[]>("/sets/topics", {
+      return backendApi<ITopicResponse[]>("/sets/topics", {
         method: "GET",
         ...options,
       });
     },
 
     getEnglishLevels: (options?: TRequestOptions) => {
-      return fetch<IEnglishLevelResponse[]>("/sets/english-levels", {
+      return backendApi<IEnglishLevelResponse[]>("/sets/english-levels", {
         method: "GET",
         ...options,
       });
     },
 
     getAuthors: (options?: TRequestOptions) => {
-      return fetch<IUserResponse[]>("/sets/authors", {
+      return backendApi<IUserResponse[]>("/sets/authors", {
         method: "GET",
         ...options,
       });

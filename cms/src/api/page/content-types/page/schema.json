@@ -1,0 +1,102 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": { "localized": true }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "path": {
+      "type": "string",
+      "required": true,
+      "regex": "^\\/(?:$|(?:[a-z0-9-]+|:[A-Za-z][A-Za-z0-9]*)(?:\\/(?:[a-z0-9-]+|:[A-Za-z][A-Za-z0-9]*))*)$",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "routeName": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "access": {
+      "type": "enumeration",
+      "enum": ["public", "authenticated", "guestOnly"],
+      "required": true,
+      "default": "public",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "redirectTo": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": ["default", "landing", "cabinet", "empty"],
+      "required": true,
+      "default": "default",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "showBreadcrumbs": {
+      "type": "boolean",
+      "required": true,
+      "default": true,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "widgets.hero-widget",
+        "widgets.feature-grid-widget",
+        "widgets.spotlight-widget",
+        "widgets.slider-widget",
+        "widgets.heading-widget",
+        "widgets.rich-text-widget",
+        "widgets.callout-widget",
+        "widgets.home-widget",
+        "widgets.login-widget",
+        "widgets.people-hero-widget",
+        "widgets.people-grid-widget",
+        "widgets.pitanyachka-widget",
+        "widgets.profile-widget",
+        "widgets.sets-list-widget",
+        "widgets.create-set-widget",
+        "widgets.set-edit-form-widget",
+        "widgets.learn-widget",
+        "widgets.match-widget"
+      ],
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "priority": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
+    }
+  }
+}

@@ -8,11 +8,10 @@
   >
     <div class="space-y-2">
       <h2 class="text-2xl font-semibold text-highlighted">
-        Оберіть категорію
+        {{ $t("pitanyachka.category.title") }}
       </h2>
       <p class="max-w-md text-sm text-muted">
-        Питання під час гри будуть лише з обраної категорії. «Всі категорії» —
-        грати з усіма питаннями одразу.
+        {{ $t("pitanyachka.category.description") }}
       </p>
     </div>
 
@@ -37,7 +36,7 @@
           name="i-lucide-layers"
           class="size-4"
         />
-        Всі категорії
+        {{ $t("pitanyachka.category.all") }}
         <span class="text-xs text-muted">{{ totalCount }}</span>
       </button>
 
@@ -73,7 +72,7 @@
       :disabled="disabled || !categories.length"
       @click="emit('start', selected)"
     >
-      Почати гру
+      {{ $t("pitanyachka.start") }}
     </UButton>
   </section>
 </template>

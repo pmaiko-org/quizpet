@@ -1,4 +1,4 @@
-FROM node:22-alpine AS node
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -11,20 +11,16 @@ COPY . .
 RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 
-FROM nginx:stable-alpine
-
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
-RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
-RUN ln -s /usr/local/bin/node /usr/bin/node
+FROM node:22-alpine
 
 WORKDIR /app
 
-COPY --from=node /app/.output ./.output
-COPY --from=node /app/package*.json ./
+COPY --from=build /app/.output ./.output
+COPY --from=build /app/package*.json ./
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 4999
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-CMD sh -c "nginx && node .output/server/index.mjs"
+EXPOSE 5001
+
+CMD ["docker-entrypoint.sh"]

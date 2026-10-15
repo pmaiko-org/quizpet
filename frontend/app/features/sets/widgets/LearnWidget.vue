@@ -1,16 +1,16 @@
 <template>
   <SetStudyNav
     class="mb-3"
-    :setId="route.params.id"
-    :active="RouteName.SETS_ID_LEARN"
+    :setId="setId"
+    active="sets-id-learn"
   />
   <BaseDataBoundary
     :pending="loading"
     :error="error"
     :empty="!cards.length"
-    errorTitle="Не вдалося завантажити набір"
-    errorDescription="Спробуйте оновити сторінку або повторно звернутися до сервера."
-    retryLabel="Спробувати ще раз"
+    :errorTitle="$t('learn.loadError.title')"
+    :errorDescription="$t('learn.loadError.description')"
+    :retryLabel="$t('common.retryAgain')"
     @retry="handleRetry"
   >
     <template #loading>
@@ -36,7 +36,7 @@
           />
         </div>
         <h2 class="mt-5 text-2xl font-semibold text-highlighted">
-          У наборі поки немає карток
+          {{ $t("learn.empty") }}
         </h2>
       </section>
     </template>
@@ -115,9 +115,6 @@
 <script setup lang="ts">
 import { useFullscreen } from "@vueuse/core";
 
-import { RouteName } from "~/shared/constants";
-
-const route = useRoute(RouteName.SETS_ID_LEARN);
 const learnStage = ref<HTMLElement | null>(null);
 const {
   isFullscreen,
@@ -148,6 +145,7 @@ const {
   reports,
   learnedCount,
   mistakeCardCount,
+  setId,
   toggleFlip: handleFlip,
   markKnown: handleKnown,
   markMissed: handleMissed,

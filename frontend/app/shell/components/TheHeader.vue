@@ -13,28 +13,39 @@
           variant="ghost"
           color="neutral"
           size="sm"
-          aria-label="Відкрити або закрити бокову панель"
+          :aria-label="$t('common.openSidebar')"
           class="cursor-pointer rounded-md border border-default bg-elevated/70"
           @click="handleToggleSidebar"
         />
 
         <NuxtLink
-          :to="{ name: RouteName.INDEX }"
+          :to="routes.resolve(isLoggedIn ? 'cabinet' : 'index')"
           class="
             inline-flex min-w-0 items-center gap-2 rounded-md px-1.5 py-1
             transition-colors
             hover:bg-elevated/70
           "
         >
+          <img
+            v-if="global?.logo?.url"
+            :src="global.logo.url"
+            :alt="global.siteName"
+            class="size-8 rounded-md object-contain"
+          >
           <span
+            v-else
             class="
               flex size-8 items-center justify-center rounded-md bg-primary
               text-xs font-bold text-inverted
             "
           >Q</span>
           <span class="min-w-0">
-            <span class="block truncate text-sm font-semibold text-highlighted">QuizPet</span>
-            <span class="block truncate text-[11px] text-muted">Навчання картками</span>
+            <span
+              class="block truncate text-sm font-semibold text-highlighted"
+            >{{ global?.siteName }}</span>
+            <span class="block truncate text-[11px] text-muted">{{
+              $t("common.flashcardLearning")
+            }}</span>
           </span>
         </NuxtLink>
       </div>
@@ -62,21 +73,25 @@
         </div>
 
         <UColorModeSwitch />
+        <LocaleSwitcher />
       </div>
     </template>
   </UHeader>
 </template>
 
 <script setup lang="ts">
-import { RouteName } from "~/shared/constants";
-
 const open = defineModel<boolean>({ required: false });
 
 const { showSidebarToggle = true } = defineProps<{
   showSidebarToggle?: boolean;
 }>();
 
-const route = useRoute();
+const routes = usePageRoutes();
+const { bootstrap } = useCmsBootstrap();
+const { page } = useCmsPage();
+const { isLoggedIn } = storeToRefs(useAuthStore());
+const { t } = useI18n();
+const global = computed(() => bootstrap.value?.global);
 
 const handleToggleSidebar = () => {
   open.value = !open.value;
@@ -84,11 +99,11 @@ const handleToggleSidebar = () => {
 
 const isLearning = computed(
   () =>
-    route.name === RouteName.SETS_ID_LEARN ||
-    route.name === RouteName.SETS_ID_MATCH,
+    page.value?.routeName === "sets-id-learn" ||
+    page.value?.routeName === "sets-id-match",
 );
 const sectionLabel = computed(() =>
-  isLearning.value ? "Режим навчання" : "Навчальний простір",
+  isLearning.value ? t("common.studyMode") : t("common.studySpace"),
 );
 const sectionIcon = computed(() =>
   isLearning.value ? "i-lucide-focus" : "i-lucide-sparkles",

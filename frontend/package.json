@@ -3,10 +3,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test:match": "node --import tsx --test tests/match-session.test.ts",
     "build": "nuxt build",
     "dev": "nuxt dev --public",
     "generate:api-types": "npm --prefix ../backend run generate:openapi && openapi-typescript ../backend/openapi.json -o ./app/shared/types/api.generated.ts && node ./scripts/append-openapi-aliases.mjs",
+    "generate:cms-api-types": "openapi-typescript ../cms/openapi.json -o ./app/core/cms/types/api.generated.ts && node ./scripts/append-cms-openapi-aliases.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -15,7 +15,8 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "type-check": "nuxi typecheck",
-    "precommit": "npm run generate:api-types && npm run type-check && npm run test:match && npm run format:fix && npm run lint:fix"
+    "precommit": "npm run generate:api-types && npm run type-check && npm run test && npm run format:fix && npm run lint:fix",
+    "test": "node --import tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@microsoft/clarity": "^1.0.2",
@@ -24,10 +25,12 @@
     "@nuxt/ui": "^4.7.1",
     "@pinia/nuxt": "^1.0.1",
     "@vueuse/core": "^14.3.0",
+    "ioredis": "^5.11.1",
     "nuxt": "^4.4.2",
     "pinia": "^4.0.2",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5.30",
+    "vue-i18n": "^11.4.13",
     "vue-router": "^5.0.4",
     "zod": "^4.3.6"
   },
