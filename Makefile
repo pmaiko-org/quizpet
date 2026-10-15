@@ -23,7 +23,7 @@ SEQUENTIAL_ENV = COMPOSE_BAKE=false COMPOSE_PARALLEL_LIMIT=1 DOCKER_BUILDKIT=1
 
 # Development
 dev: check-rclone
-	docker volume ls -qf dangling=true | xargs -r docker volume rm
+	docker volume ls -qf dangling=true | grep -E '^[0-9a-f]{64}$$' | xargs -r docker volume rm
 	$(DEV_COMPOSE) up --build --remove-orphans --renew-anon-volumes
 
 

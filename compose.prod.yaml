@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - frontend-static:/app/.output/public:ro
+      - nginx-cache:/var/cache/nginx/media
 
   frontend:
     build:
