@@ -22,6 +22,7 @@ Fix all errors before replying.
 | `make down` | Stop and remove containers while preserving volumes |
 | `make reset` | Stop containers and permanently remove their volumes |
 | `make logs` | Tail logs from all containers |
+| `make prune` | Remove images not used by any container and trim the build cache to `BUILD_CACHE_KEEP`; runs automatically at the end of `make prod` |
 | `make precommit` | Type-check, format, and lint both backend and frontend |
 | `make prod` | Build and deploy production stack |
 

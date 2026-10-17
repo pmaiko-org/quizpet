@@ -14,9 +14,10 @@ LOCK_TIMEOUT = 1800
 LOCK_BUSY_CODE = 9
 
 PROD_BUILD_SERVICES = backend cms frontend nginx
+BUILD_CACHE_KEEP = 2GB
 SEQUENTIAL_ENV = COMPOSE_BAKE=false COMPOSE_PARALLEL_LIMIT=1 DOCKER_BUILDKIT=1
 
-.PHONY: dev prod prod-deploy prod-build down reset rebuild logs ps \
+.PHONY: dev prod prod-deploy prod-build prune down reset rebuild logs ps \
 	precommit generate-cms-types check-rclone rclone-auth \
 	cms-uploads-migrate create-network remove-network list-networks
 
@@ -39,13 +40,12 @@ prod:
 
 prod-deploy: create-network check-rclone
 	$(PROD_COMPOSE) down --remove-orphans
+	@echo "⚡ Removing dangling images before build..."
+	-docker image prune -f
 	$(MAKE) --no-print-directory prod-build
 	@echo "⚡ Starting containers..."
 	$(SEQUENTIAL_ENV) $(PROD_COMPOSE) up -d --no-build --remove-orphans
-	@echo "⚡ Cleaning old build cache (only unused layers older than 24h)..."
-	docker builder prune -f --filter "until=24h"
-	@echo "⚡ Removing dangling images..."
-	docker image prune -f
+	$(MAKE) --no-print-directory prune
 
 prod-build:
 	@for service in $(PROD_BUILD_SERVICES); do \
@@ -54,6 +54,14 @@ prod-build:
 			$(PROD_COMPOSE) build $$service || exit 1; \
 	done
 	@echo "⚡ All images built"
+
+prune:
+	@echo "⚡ Removing images not used by any container..."
+	-docker image prune -af
+	@echo "⚡ Trimming build cache down to $(BUILD_CACHE_KEEP)..."
+	-@docker builder prune -af --max-used-space $(BUILD_CACHE_KEEP) 2>/dev/null \
+		|| docker builder prune -af --keep-storage $(BUILD_CACHE_KEEP)
+	@docker system df
 
 
 # Docker
