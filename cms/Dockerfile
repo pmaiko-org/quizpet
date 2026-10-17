@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:22.18.0-alpine AS build
 
 ARG PUBLIC_URL
 ARG DATABASE_CLIENT
@@ -23,7 +23,7 @@ ENV PUBLIC_URL=${PUBLIC_URL}
 ENV DATABASE_CLIENT=${DATABASE_CLIENT}
 RUN npm run build
 
-FROM node:22-alpine
+FROM node:22.18.0-alpine
 
 RUN apk add --no-cache vips-dev rclone fuse3 su-exec \
   && echo user_allow_other >> /etc/fuse.conf

@@ -76,6 +76,7 @@ enum ApprovalStatus {
 - **Frontend static assets**: in prod the `frontend` container copies `.output/public` into the shared `frontend-static` volume on start (`frontend/docker-entrypoint.sh`), and `nginx` mounts it read-only at `/app/.output/public` to serve `/_nuxt/` and images directly.
 - **Auth**: Google OAuth 2.0 → issues JWT access + refresh tokens. Frontend auto-refreshes on 401 via the `$fetch` plugin, then retries the original request once.
 - **File storage**: Google Drive is the storage backend, mounted with rclone (FUSE) inside the containers by `backend/docker-entrypoint.sh` and `cms/docker-entrypoint.sh`. Backend mounts `RCLONE_STORAGE_REMOTE` at `STORAGE_PATH` (`/storage`) and serves it as static files under the same path prefix; Strapi mounts `RCLONE_CMS_REMOTE` at `public/uploads`, so on the remote the media lands in `cms/` next to `db-backups/`. Both entrypoints mount before the app starts, refuse to run unmounted, and stop the container if the mount disappears. `rclone/rclone.conf` is required — `make rclone-auth` creates it, `make check-rclone` guards `make dev` and `make prod`. `StorageCleanService` and `StorageDbBackupsService` run on schedules.
+- **Dev tools**: `compose.dev.yaml` swaps the `redis` image for `redis/redis-stack` (RedisInsight on `REDIS_INSIGHT_PORT`, default 8001) and adds a `pgadmin` service (`PGADMIN_PORT`, default 5050). Neither is part of the prod stack.
 - **Redis**: Present in the compose stack (LRU cache, 100 MB limit) but not yet wired into backend application code.
 
 ## Backend ↔ frontend contract

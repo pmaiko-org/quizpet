@@ -35,5 +35,34 @@ services:
       NODE_ENV: "development"
 
   redis:
+    image: redis/redis-stack:7.4.0-v8
+    command: []
+    environment:
+      REDIS_ARGS: "--maxmemory 64mb --maxmemory-policy allkeys-lru --appendonly no"
+    mem_limit: 512mb
     ports:
       - "${REDIS_PORT}:6379"
+      - "${REDIS_INSIGHT_PORT:-8001}:8001"
+
+  pgadmin:
+    image: dpage/pgadmin4:9.18.0
+    container_name: "${PROJECT_PREFIX}-pgadmin"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal_network
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@quizpet.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_DISABLE_POSTFIX: "True"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+
+volumes:
+  pgadmin-data:

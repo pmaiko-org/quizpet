@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:22.18.0-alpine AS build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY . .
 RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 
-FROM node:22-alpine
+FROM node:22.18.0-alpine
 
 WORKDIR /app
 
