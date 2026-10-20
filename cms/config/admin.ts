@@ -29,7 +29,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Admin => 
   preview: {
     enabled: true,
     config: {
-      allowedOrigins: [env('CMS_PREVIEW_URL')!],
+      allowedOrigins: [env('APP_ORIGIN')!],
       async handler(uid, { documentId, locale }) {
         if (uid !== 'api::page.page') {
           return null;
@@ -61,7 +61,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Admin => 
         ).toString('base64url');
         const query = new URLSearchParams({ token });
 
-        return `${env('CMS_PREVIEW_URL')}/api/preview?${query}`;
+        return `${env('APP_ORIGIN')}/api/preview?${query}`;
       },
     },
   },

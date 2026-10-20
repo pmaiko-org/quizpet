@@ -721,8 +721,8 @@ NUXT_REVALIDATE_SECRET=
 # Общий секрет CMS и Nuxt для защищённого Preview черновиков
 CMS_PREVIEW_SECRET=
 
-# Публичный origin Nuxt, на который Strapi формирует Preview-ссылку
-CMS_PREVIEW_URL=
+# Публичный origin приложения, на который Strapi формирует Preview-ссылку
+APP_ORIGIN=
 
 # Redis для кеша контента
 NUXT_REDIS_URL=redis://p-quizpet-redis:6379

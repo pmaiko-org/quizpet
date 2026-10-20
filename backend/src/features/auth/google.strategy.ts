@@ -5,6 +5,7 @@ import {
   StrategyOptions,
   VerifyCallback,
 } from "passport-google-oauth20";
+import { GLOBAL_PREFIX } from "../../config/constants";
 import { AuthService } from "./auth.service";
 
 @Injectable()
@@ -13,7 +14,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     const options: StrategyOptions = {
       clientID: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: process.env.GOOGLE_REDIRECT_URI as string,
+      callbackURL: `${process.env.APP_ORIGIN}/${GLOBAL_PREFIX}/auth/google/redirect`,
       scope: ["email", "profile"],
     };
 

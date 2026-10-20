@@ -4,7 +4,7 @@ import { seed } from "../scripts/seed";
 import { registerContentValidation } from "./utils/cms-validation";
 
 const REQUIRED_ENV = {
-  CMS_PREVIEW_URL: "content preview links and frontend revalidation",
+  APP_ORIGIN: "content preview links and frontend revalidation",
   CMS_PREVIEW_SECRET: "signing content preview links",
   NUXT_REVALIDATE_SECRET: "frontend revalidation after publishing",
 };
@@ -38,9 +38,9 @@ export default {
 
     let timer: NodeJS.Timeout | undefined;
     const revalidate = () => {
-      const previewUrl = process.env.CMS_PREVIEW_URL;
+      const appOrigin = process.env.APP_ORIGIN;
       const revalidateSecret = process.env.NUXT_REVALIDATE_SECRET;
-      if (!previewUrl || !revalidateSecret) {
+      if (!appOrigin || !revalidateSecret) {
         return;
       }
 
@@ -48,7 +48,7 @@ export default {
       timer = setTimeout(async () => {
         try {
           const response = await fetch(
-            `${previewUrl}/api/_revalidate`,
+            `${appOrigin}/api/_revalidate`,
             {
               method: "POST",
               headers: {

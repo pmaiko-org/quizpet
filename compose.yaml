@@ -98,9 +98,12 @@ services:
       DB_DATABASE: ${POSTGRES_DB}
       CMS_DATABASE_NAME: ${CMS_DATABASE_NAME}
 
+      JWT_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET is required}
+
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+      APP_ORIGIN: ${APP_ORIGIN:?APP_ORIGIN is required}
     logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "grep -q ' /storage fuse' /proc/mounts || exit 1"]
@@ -154,7 +157,7 @@ services:
       TRANSFER_TOKEN_SALT: ${CMS_TRANSFER_TOKEN_SALT}
       ENCRYPTION_KEY: ${CMS_ENCRYPTION_KEY}
       CMS_PREVIEW_SECRET: ${CMS_PREVIEW_SECRET:?CMS_PREVIEW_SECRET is required}
-      CMS_PREVIEW_URL: ${CMS_PREVIEW_URL:?CMS_PREVIEW_URL is required}
+      APP_ORIGIN: ${APP_ORIGIN:?APP_ORIGIN is required}
       NUXT_REVALIDATE_SECRET: ${NUXT_REVALIDATE_SECRET:?NUXT_REVALIDATE_SECRET is required}
     logging: *default-logging
     healthcheck:
