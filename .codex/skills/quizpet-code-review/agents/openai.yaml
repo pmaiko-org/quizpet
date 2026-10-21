@@ -1,0 +1,3 @@
+interface:
+  display_name: "QuizPet Code Review"
+  short_description: "Find concrete architecture and reuse problems in QuizPet"

@@ -4,6 +4,15 @@ import type {
   TCmsRedirectsResponse as TGeneratedCmsRedirectsResponse,
 } from "./types/api.generated";
 
+export type {
+  TCmsComponent,
+  TCmsComponentUid,
+  TCmsContentType,
+  TCmsContentTypeUid,
+  TCmsPageSchema,
+  TCmsPageSchemaBlock,
+} from "./types/schema";
+
 export type TCmsBootstrapResponse = TGeneratedCmsBootstrapResponse;
 export type TCmsPageResolveResponse = TGeneratedCmsPageResolveResponse;
 export type TCmsLocale = TCmsBootstrapResponse["locale"];

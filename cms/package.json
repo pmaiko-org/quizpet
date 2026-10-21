@@ -12,8 +12,8 @@
     "start": "strapi start",
     "strapi": "strapi",
     "seed": "tsx scripts/seed.ts",
-    "generate:types": "strapi ts:generate-types",
-    "generate:openapi": "strapi openapi generate --output ./openapi.json",
+    "generate:types": "strapi ts:generate-types && node scripts/export-schema-types.mjs",
+    "generate:openapi": "node --import tsx scripts/generate-openapi.ts",
     "check:translations": "node scripts/check-translations.mjs",
     "check:widgets": "node scripts/check-widgets.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p src/admin/tsconfig.json",
@@ -35,6 +35,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

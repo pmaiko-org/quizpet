@@ -474,33 +474,35 @@ development. В production он логирует ошибку и возвращ�
 
 ### 7.8 Автогенерация TypeScript-типов
 
-У Strapi нет готового стабильного генератора типов HTTP-ответов для внешнего
-фронтенда. Штатный `strapi ts:generate-types` создаёт типы схем для кода самого
-Strapi, а встроенный генератор OpenAPI пока помечен как experimental. Поэтому
-используются оба механизма, каждый для своей задачи.
+У Strapi нет одного генератора, который одновременно описывает внутренние схемы и
+фактические ответы кастомных HTTP-маршрутов. Поэтому используются два механизма,
+каждый для своей задачи.
 
 **В CMS:**
 
 1. `strapi ts:generate-types` генерирует
    `cms/types/generated/{contentTypes,components}.d.ts` из JSON-схем Strapi.
-2. Эти файлы используются контроллерами и сервисами CMS, но напрямую во фронтенд
-   не импортируются: они содержат внутреннюю module augmentation Strapi и не
-   описывают итоговую форму кастомных ответов.
+2. Эти файлы используются контроллерами и сервисами CMS. Генератор также переносит
+   их во frontend и адаптирует module augmentation к `@strapi/types`. Поэтому после
+   добавления или удаления content type, component, поля или варианта Dynamic Zone
+   полный реестр UID и типов доступен frontend без ручного перечисления.
 3. Для `bootstrap`, `resolve` и `redirects` рядом с маршрутами объявляются Zod-схемы
    `request`/`response` со стабильными именами. `zod` добавляется как прямая
    зависимость CMS. Один и тот же контракт используется для типизации контроллера
-   через `z.infer` и встроенным генератором OpenAPI.
-4. `strapi openapi generate` сохраняет спецификацию в
-   `cms/openapi.json`. HTTP-доступ к полной спецификации в production не включается.
+   через `z.infer` и генератором OpenAPI.
+4. `@asteasolutions/zod-to-openapi` без запуска Strapi сохраняет контракт этих
+   маршрутов в `cms/openapi.json`. База данных для генерации не нужна.
 
 **Во фронтенде:**
 
 1. Уже используемый `openapi-typescript` преобразует `cms/openapi.json` в
-   `frontend/app/features/cms/types/api.generated.ts`.
+   `frontend/app/core/cms/types/api.generated.ts`.
 2. Файл полностью генерируемый и вручную не редактируется.
 3. Скрипт добавляет только удобные публичные type aliases с префиксом `T`, например
    `TCmsBootstrapResponse`, `TCmsPageResolveResponse` и `TCmsRedirectsResponse`.
-4. Тип `blocks` должен получиться дискриминированным union по литеральному полю
+4. `frontend/app/core/cms/types/schema.ts` экспортирует generic-типы
+   `TCmsContentType<TUid>` и `TCmsComponent<TUid>` поверх полного реестра Strapi.
+5. Тип `blocks` должен получиться дискриминированным union по литеральному полю
    `__component`; реестр виджетов проверяется через `satisfies` на полноту этого union.
 
 Автоматическую OpenAPI-схему стандартного REST-маршрута `page` не используем как
@@ -512,17 +514,18 @@ Strapi, а встроенный генератор OpenAPI пока помече
 
 ```text
 Strapi JSON schemas → strapi ts:generate-types → типы внутри CMS
+  → frontend/app/core/cms/types/{contentTypes,components}.generated.d.ts
 Zod request/response schemas
-  → strapi openapi generate
+  → zod-to-openapi
   → cms/openapi.json
   → openapi-typescript
-  → frontend/app/features/cms/types/api.generated.ts
+  → frontend/app/core/cms/types/api.generated.ts
 ```
 
-`cms/openapi.json` и итоговый TypeScript-файл коммитятся. Команда запускается после
+`cms/openapi.json` и итоговые TypeScript-файлы коммитятся. Команда запускается после
 каждого изменения схемы или контракта и в CI; CI завершает проверку ошибкой, если
-после генерации появился незакоммиченный diff. Для запуска OpenAPI-генератора Strapi
-нужна доступная CMS-база PostgreSQL.
+после генерации появился незакоммиченный diff. Ни один шаг генерации не подключается
+к PostgreSQL.
 
 ---
 
