@@ -327,6 +327,9 @@ export const getBootstrap = async (
     getLocaleSettings(strapi),
     strapi.documents("api::translation.translation").findMany({
       locale,
+      filters: {
+        namespace: { $in: ["common", "filePicker", "landing"] },
+      },
       limit: -1,
     }),
     getPages(strapi, locale, "published"),

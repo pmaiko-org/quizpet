@@ -1,94 +1,70 @@
-import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { Repository } from "typeorm";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "../users/user.entity";
-import { RefreshTokenPayload } from "./interfaces/jwt-payload.interface";
-import { StorageService } from "../storage/services/storage.service";
+import type { Profile } from "passport-google-oauth20";
+import { Repository } from "typeorm";
 import { RequestService } from "../../common/request/request.service";
 import { FileResponseDto } from "../storage/dto/file.response.dto";
+import { StorageService } from "../storage/services/storage.service";
+import { UserEntity } from "../users/user.entity";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-    private jwtService: JwtService,
-    private storageService: StorageService,
-    private requestService: RequestService,
+    private readonly userRepository: Repository<UserEntity>,
+    private readonly storageService: StorageService,
+    private readonly requestService: RequestService,
   ) {}
 
-  async validateUser(profile: any) {
-    const { id: googleId, emails, name, photos } = profile;
-    let user = await this.userRepository.findOne({ where: { googleId } });
+  async validateGoogleUser(profile: Profile) {
+    const email = profile.emails?.[0]?.value.trim().toLowerCase();
+    if (!email) throw new UnauthorizedException("Google account has no email");
 
-    if (!user) {
-      const picture: string | undefined = photos[0]?.value;
+    let user = await this.userRepository.findOne({
+      where: [{ googleId: profile.id }, { email }],
+    });
 
-      let storageFile: FileResponseDto | undefined = undefined;
+    if (user) {
+      if (user.googleId !== profile.id) {
+        user.googleId = profile.id;
+        user = await this.userRepository.save(user);
+      }
+      return user;
+    }
 
-      if (picture) {
+    const picture = profile.photos?.[0]?.value;
+    let storageFile: FileResponseDto | undefined;
+
+    if (picture) {
+      try {
         const response = await this.requestService.get<ArrayBuffer>(picture, {
           responseType: "arraybuffer",
         });
         storageFile = await this.storageService.uploadFile({
-          originalname: `user-${googleId}`,
+          originalname: `user-${profile.id}`,
           mimetype: String(response.headers["content-type"] ?? ""),
           size: Number(response.headers["content-length"] ?? 0),
           buffer: Buffer.from(response.data),
         });
+      } catch {
+        storageFile = undefined;
       }
-
-      user = this.userRepository.create({
-        googleId,
-        email: emails[0].value,
-        firstName: name.givenName || "unknown",
-        lastName: name.familyName || "unknown",
-        picture: storageFile?.id ? { id: storageFile?.id } : undefined,
-      });
-
-      await this.userRepository.save(user);
     }
 
-    const accessToken = this.generateAccessToken(user);
-    const refreshToken = this.generateRefreshToken(user);
-
-    return { user, accessToken, refreshToken };
-  }
-
-  generateAccessToken(user: Pick<UserEntity, "id" | "email">) {
-    return this.jwtService.sign(
-      { sub: user.id, email: user.email },
-      { secret: process.env.JWT_SECRET, expiresIn: "5d" },
+    return this.userRepository.save(
+      this.userRepository.create({
+        googleId: profile.id,
+        email,
+        firstName: profile.name?.givenName || "unknown",
+        lastName: profile.name?.familyName || "unknown",
+        picture: storageFile?.id ? { id: storageFile.id } : undefined,
+      }),
     );
   }
 
-  generateRefreshToken(user: UserEntity) {
-    return this.jwtService.sign(
-      { sub: user.id, tokenVersion: "user.tokenVersion" },
-      { secret: process.env.JWT_REFRESH_SECRET, expiresIn: "90d" },
-    );
-  }
-
-  verifyRefreshToken(refreshToken: string) {
-    try {
-      return this.jwtService.verify<RefreshTokenPayload>(refreshToken, {
-        secret: process.env.JWT_REFRESH_SECRET,
-      });
-    } catch {
-      return null;
-    }
-  }
-
-  async refreshAccessToken(refreshToken: string): Promise<string | null> {
-    const payload = this.verifyRefreshToken(refreshToken);
-    if (!payload) return null;
-
-    const user = await this.userRepository.findOne({
-      where: { id: payload.sub },
-    });
-    if (!user) return null;
-
-    return this.generateAccessToken(user);
+  async getUser(userId: string) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new UnauthorizedException("User not found");
+    return user;
   }
 }

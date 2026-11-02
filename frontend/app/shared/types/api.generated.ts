@@ -11,7 +11,23 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["AuthController_googleAuth"];
+    get: operations["AuthController_googleStart"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/google/authorize": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["AuthController_googleAuthorize"];
     put?: never;
     post?: never;
     delete?: never;
@@ -27,9 +43,25 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["AuthController_googleAuthRedirect"];
+    get: operations["AuthController_googleCallback"];
     put?: never;
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/handoff": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["AuthController_handoff"];
     delete?: never;
     options?: never;
     head?: never;
@@ -45,8 +77,104 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["AuthController_refreshToken"];
+    post: operations["AuthController_refresh"];
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["AuthController_status"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/me": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["AuthController_me"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/logout": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["AuthController_logout"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/sessions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["AuthController_sessions"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/sessions/others": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations["AuthController_revokeOtherSessions"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/auth/sessions/{sessionId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations["AuthController_revokeSession"];
     options?: never;
     head?: never;
     patch?: never;
@@ -264,11 +392,37 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    RefreshTokenDto: {
-      refreshToken: string;
-    };
-    RefreshTokenResponseDto: {
+    AccessTokenResponseDto: {
       accessToken: string;
+    };
+    AuthStatusResponseDto: {
+      authenticated: boolean;
+    };
+    OAuthHandoffDto: {
+      code: string;
+    };
+    SessionResponseDto: {
+      id: string;
+      device: string;
+      ipAddress: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      lastActivityAt: string;
+      /** Format: date-time */
+      expiresAt: string;
+      current: boolean;
+    };
+    UserResponseDto: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      avatar?: string;
+      avatarFileId?: string;
+    };
+    SuccessResponseDto: {
+      success: boolean;
     };
     UserListQueryDto: {
       /** @default 1 */
@@ -289,17 +443,6 @@ export interface components {
     };
     AccountDeleteDto: {
       confirmEmail: string;
-    };
-    SuccessResponseDto: {
-      success: boolean;
-    };
-    UserResponseDto: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      avatar?: string;
-      avatarFileId?: string;
     };
     PaginationMetaDto: {
       page: number;
@@ -430,7 +573,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  AuthController_googleAuth: {
+  AuthController_googleStart: {
     parameters: {
       query?: never;
       header?: never;
@@ -447,7 +590,7 @@ export interface operations {
       };
     };
   };
-  AuthController_googleAuthRedirect: {
+  AuthController_googleAuthorize: {
     parameters: {
       query?: never;
       header?: never;
@@ -464,7 +607,24 @@ export interface operations {
       };
     };
   };
-  AuthController_refreshToken: {
+  AuthController_googleCallback: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  AuthController_handoff: {
     parameters: {
       query?: never;
       header?: never;
@@ -473,16 +633,149 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["RefreshTokenDto"];
+        "application/json": components["schemas"]["OAuthHandoffDto"];
       };
     };
     responses: {
-      201: {
+      200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["RefreshTokenResponseDto"];
+          "application/json": components["schemas"]["AccessTokenResponseDto"];
+        };
+      };
+    };
+  };
+  AuthController_refresh: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AccessTokenResponseDto"];
+        };
+      };
+    };
+  };
+  AuthController_status: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuthStatusResponseDto"];
+        };
+      };
+    };
+  };
+  AuthController_me: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserResponseDto"];
+        };
+      };
+    };
+  };
+  AuthController_logout: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  AuthController_sessions: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionResponseDto"][];
+        };
+      };
+    };
+  };
+  AuthController_revokeOtherSessions: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponseDto"];
+        };
+      };
+    };
+  };
+  AuthController_revokeSession: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        sessionId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponseDto"];
         };
       };
     };
@@ -868,18 +1161,20 @@ export interface operations {
 
 type ApiSchemas = components["schemas"];
 
+export type IAccessTokenResponse = ApiSchemas["AccessTokenResponseDto"];
 export type IAccountDelete = ApiSchemas["AccountDeleteDto"];
+export type IAuthStatusResponse = ApiSchemas["AuthStatusResponseDto"];
 export type ICardCreate = ApiSchemas["CardCreateDto"];
 export type ICardDetailsResponse = ApiSchemas["CardDetailsResponseDto"];
 export type ICardUpdate = ApiSchemas["CardUpdateDto"];
 export type IEnglishLevelResponse = ApiSchemas["EnglishLevelResponseDto"];
 export type IFileResponse = ApiSchemas["FileResponseDto"];
+export type IOAuthHandoff = ApiSchemas["OAuthHandoffDto"];
 export type IPaginationMeta = ApiSchemas["PaginationMetaDto"];
 export type IPaginationQuery = ApiSchemas["PaginationQueryDto"];
 export type IProfileStatsResponse = ApiSchemas["ProfileStatsResponseDto"];
 export type IProfileUpdate = ApiSchemas["ProfileUpdateDto"];
-export type IRefreshToken = ApiSchemas["RefreshTokenDto"];
-export type IRefreshTokenResponse = ApiSchemas["RefreshTokenResponseDto"];
+export type ISessionResponse = ApiSchemas["SessionResponseDto"];
 export type ISetCreate = ApiSchemas["SetCreateDto"];
 export type ISetDetailsResponse = ApiSchemas["SetDetailsResponseDto"];
 export type ISetListItemResponse = ApiSchemas["SetListItemResponseDto"];

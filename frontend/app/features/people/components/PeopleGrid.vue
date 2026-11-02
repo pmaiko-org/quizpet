@@ -1,18 +1,16 @@
 <template>
   <section class="space-y-3">
     <BaseSectionHeader
-      :eyebrow="$t('people.grid.eyebrow')"
-      :title="$t('people.grid.title')"
-      :summary="
-        meta ? t('people.grid.count', { count: meta.total }, meta.total) : ''
-      "
+      :eyebrow="$wt('eyebrow')"
+      :title="$wt('title')"
+      :summary="meta ? t('count', { count: meta.total }, meta.total) : ''"
     />
 
     <BaseDataBoundary
       :pending="pending"
       :error="error"
       :empty="!users.length"
-      :errorTitle="$t('people.grid.error')"
+      :errorTitle="$wt('error')"
       @retry="emit('refresh')"
     >
       <template #loading>
@@ -60,7 +58,7 @@
             />
           </div>
           <h3 class="mt-4 text-xl font-semibold text-highlighted">
-            {{ $t("people.grid.empty") }}
+            {{ $wt("empty") }}
           </h3>
         </div>
       </template>
@@ -107,11 +105,12 @@ const {
   error?: unknown;
 }>();
 
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const page = defineModel<number>("page", { required: true });
 
 const emit = defineEmits<{
   refresh: [];
 }>();
+const $wt = t;
 </script>

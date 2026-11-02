@@ -2,5 +2,12 @@
   "collectionName": "components_widgets_pitanyachka_widgets",
   "info": { "displayName": "Pitanyachka Widget" },
   "options": {},
-  "attributes": {}
+  "attributes": {
+    "translations": {
+      "type": "component",
+      "component": "shared.translation",
+      "repeatable": true,
+      "required": true
+    }
+  }
 }

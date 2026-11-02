@@ -4,6 +4,10 @@ import { resolve } from "node:path";
 const cmsRoot = resolve(import.meta.dirname, "..");
 const projectRoot = resolve(cmsRoot, "..");
 const widgetsRoot = resolve(cmsRoot, "src/components/widgets");
+const sharedTranslationPath = resolve(
+  cmsRoot,
+  "src/components/shared/translation.json",
+);
 const pageSchema = JSON.parse(
   readFileSync(
     resolve(cmsRoot, "src/api/page/content-types/page/schema.json"),
@@ -62,6 +66,10 @@ compare("Zod contract", contractUids);
 compare("frontend registry", registryUids);
 compare("seed", seedUids);
 
+if (!existsSync(sharedTranslationPath)) {
+  failures.push("shared.translation: component schema is missing");
+}
+
 
 for (const file of schemaFiles) {
   const apiId = file.slice(0, -5);
@@ -84,6 +92,13 @@ for (const file of schemaFiles) {
   }
   if (!registryWidgets.has(uid) || !existsSync(registryWidgets.get(uid))) {
     failures.push(`${uid}: Vue component referenced by the registry is missing`);
+  }
+  if (
+    seed.includes(`functionalBlock("${apiId.replace(/-widget$/, "")}")`) &&
+    (schema.attributes?.translations?.component !== "shared.translation" ||
+      schema.attributes.translations.repeatable !== true)
+  ) {
+    failures.push(`${uid}: functional widget must own repeatable translations`);
   }
 }
 

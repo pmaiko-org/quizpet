@@ -1,22 +1,22 @@
 export const useOAuthCallback = () => {
-  const { setTokens } = useAuthStore();
+  const route = useRoute();
   const routes = usePageRoutes();
+  const { exchangeOAuthCode } = useAuthStore();
 
-  onMounted(() => {
-    const hash = window.location.hash.startsWith("#")
-      ? window.location.hash.slice(1)
-      : "";
+  onMounted(async () => {
+    const handoff = Array.isArray(route.query.handoff)
+      ? route.query.handoff[0]
+      : route.query.handoff;
+    if (!handoff) return;
 
-    if (!hash) return;
-
-    const params = new URLSearchParams(hash);
-    const accessToken = params.get("accessToken");
-    const refreshToken = params.get("refreshToken");
-
-    if (accessToken && refreshToken) {
-      setTokens(accessToken, refreshToken);
-      history.replaceState(null, "", window.location.pathname);
-      navigateTo(routes.resolve("cabinet"), { replace: true });
+    try {
+      await exchangeOAuthCode(handoff);
+      await navigateTo(routes.resolve("cabinet"), { replace: true });
+    } catch {
+      await navigateTo(
+        { path: routes.resolve("login"), query: { error: "oauth_handoff" } },
+        { replace: true },
+      );
     }
   });
 };

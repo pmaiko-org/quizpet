@@ -17,7 +17,7 @@
           <p
             class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
-            {{ $t("learn.results.eyebrow") }}
+            {{ $wt("results.eyebrow") }}
           </p>
           <h2
             class="
@@ -48,7 +48,7 @@
               class="justify-center"
               @click="emit('restart')"
             >
-              {{ $t("learn.results.restart") }}
+              {{ $wt("results.restart") }}
             </UButton>
 
             <UButton
@@ -60,7 +60,7 @@
               :disabled="mistakeCards.length === 0"
               @click="emit('retryMistakes')"
             >
-              {{ $t("learn.results.retryMistakes") }}
+              {{ $wt("results.retryMistakes") }}
             </UButton>
           </div>
         </div>
@@ -89,20 +89,16 @@
           <p
             class="text-sm font-medium tracking-[0.24em] text-primary uppercase"
           >
-            {{ $t("learn.results.reviewEyebrow") }}
+            {{ $wt("results.reviewEyebrow") }}
           </p>
           <h3 class="mt-1 text-2xl font-semibold text-highlighted">
-            {{ $t("learn.results.reviewTitle") }}
+            {{ $wt("results.reviewTitle") }}
           </h3>
         </div>
 
         <p class="text-sm text-toned">
           {{
-            $t(
-              "learn.results.cardCount",
-              { count: reports.length },
-              reports.length,
-            )
+            $wt("results.cardCount", { count: reports.length }, reports.length)
           }}
         </p>
       </div>
@@ -138,8 +134,8 @@
                 >
                   {{
                     report.mistakes
-                      ? $t("learn.results.mistakes", { count: report.mistakes })
-                      : $t("learn.results.noMistakes")
+                      ? $wt("results.mistakes", { count: report.mistakes })
+                      : $wt("results.noMistakes")
                   }}
                 </UBadge>
               </div>
@@ -157,7 +153,7 @@
             >
               <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
-                  {{ $t("learn.results.attempts") }}
+                  {{ $wt("results.attempts") }}
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
                   {{ report.attempts.length }}
@@ -166,7 +162,7 @@
 
               <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
-                  {{ $t("learn.results.time") }}
+                  {{ $wt("results.time") }}
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
                   {{ formatDuration(report.totalDurationMs) }}
@@ -175,7 +171,7 @@
 
               <div class="rounded-md border border-default bg-default/70 p-3">
                 <p class="text-xs tracking-[0.16em] text-toned uppercase">
-                  {{ $t("learn.results.average") }}
+                  {{ $wt("results.average") }}
                 </p>
                 <p class="mt-1 text-lg font-semibold text-highlighted">
                   {{ formatDuration(report.averageDurationMs) }}
@@ -201,7 +197,7 @@ const { reports, totalDurationMs } = defineProps<{
   totalDurationMs: number;
 }>();
 
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const emit = defineEmits<{
   restart: [];
@@ -230,27 +226,27 @@ const averageTime = computed(() => {
 
 const heading = computed(() => {
   if (!reports.length) {
-    return t("learn.results.headingEmpty");
+    return t("results.headingEmpty");
   }
 
   if (!mistakeCards.value.length) {
-    return t("learn.results.headingPerfect");
+    return t("results.headingPerfect");
   }
 
-  return t("learn.results.headingReview");
+  return t("results.headingReview");
 });
 
 const summary = computed(() => {
   if (!reports.length) {
-    return t("learn.results.summaryEmpty");
+    return t("results.summaryEmpty");
   }
 
   if (!mistakeCards.value.length) {
-    return t("learn.results.summaryPerfect");
+    return t("results.summaryPerfect");
   }
 
   return t(
-    "learn.results.summaryReview",
+    "results.summaryReview",
     { count: mistakeCards.value.length },
     mistakeCards.value.length,
   );
@@ -259,19 +255,19 @@ const summary = computed(() => {
 const stats = computed(() => {
   return [
     {
-      label: t("learn.results.accuracy"),
+      label: t("results.accuracy"),
       value: `${accuracy.value}%`,
     },
     {
-      label: t("learn.results.firstTry"),
+      label: t("results.firstTry"),
       value: knownFirstTry.value,
     },
     {
-      label: t("learn.results.totalTime"),
+      label: t("results.totalTime"),
       value: formatDuration(totalDurationMs),
     },
     {
-      label: t("learn.results.averageTime"),
+      label: t("results.averageTime"),
       value: formatDuration(averageTime.value),
     },
   ];
@@ -286,4 +282,5 @@ const orderedReports = computed(() => {
     return right.totalDurationMs - left.totalDurationMs;
   });
 });
+const $wt = t;
 </script>

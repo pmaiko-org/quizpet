@@ -2,7 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { spawn } from "child_process";
-import { EnvironmentVariables } from "../../../config/configuration";
+import { TEnvironmentVariables } from "../../../config/configuration";
 import { StorageFsService } from "./storage-fs.service";
 
 type TDatabaseBackupTarget = {
@@ -17,7 +17,7 @@ export class StorageDbBackupsService {
   private readonly pgDumpBin = process.env.PG_DUMP_BIN || "pg_dump";
 
   constructor(
-    private readonly configService: ConfigService<EnvironmentVariables>,
+    private readonly configService: ConfigService<TEnvironmentVariables>,
     private readonly storageFsService: StorageFsService,
   ) {}
 

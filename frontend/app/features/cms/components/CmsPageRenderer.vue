@@ -22,9 +22,10 @@
         :key="item.key"
         :class="{ [CONTAINERLESS]: item.frame === 'full' || isCabinet }"
       >
-        <component
-          :is="item.component"
-          v-bind="item.props"
+        <CmsWidgetHost
+          :component="item.component"
+          :componentProps="item.props"
+          :translations="item.translations"
         />
       </UContainer>
     </div>
@@ -64,7 +65,19 @@ const widgets = computed(() =>
     }
 
     const { id, __component: uid, ...props } = block;
-    return [{ key: `${uid}:${id}`, props, ...definition }];
+    const translations = "translations" in props ? props.translations : [];
+    const componentProps = Object.fromEntries(
+      Object.entries(props).filter(([key]) => key !== "translations"),
+    );
+
+    return [
+      {
+        key: `${uid}:${id}`,
+        props: componentProps,
+        translations,
+        ...definition,
+      },
+    ];
   }),
 );
 </script>

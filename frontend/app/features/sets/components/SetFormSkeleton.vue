@@ -1,7 +1,7 @@
 <template>
   <div
     class="space-y-5 pb-20"
-    :aria-label="$t('sets.form.loading')"
+    :aria-label="$wt('form.loading')"
   >
     <section
       class="
@@ -99,3 +99,7 @@
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+const { t: $wt } = useCmsWidgetI18n();
+</script>

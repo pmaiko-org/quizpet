@@ -1,8 +1,8 @@
 <template>
   <BaseHeroSection
-    :eyebrow="$t('sets.hero.eyebrow')"
-    :title="$t('sets.hero.title')"
-    :description="$t('sets.hero.description')"
+    :eyebrow="$wt('hero.eyebrow')"
+    :title="$wt('hero.title')"
+    :description="$wt('hero.description')"
   >
     <div
       class="
@@ -16,7 +16,7 @@
         size="lg"
         class="justify-center"
       >
-        {{ $t("sets.create") }}
+        {{ $wt("create") }}
       </UButton>
     </div>
 
@@ -45,4 +45,5 @@ const { stats, pending = false } = defineProps<{
   stats: IHeroStat[];
   pending?: boolean;
 }>();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

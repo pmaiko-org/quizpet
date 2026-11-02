@@ -1,8 +1,16 @@
-import { FetchError } from "ofetch";
-
+import { isAccessTokenUsable } from "~/core/session/utils/auth-token";
 import { StatusCodes } from "~/shared/constants";
 import { createRepository } from "~/shared/repository";
 import type { TApiFetch } from "~/shared/repository/types";
+
+const RETRY_FLAG = "_retryAfterAuthRefresh";
+
+const isRefreshExcluded = (request: unknown) => {
+  const path = String(request);
+  return ["/auth/handoff", "/auth/refresh", "/auth/status"].some(value =>
+    path.includes(value),
+  );
+};
 
 export default defineNuxtPlugin({
   name: "api",
@@ -10,97 +18,44 @@ export default defineNuxtPlugin({
     const backendApiUrl = useBackendApiUrl();
     const cmsApiUrl = useCmsApiUrl();
     const authStore = useAuthStore();
-    const { accessToken } = storeToRefs(authStore);
-    const { getTokenEntry, authRefreshToken, doLogout } = authStore;
+    const { accessToken, isLoggingOut } = storeToRefs(authStore);
 
-    const RETRY_FLAG = "_retryAfterRefresh";
-
-    const inflight = new Set<AbortController>();
-    const controllerByOptions = new WeakMap<object, AbortController>();
-
-    const abortAll = () => {
-      inflight.forEach(controller => controller.abort());
-      inflight.clear();
-    };
-
-    const untrack = (options: object) => {
-      const controller = controllerByOptions.get(options);
-      if (!controller) return;
-
-      inflight.delete(controller);
-      controllerByOptions.delete(options);
-    };
-
-    const backendApi = $fetch.create({
+    const backendApi: TApiFetch = $fetch.create({
       baseURL: backendApiUrl,
-      credentials: "omit",
-      retry: false,
+      credentials: "include",
+      retry: 1,
+      retryStatusCodes: [StatusCodes.UNAUTHORIZED],
 
-      onRequest({ options }) {
+      onRequest({ request, options }) {
         options.headers.set("accept-language", "uk");
-        options.headers.set("authorization", getTokenEntry(accessToken.value));
+        if (
+          !isRefreshExcluded(request) &&
+          isAccessTokenUsable(accessToken.value)
+        ) {
+          options.headers.set("authorization", `Bearer ${accessToken.value}`);
+        } else {
+          options.headers.delete("authorization");
+        }
+      },
 
-        const controller = new AbortController();
-        inflight.add(controller);
-        controllerByOptions.set(options, controller);
+      async onResponseError({ request, response, options }) {
+        if (response.status !== StatusCodes.UNAUTHORIZED) return;
 
-        const callerSignal = options.signal;
-        if (callerSignal) {
-          if (callerSignal.aborted) {
-            controller.abort(callerSignal.reason);
-          } else {
-            callerSignal.addEventListener(
-              "abort",
-              () => controller.abort(callerSignal.reason),
-              { once: true },
-            );
-          }
+        const retryState = options as unknown as Record<string, unknown>;
+        if (retryState[RETRY_FLAG] || isRefreshExcluded(request)) {
+          options.retry = 0;
+          authStore.clearAuth();
+          return;
         }
 
-        options.signal = controller.signal;
-      },
+        if (!accessToken.value || isLoggingOut.value) {
+          options.retry = 0;
+          return;
+        }
 
-      onRequestError({ options }) {
-        untrack(options);
-      },
-
-      async onResponse(context): Promise<void> {
-        untrack(context.options);
-
-        if (context.response.status === StatusCodes.UNAUTHORIZED) {
-          const options = context.options as unknown as Record<string, unknown>;
-          const isRetried = options[RETRY_FLAG];
-
-          if (isRetried) {
-            abortAll();
-            await doLogout();
-            return;
-          }
-
-          const newAccessToken = await authRefreshToken();
-          if (!newAccessToken) {
-            abortAll();
-            await doLogout();
-            return;
-          }
-
-          const retryOptions = {
-            ...context.options,
-            [RETRY_FLAG]: true,
-          } as Record<string, unknown>;
-
-          try {
-            await backendApi(context.request, {
-              ...retryOptions,
-              onResponse(ctx) {
-                Object.assign(context, ctx);
-              },
-            });
-          } catch (error) {
-            if (error instanceof FetchError) {
-              console.error("Request retry after token refresh failed");
-            }
-          }
+        retryState[RETRY_FLAG] = true;
+        if (!(await authStore.authRefreshToken())) {
+          options.retry = 0;
         }
       },
     });

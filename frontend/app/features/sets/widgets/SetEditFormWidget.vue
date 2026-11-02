@@ -1,9 +1,9 @@
 <template>
   <BaseDataBoundary
-    :pending="status === 'pending' || status === 'idle'"
+    :pending="pending"
     :error="error"
-    :errorTitle="$t('sets.edit.loadError.title')"
-    :errorDescription="$t('sets.edit.loadError.description')"
+    :errorTitle="$wt('edit.loadError.title')"
+    :errorDescription="$wt('edit.loadError.description')"
     @retry="handleRetry"
   >
     <template #loading>
@@ -19,5 +19,6 @@
 </template>
 
 <script setup lang="ts">
-const { set, status, error, refresh: handleRetry } = useSetEdit();
+const { set, pending, error, refresh: handleRetry } = useSetEdit();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

@@ -1,7 +1,7 @@
 <template>
   <section class="space-y-3">
     <BaseSectionHeader
-      :eyebrow="$t('sets.grid.eyebrow')"
+      :eyebrow="$wt('grid.eyebrow')"
       :title="sectionTitle"
       :summary="summaryText"
     />
@@ -34,8 +34,8 @@
       :pending="pending"
       :error="error"
       :empty="!sets.length"
-      :errorTitle="$t('sets.grid.errorTitle')"
-      :errorDescription="$t('sets.grid.errorDescription')"
+      :errorTitle="$wt('grid.errorTitle')"
+      :errorDescription="$wt('grid.errorDescription')"
       @retry="emit('refresh')"
     >
       <template #loading>
@@ -133,7 +133,7 @@
             class="mt-5 justify-center"
             @click="emit('clearFilters')"
           >
-            {{ $t("sets.filters.clear") }}
+            {{ $wt("filters.clear") }}
           </UButton>
           <UButton
             v-else
@@ -142,7 +142,7 @@
             size="lg"
             class="mt-5 justify-center"
           >
-            {{ $t("sets.grid.createFirst") }}
+            {{ $wt("grid.createFirst") }}
           </UButton>
         </div>
       </template>
@@ -186,7 +186,7 @@ import type {
 import type { ISetAuthorOption, TSetListScope } from "../types";
 
 const routes = usePageRoutes();
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const {
   sets,
@@ -231,12 +231,12 @@ const scopeTabs = computed(
   () =>
     [
       {
-        label: t("sets.scope.mine"),
+        label: t("scope.mine"),
         value: "mine",
         icon: "i-lucide-user-round",
       },
       {
-        label: t("sets.scope.all"),
+        label: t("scope.all"),
         value: "all",
         icon: "i-lucide-library",
       },
@@ -244,23 +244,23 @@ const scopeTabs = computed(
 );
 
 const sectionTitle = computed(() =>
-  scope.value === "mine" ? t("sets.grid.mineTitle") : t("sets.grid.allTitle"),
+  scope.value === "mine" ? t("grid.mineTitle") : t("grid.allTitle"),
 );
 
 const emptyTitle = computed(() =>
   hasActiveFilters
-    ? t("sets.grid.filteredEmptyTitle")
+    ? t("grid.filteredEmptyTitle")
     : scope.value === "mine"
-      ? t("sets.grid.mineEmptyTitle")
-      : t("sets.grid.allEmptyTitle"),
+      ? t("grid.mineEmptyTitle")
+      : t("grid.allEmptyTitle"),
 );
 
 const emptyDescription = computed(() =>
   hasActiveFilters
-    ? t("sets.grid.filteredEmptyDescription")
+    ? t("grid.filteredEmptyDescription")
     : scope.value === "mine"
-      ? t("sets.grid.mineEmptyDescription")
-      : t("sets.grid.allEmptyDescription"),
+      ? t("grid.mineEmptyDescription")
+      : t("grid.allEmptyDescription"),
 );
 
 const emit = defineEmits<{
@@ -269,4 +269,5 @@ const emit = defineEmits<{
   clearFilters: [];
   retryFilterOptions: [];
 }>();
+const $wt = t;
 </script>

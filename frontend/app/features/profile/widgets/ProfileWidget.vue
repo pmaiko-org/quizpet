@@ -2,8 +2,8 @@
   <BaseDataBoundary
     :pending="pending"
     :error="error"
-    :errorTitle="$t('profile.loadError.title')"
-    :errorDescription="$t('profile.loadError.description')"
+    :errorTitle="$wt('loadError.title')"
+    :errorDescription="$wt('loadError.description')"
     @retry="refresh"
   >
     <template #loading>
@@ -31,9 +31,9 @@
           >
             <div class="space-y-5">
               <BaseSectionIntro
-                :eyebrow="$t('profile.eyebrow')"
-                :title="$t('profile.title')"
-                :description="$t('profile.description')"
+                :eyebrow="$wt('eyebrow')"
+                :title="$wt('title')"
+                :description="$wt('description')"
                 titleTag="h1"
                 size="hero"
               />
@@ -45,9 +45,9 @@
                 "
               >
                 <UFormField
-                  :label="$t('profile.firstName.label')"
+                  :label="$wt('firstName.label')"
                   name="firstName"
-                  :description="$t('profile.firstName.description')"
+                  :description="$wt('firstName.description')"
                   required
                   size="lg"
                 >
@@ -55,14 +55,14 @@
                     v-model="state.firstName"
                     size="lg"
                     class="w-full"
-                    :placeholder="$t('profile.firstName.placeholder')"
+                    :placeholder="$wt('firstName.placeholder')"
                   />
                 </UFormField>
 
                 <UFormField
-                  :label="$t('profile.lastName.label')"
+                  :label="$wt('lastName.label')"
                   name="lastName"
-                  :description="$t('profile.lastName.description')"
+                  :description="$wt('lastName.description')"
                   required
                   size="lg"
                 >
@@ -70,7 +70,7 @@
                     v-model="state.lastName"
                     size="lg"
                     class="w-full"
-                    :placeholder="$t('profile.lastName.placeholder')"
+                    :placeholder="$wt('lastName.placeholder')"
                   />
                 </UFormField>
               </div>
@@ -78,7 +78,7 @@
               <UFormField
                 label="Email"
                 name="email"
-                :description="$t('profile.email.description')"
+                :description="$wt('email.description')"
                 size="lg"
               >
                 <UInput
@@ -100,8 +100,8 @@
               <BaseFilePicker
                 v-model="state.avatar"
                 name="avatar"
-                :label="$t('profile.avatar.label')"
-                :description="$t('profile.avatar.description')"
+                :label="$wt('avatar.label')"
+                :description="$wt('avatar.description')"
                 hint="PNG, JPG, WEBP, SVG"
               />
             </UCard>
@@ -117,11 +117,13 @@
                 sm:w-auto sm:min-w-40
               "
             >
-              {{ $t("profile.save") }}
+              {{ $wt("save") }}
             </UButton>
           </div>
         </UCard>
       </UForm>
+
+      <AuthSessions />
 
       <UCard
         :ui="{
@@ -137,10 +139,10 @@
         >
           <div class="space-y-1">
             <h2 class="text-base font-semibold text-error">
-              {{ $t("profile.delete.sectionTitle") }}
+              {{ $wt("delete.sectionTitle") }}
             </h2>
             <p class="max-w-xl text-sm text-muted">
-              {{ $t("profile.delete.sectionDescription") }}
+              {{ $wt("delete.sectionDescription") }}
             </p>
           </div>
 
@@ -151,7 +153,7 @@
             class="shrink-0"
             @click="handleOpenDeleteModal"
           >
-            {{ $t("profile.delete.action") }}
+            {{ $wt("delete.action") }}
           </UButton>
         </div>
       </UCard>
@@ -159,20 +161,20 @@
 
     <UModal
       v-model:open="deleteModalOpen"
-      :title="$t('profile.delete.modalTitle')"
-      :description="$t('profile.delete.modalDescription')"
+      :title="$wt('delete.modalTitle')"
+      :description="$wt('delete.modalDescription')"
     >
       <template #body>
         <div class="space-y-4">
           <p class="text-sm text-muted">
-            {{ $t("profile.delete.confirmPrompt") }}
+            {{ $wt("delete.confirmPrompt") }}
             <strong class="text-default">{{ user?.email }}</strong>.
           </p>
-          <UFormField :label="$t('profile.delete.confirmLabel')">
+          <UFormField :label="$wt('delete.confirmLabel')">
             <UInput
               v-model="deleteConfirmEmail"
               class="w-full"
-              :placeholder="$t('profile.delete.confirmPlaceholder')"
+              :placeholder="$wt('delete.confirmPlaceholder')"
               autocomplete="off"
             />
           </UFormField>
@@ -187,7 +189,7 @@
             :disabled="deleting"
             @click="handleCloseDeleteModal"
           >
-            {{ $t("common.cancel") }}
+            {{ $wt("common.cancel") }}
           </UButton>
           <UButton
             color="error"
@@ -195,7 +197,7 @@
             :disabled="!canDelete"
             @click="handleDeleteAccount"
           >
-            {{ $t("profile.delete.forever") }}
+            {{ $wt("delete.forever") }}
           </UButton>
         </div>
       </template>
@@ -219,10 +221,10 @@ interface IProfileFormState {
 }
 
 const { $repository } = useNuxtApp();
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 const profileSchema = createProfileSchema(t);
 const { user, pending, error, refresh } = useCurrentUser();
-const { clearTokens } = useAuthStore();
+const { clearAuth } = useAuthStore();
 
 const state = reactive<IProfileFormState>({
   firstName: "",
@@ -264,15 +266,15 @@ const handleDeleteAccount = async () => {
     });
 
     deleteModalOpen.value = false;
-    clearTokens();
+    clearAuth();
     clearNuxtData();
 
-    toast.add({ title: t("profile.toast.deleted"), description: "" });
+    toast.add({ title: t("toast.deleted"), description: "" });
 
     await navigateTo(routes.resolve("login"));
   } catch {
     toast.add({
-      title: t("profile.toast.deleteError"),
+      title: t("toast.deleteError"),
       description: "",
       color: "error",
     });
@@ -312,12 +314,12 @@ const handleSubmit = async (event: {
     await refresh();
 
     toast.add({
-      title: t("profile.toast.updated"),
+      title: t("toast.updated"),
       description: "",
     });
   } catch {
     toast.add({
-      title: t("profile.toast.updateError"),
+      title: t("toast.updateError"),
       description: "",
       color: "error",
     });
@@ -325,4 +327,5 @@ const handleSubmit = async (event: {
     submitting.value = false;
   }
 };
+const $wt = t;
 </script>

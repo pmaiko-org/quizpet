@@ -3,10 +3,10 @@
     <div class="flex items-center justify-between gap-3">
       <div>
         <p class="text-sm font-semibold text-highlighted">
-          {{ $t("sets.filters.title") }}
+          {{ $wt("filters.title") }}
         </p>
         <p class="mt-0.5 text-xs text-toned">
-          {{ $t("sets.filters.description") }}
+          {{ $wt("filters.description") }}
         </p>
       </div>
 
@@ -19,21 +19,21 @@
         icon="i-lucide-rotate-ccw"
         @click="emit('clear')"
       >
-        {{ $t("sets.filters.clearShort") }}
+        {{ $wt("filters.clearShort") }}
       </UButton>
     </div>
 
     <div :class="filtersGridClass">
-      <UFormField :label="$t('sets.filters.name')">
+      <UFormField :label="$wt('filters.name')">
         <UInput
           v-model="search"
           icon="i-lucide-search"
-          :placeholder="$t('sets.filters.namePlaceholder')"
+          :placeholder="$wt('filters.namePlaceholder')"
           class="w-full"
         />
       </UFormField>
 
-      <UFormField :label="$t('sets.filters.topic')">
+      <UFormField :label="$wt('filters.topic')">
         <USkeleton
           v-if="!optionsReady"
           class="h-8 w-full"
@@ -45,8 +45,8 @@
           :items="topics"
           labelKey="label"
           valueKey="id"
-          :placeholder="$t('sets.filters.allTopics')"
-          :searchInput="{ placeholder: $t('sets.filters.topicSearch') }"
+          :placeholder="$wt('filters.allTopics')"
+          :searchInput="{ placeholder: $wt('filters.topicSearch') }"
           :multiple="true"
           class="w-full"
         >
@@ -59,7 +59,7 @@
         </USelectMenu>
       </UFormField>
 
-      <UFormField :label="$t('sets.filters.englishLevel')">
+      <UFormField :label="$wt('filters.englishLevel')">
         <USkeleton
           v-if="!optionsReady"
           class="h-8 w-full"
@@ -71,8 +71,8 @@
           :items="englishLevels"
           labelKey="label"
           valueKey="id"
-          :placeholder="$t('sets.filters.allLevels')"
-          :searchInput="{ placeholder: $t('sets.filters.levelSearch') }"
+          :placeholder="$wt('filters.allLevels')"
+          :searchInput="{ placeholder: $wt('filters.levelSearch') }"
           :multiple="true"
           class="w-full"
         />
@@ -80,7 +80,7 @@
 
       <UFormField
         v-if="scope === 'all'"
-        :label="$t('sets.filters.author')"
+        :label="$wt('filters.author')"
       >
         <USkeleton
           v-if="!optionsReady"
@@ -93,8 +93,8 @@
           :items="authors"
           labelKey="label"
           valueKey="id"
-          :placeholder="$t('sets.filters.allAuthors')"
-          :searchInput="{ placeholder: $t('sets.filters.authorSearch') }"
+          :placeholder="$wt('filters.allAuthors')"
+          :searchInput="{ placeholder: $wt('filters.authorSearch') }"
           :multiple="true"
           class="w-full"
         />
@@ -105,7 +105,7 @@
       v-if="optionsError"
       class="mt-3 flex items-center justify-between gap-3 text-sm text-error"
     >
-      <span>{{ $t("sets.filters.error") }}</span>
+      <span>{{ $wt("filters.error") }}</span>
       <UButton
         type="button"
         color="error"
@@ -114,7 +114,7 @@
         class="px-0"
         @click="emit('retryOptions')"
       >
-        {{ $t("common.retry") }}
+        {{ $wt("common.retry") }}
       </UButton>
     </div>
   </div>
@@ -162,4 +162,5 @@ const emit = defineEmits<{
   clear: [];
   retryOptions: [];
 }>();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

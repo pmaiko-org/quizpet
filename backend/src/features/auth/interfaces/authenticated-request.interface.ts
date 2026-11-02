@@ -1,13 +1,11 @@
 import { Request } from "express";
-import { JwtPayload } from "./jwt-payload.interface";
+import { IJwtPayload } from "../security/jwt-payload.interface";
+import type { UserEntity } from "../../users/user.entity";
 
-export interface AuthenticatedRequest extends Request {
-  user: JwtPayload;
+export interface IAuthenticatedRequest extends Request {
+  user: IJwtPayload;
 }
 
-export interface GoogleAuthRequest extends Request {
-  user: {
-    accessToken: string;
-    refreshToken: string;
-  };
+export interface IGoogleAuthRequest extends Request {
+  user: UserEntity;
 }

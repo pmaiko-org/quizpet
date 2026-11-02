@@ -24,7 +24,7 @@
         focus:outline-none
       "
     >
-      {{ $t("match.results.title") }}
+      {{ $wt("results.title") }}
     </h2>
     <p class="mt-2 text-sm text-toned">
       {{ setName }}
@@ -40,7 +40,7 @@
         size="lg"
         @click="emit('restart')"
       >
-        {{ $t("match.results.playAgain") }}
+        {{ $wt("results.playAgain") }}
       </UButton>
       <UButton
         :to="routes.resolve('sets-id-learn', { id: setId })"
@@ -49,7 +49,7 @@
         color="neutral"
         size="lg"
       >
-        {{ $t("match.results.continueLearn") }}
+        {{ $wt("results.continueLearn") }}
       </UButton>
     </div>
   </section>
@@ -59,7 +59,7 @@
 import { formatTime } from "../../utils";
 
 const routes = usePageRoutes();
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const { setId, setName, matchedCount, mistakes, elapsedMs, accuracy } =
   defineProps<{
@@ -73,10 +73,11 @@ const { setId, setName, matchedCount, mistakes, elapsedMs, accuracy } =
 const emit = defineEmits<{ restart: [] }>();
 const heading = useTemplateRef("heading");
 const metrics = computed(() => [
-  { label: t("match.metrics.matched"), value: matchedCount },
-  { label: t("match.metrics.time"), value: formatTime(elapsedMs) },
-  { label: t("match.metrics.mistakes"), value: mistakes },
-  { label: t("match.metrics.accuracy"), value: `${accuracy}%` },
+  { label: t("metrics.matched"), value: matchedCount },
+  { label: t("metrics.time"), value: formatTime(elapsedMs) },
+  { label: t("metrics.mistakes"), value: mistakes },
+  { label: t("metrics.accuracy"), value: `${accuracy}%` },
 ]);
 onMounted(() => heading.value?.focus());
+const $wt = t;
 </script>

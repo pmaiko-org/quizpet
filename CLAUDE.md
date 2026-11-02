@@ -87,7 +87,7 @@ Backend DTO class names become OpenAPI schema names, which the frontend consumes
 
 - **Schema** (content types, components, enum values) is applied by Strapi itself on boot.
 - **Migrations** (`cms/database/migrations/*.js`) change data that already exists. Strapi runs them automatically on boot, before the schema sync, in filename order. They must be `.js` or `.sql` — `.ts` files are not discovered.
-- **Seed** (`cms/scripts/seed.ts`) only creates what is missing: a page, a translation key or the global entry that is not in the database yet. It never updates an existing record, so the admin panel stays the source of truth for editorial content (`title`, `path`, `blocks`, `seo`, `priority`, translation values).
+- **Seed** (`cms/scripts/seed.ts`, with translation data in `cms/scripts/seed/translations.ts`) creates only missing pages, global translation keys, and the global entry. Global translation data is grouped by namespace (`common`, `landing`, `filePicker`) and stores keys without repeating that namespace. The seed adds the namespace only when it builds the Strapi key. It does not overwrite existing editorial content. The one idempotent exception is a schema backfill: when an existing functional widget has no `translations` yet, the seed copies its current CMS translation values into that empty field and never replaces a populated field.
 - The seed runs from `bootstrap()` in `cms/src/index.ts`, after Strapi has synced the schema, so every environment seeds itself on start and a redeploy changes nothing. `npm run seed` runs the same code as a one-off script.
 - Changing a field of a record that already exists in production therefore needs a migration — editing `seed.ts` alone will not apply it.
 
@@ -101,6 +101,7 @@ A task that changes a CMS-managed page, widget, or text is complete only when th
 - A new frontend route must also be added for both `uk` and `en` to the idempotent CMS seed with its `routeName`, localized `path`, `parent`, `access`, `layout`, SEO, and blocks.
 - A new or changed widget must update the Strapi component schema, the page Dynamic Zone, the Zod contract, OpenAPI, generated frontend types, the render registry, and both locale variants in the seed.
 - A translation key change must update the `translation` entries and seed for both `uk` and `en` with complete text in each language.
+- Functional widgets own a repeatable `shared.translation` field. Their keys are local to the widget (`title`, `form.name.label`), arrive with the resolved page block, and must not be added to the global bootstrap translation payload. Only application-wide shell and shared UI messages remain in the global `translation` collection.
 - Remove a page or widget only after removing its CMS usage, then remove its schema, registry entry, contract, and unused translations.
 - Do not leave CMS synchronization as a manual follow-up or make untracked changes only through the local admin panel.
 

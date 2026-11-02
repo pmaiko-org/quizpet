@@ -13,7 +13,7 @@ import type { setSchema } from "../validation";
 export const useSetForm = () => {
   const { $repository } = useNuxtApp();
   const toast = useToast();
-  const { t } = useI18n();
+  const { t } = useCmsWidgetI18n();
   const routes = usePageRoutes();
 
   const topics = ref<ITopicResponse[]>([]);
@@ -80,23 +80,23 @@ export const useSetForm = () => {
 
         await $repository.sets.updateSet(id, payload);
         await navigateTo(routes.resolve("sets"));
-        toast.add({ title: t("sets.toast.updated"), description: "" });
+        toast.add({ title: t("toast.updated"), description: "" });
 
         return false;
       }
 
       await $repository.sets.createSet(basePayload);
       await navigateTo(routes.resolve("sets"));
-      toast.add({ title: t("sets.toast.created"), description: "" });
+      toast.add({ title: t("toast.created"), description: "" });
 
       return true;
     } catch (error) {
       toast.add({
-        title: t("sets.toast.saveError"),
+        title: t("toast.saveError"),
         description:
           error instanceof FetchError
-            ? t("sets.toast.validationError")
-            : t("sets.toast.retryError"),
+            ? t("toast.validationError")
+            : t("toast.retryError"),
         color: "error",
       });
 

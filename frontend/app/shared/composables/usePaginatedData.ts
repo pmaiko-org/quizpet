@@ -57,27 +57,17 @@ export const usePaginatedData = <
     },
   });
 
-  const {
-    data,
-    pending: requestPending,
-    error,
-    refresh,
-    status,
-  } = useAsyncData<IPaginatedResponse<TItem>>(
-    key,
-    () => request({ page: page.value }),
-    {
-      server: false,
-      watch: [page, ...requestWatchSources],
-      dedupe: "cancel",
-    },
-  );
+  const { data, error, refresh, status } = useAsyncData<
+    IPaginatedResponse<TItem>
+  >(key, () => request({ page: page.value }), {
+    server: false,
+    watch: [page, ...requestWatchSources],
+    dedupe: "cancel",
+  });
 
   const items = computed<TItem[]>(() => data.value?.data ?? []);
   const meta = computed<IPaginationMeta | null>(() => data.value?.meta ?? null);
-  const pending = computed(
-    () => status.value === "idle" || requestPending.value,
-  );
+  const pending = useClientAsyncDataPending(status);
 
   watch(meta, (currentMeta) => {
     if (!currentMeta) {

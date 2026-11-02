@@ -45,7 +45,7 @@
             sm:text-4xl
           "
         >
-          {{ $t("login.showcase.title") }}
+          {{ $wt("showcase.title") }}
         </h1>
         <p
           class="
@@ -53,9 +53,13 @@
             sm:text-base
           "
         >
-          {{ $t("login.showcase.description") }}
+          {{ $wt("showcase.description") }}
         </p>
       </div>
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+const { t: $wt } = useCmsWidgetI18n();
+</script>

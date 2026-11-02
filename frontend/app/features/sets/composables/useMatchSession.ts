@@ -23,6 +23,7 @@ export const useMatchSession = (currentUserEmail: Ref<string | undefined>) => {
       ) ?? [],
   );
   const game = useMatchGame(cards);
+  const loading = useClientAsyncDataPending(status);
 
   watch(setId, game.reset, { flush: "sync" });
 
@@ -34,9 +35,7 @@ export const useMatchSession = (currentUserEmail: Ref<string | undefined>) => {
     canEdit: computed(() =>
       canEditSet(set.value ?? null, currentUserEmail.value),
     ),
-    loading: computed(
-      () => status.value === "pending" || status.value === "idle",
-    ),
+    loading,
     error,
     refresh,
   };

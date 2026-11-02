@@ -14,7 +14,7 @@
     "seed": "tsx scripts/seed.ts",
     "generate:types": "strapi ts:generate-types && node scripts/export-schema-types.mjs",
     "generate:openapi": "node --import tsx scripts/generate-openapi.ts",
-    "check:translations": "node scripts/check-translations.mjs",
+    "check:translations": "node --import tsx scripts/check-translations.mjs",
     "check:widgets": "node scripts/check-widgets.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p src/admin/tsconfig.json",
     "upgrade": "npx @strapi/upgrade latest",

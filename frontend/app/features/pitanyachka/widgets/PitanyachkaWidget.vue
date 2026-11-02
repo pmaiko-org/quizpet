@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-5">
     <BaseHeroSection
-      :eyebrow="$t('pitanyachka.hero.eyebrow')"
-      :title="$t('pitanyachka.hero.title')"
-      :description="$t('pitanyachka.hero.description')"
+      :eyebrow="$wt('hero.eyebrow')"
+      :title="$wt('hero.title')"
+      :description="$wt('hero.description')"
     />
 
     <PitanyachkaControls
@@ -25,8 +25,8 @@
     <PitanyachkaStage
       v-else-if="isReading"
       icon="i-lucide-mic"
-      :title="$t('pitanyachka.reading.title', { name: state.readerName })"
-      :description="$t('pitanyachka.reading.description')"
+      :title="$wt('reading.title', { name: state.readerName })"
+      :description="$wt('reading.description')"
     />
 
     <PitanyachkaCategoryPicker
@@ -39,15 +39,15 @@
     <PitanyachkaStage
       v-else-if="state.remaining === 0"
       icon="i-lucide-party-popper"
-      :title="$t('pitanyachka.finished.title')"
-      :description="$t('pitanyachka.finished.description')"
+      :title="$wt('finished.title')"
+      :description="$wt('finished.description')"
     />
 
     <PitanyachkaStage
       v-else
       icon="i-lucide-sparkles"
-      :title="$t('pitanyachka.free.title')"
-      :description="$t('pitanyachka.free.description')"
+      :title="$wt('free.title')"
+      :description="$wt('free.description')"
     >
       <UButton
         color="primary"
@@ -57,7 +57,7 @@
         :disabled="!connected"
         @click="generateQuestion"
       >
-        {{ $t("pitanyachka.generate") }}
+        {{ $wt("generate") }}
       </UButton>
     </PitanyachkaStage>
 
@@ -76,10 +76,10 @@ const { user } = useCurrentUser();
 const playerName = computed(() => {
   const fullName =
     `${user.value?.firstName ?? ""} ${user.value?.lastName ?? ""}`.trim();
-  return fullName || user.value?.email || t("pitanyachka.player");
+  return fullName || user.value?.email || t("player");
 });
 
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const {
   connected,
@@ -96,4 +96,5 @@ const {
 const isReading = computed(
   () => state.value.phase === PitanyachkaPhase.READING,
 );
+const $wt = t;
 </script>

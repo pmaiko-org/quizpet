@@ -125,18 +125,84 @@ const calloutWidgetSchema = z.object({
   secondaryLink: cmsLinkSchema.nullable().optional(),
 });
 
+const widgetTranslationsSchema = z.array(
+  z.object({
+    id: z.number(),
+    key: z.string(),
+    value: z.string(),
+  }),
+).superRefine((translations, context) => {
+  const keys = new Set<string>();
+
+  translations.forEach(({ key }, index) => {
+    if (keys.has(key)) {
+      context.addIssue({
+        code: "custom",
+        message: `Duplicate widget translation key: ${key}`,
+        path: [index, "key"],
+      });
+    }
+
+    keys.add(key);
+  });
+});
+
 const functionalWidgetSchema = z.discriminatedUnion("__component", [
-  z.object({ id: z.number(), __component: z.literal("widgets.home-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.login-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.people-hero-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.people-grid-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.pitanyachka-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.profile-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.sets-list-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.create-set-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.set-edit-form-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.learn-widget") }),
-  z.object({ id: z.number(), __component: z.literal("widgets.match-widget") }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.home-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.login-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.people-hero-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.people-grid-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.pitanyachka-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.profile-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.sets-list-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.create-set-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.set-edit-form-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.learn-widget"),
+    translations: widgetTranslationsSchema,
+  }),
+  z.object({
+    id: z.number(),
+    __component: z.literal("widgets.match-widget"),
+    translations: widgetTranslationsSchema,
+  }),
 ]);
 
 export const cmsBlockSchema = z.union([

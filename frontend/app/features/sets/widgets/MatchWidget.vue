@@ -8,15 +8,15 @@
       :pending="loading"
       :error="error"
       :empty="!availableCount"
-      :errorTitle="$t('match.loadError.title')"
-      :errorDescription="$t('match.loadError.description')"
-      :retryLabel="$t('common.retryAgain')"
+      :errorTitle="$wt('loadError.title')"
+      :errorDescription="$wt('loadError.description')"
+      :retryLabel="$wt('common.retryAgain')"
       @retry="handleRetry"
     >
       <template #loading>
         <div
           class="space-y-5"
-          :aria-label="$t('match.loading')"
+          :aria-label="$wt('loading')"
           aria-busy="true"
         >
           <USkeleton class="h-8 w-48" />
@@ -35,10 +35,10 @@
           class="rounded-md border border-dashed border-default p-8 text-center"
         >
           <h1 class="text-xl font-semibold text-highlighted">
-            {{ $t("match.empty.title") }}
+            {{ $wt("empty.title") }}
           </h1>
           <p class="mt-2 text-sm text-toned">
-            {{ $t("match.empty.description") }}
+            {{ $wt("empty.description") }}
           </p>
           <UButton
             v-if="canEdit"
@@ -46,7 +46,7 @@
             class="mt-5"
             icon="i-lucide-plus"
           >
-            {{ $t("match.empty.action") }}
+            {{ $wt("empty.action") }}
           </UButton>
         </section>
       </template>
@@ -74,7 +74,7 @@
               mt-5 text-xs font-semibold tracking-widest text-primary uppercase
             "
           >
-            {{ $t("match.eyebrow") }}
+            {{ $wt("eyebrow") }}
           </p>
           <h1
             class="
@@ -86,7 +86,7 @@
           </h1>
           <p class="mx-auto mt-4 max-w-lg text-sm/6 text-toned">
             {{
-              $t("match.intro", {
+              $wt("intro", {
                 count: availableCount,
                 size: MATCH_ROUND_SIZE,
               })
@@ -98,10 +98,10 @@
             size="xl"
             @click="handleStart"
           >
-            {{ $t("match.start") }}
+            {{ $wt("start") }}
           </UButton>
           <p class="mt-4 text-xs text-muted">
-            {{ $t("match.keyboardHint") }}
+            {{ $wt("keyboardHint") }}
           </p>
         </section>
       </template>
@@ -128,7 +128,7 @@
                 text-xs font-semibold tracking-widest text-primary uppercase
               "
             >
-              {{ $t("match.eyebrow") }}
+              {{ $wt("eyebrow") }}
             </p>
             <h1
               class="
@@ -142,10 +142,10 @@
             icon="i-lucide-rotate-ccw"
             color="neutral"
             variant="ghost"
-            :aria-label="$t('match.restart')"
+            :aria-label="$wt('restart')"
             @click="handleStart"
           >
-            {{ $t("match.restart") }}
+            {{ $wt("restart") }}
           </UButton>
         </div>
         <div
@@ -154,7 +154,7 @@
           <dl class="grid grid-cols-3 gap-3 text-center">
             <div>
               <dt class="text-xs text-muted">
-                {{ $t("match.metrics.matched") }}
+                {{ $wt("metrics.matched") }}
               </dt>
               <dd class="mt-1 font-semibold text-highlighted">
                 {{ matchedCount }} / {{ totalCards }}
@@ -162,7 +162,7 @@
             </div>
             <div>
               <dt class="text-xs text-muted">
-                {{ $t("match.metrics.time") }}
+                {{ $wt("metrics.time") }}
               </dt>
               <dd class="mt-1 font-semibold text-highlighted tabular-nums">
                 {{ formatTime(elapsedMs) }}
@@ -170,7 +170,7 @@
             </div>
             <div>
               <dt class="text-xs text-muted">
-                {{ $t("match.metrics.mistakes") }}
+                {{ $wt("metrics.mistakes") }}
               </dt>
               <dd class="mt-1 font-semibold text-highlighted">
                 {{ mistakes }}
@@ -180,7 +180,7 @@
           <UProgress
             :modelValue="matchedCount"
             :max="totalCards"
-            :aria-label="$t('match.metrics.matched')"
+            :aria-label="$wt('metrics.matched')"
           />
         </div>
         <MatchBoard
@@ -235,4 +235,5 @@ const {
   nextRound: handleNextRound,
   selectTile: handleSelect,
 } = useMatchSession(email);
+const { t: $wt } = useCmsWidgetI18n();
 </script>

@@ -43,6 +43,10 @@ export default defineNuxtConfig({
         { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       ],
       meta: [
+        {
+          name: "google-site-verification",
+          content: "vMUDJYGTAGROhycUg6H_AgfdZqguuO02DtrwN06DNmk",
+        },
         { property: "og:type", content: "website" },
         { property: "og:image", content: "/og-image.png" },
         { property: "og:image:width", content: "1200" },
@@ -69,6 +73,8 @@ export default defineNuxtConfig({
     "/**": {
       headers: {
         "content-security-policy": "frame-ancestors 'self'",
+        "referrer-policy": "same-origin",
+        "x-content-type-options": "nosniff",
       },
     },
   },

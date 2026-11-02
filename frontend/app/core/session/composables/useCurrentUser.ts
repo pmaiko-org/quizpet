@@ -6,7 +6,6 @@ export const useCurrentUser = () => {
 
   const {
     data: user,
-    pending: requestPending,
     status,
     error,
     refresh,
@@ -24,9 +23,7 @@ export const useCurrentUser = () => {
   );
 
   const email = computed(() => user.value?.email);
-  const pending = computed(
-    () => requestPending.value || status.value === "idle",
-  );
+  const pending = useClientAsyncDataPending(status);
 
   return { user, email, pending, error, refresh };
 };

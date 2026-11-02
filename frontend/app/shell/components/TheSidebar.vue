@@ -165,21 +165,26 @@ const handleCloseOnMobile = () => {
   }
 };
 
-const items = computed<NavigationMenuItem[]>(() =>
-  (bootstrap.value?.global.sidebarLinks ?? []).map(link => ({
+const items = computed<NavigationMenuItem[]>(() => [
+  ...(bootstrap.value?.global.sidebarLinks ?? []).map(link => ({
     label: link.label,
     to: link.path,
     icon: link.icon ?? undefined,
   })),
-);
+  {
+    label: t("common.landing"),
+    to: routes.resolve("index"),
+    icon: "i-lucide-house",
+  },
+]);
 
 const { user: profile, pending: profilePending } = useCurrentUser();
 
 const { stats, pending: statsPending } = useMyStats();
 
 const metrics = computed(() => [
-  { value: stats.value.peopleCount, label: t("home.metric.people") },
-  { value: stats.value.mySetsCount, label: t("home.metric.sets") },
-  { value: stats.value.myTopicsCount, label: t("home.metric.topics") },
+  { value: stats.value.peopleCount, label: t("common.people") },
+  { value: stats.value.mySetsCount, label: t("common.sets") },
+  { value: stats.value.myTopicsCount, label: t("common.topics") },
 ]);
 </script>

@@ -337,56 +337,111 @@ export interface components {
               id: number;
               /** @enum {string} */
               __component: "widgets.home-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.login-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.people-hero-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.people-grid-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.pitanyachka-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.profile-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.sets-list-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.create-set-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.set-edit-form-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.learn-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
           | {
               id: number;
               /** @enum {string} */
               __component: "widgets.match-widget";
+              translations: {
+                id: number;
+                key: string;
+                value: string;
+              }[];
             }
         )[];
         alternates: {

@@ -11,7 +11,7 @@ import { useSetFilters } from "./useSetFilters";
 
 export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
   const { $repository } = useNuxtApp();
-  const { t } = useI18n();
+  const { t } = useCmsWidgetI18n();
   const route = useRoute();
   const resolvedDefaultScope = ref<TSetListScope | null>(null);
   const loadedScope = ref<TSetListScope | null>(null);
@@ -140,20 +140,17 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
 
     return [
       {
-        label:
-          activeScope.value === "mine"
-            ? t("sets.stats.mine")
-            : t("sets.stats.all"),
+        label: activeScope.value === "mine" ? t("stats.mine") : t("stats.all"),
         value: totalSets.value,
         icon: "i-lucide-library",
       },
       {
-        label: t("sets.stats.topics"),
+        label: t("stats.topics"),
         value: topicsCount,
         icon: "i-lucide-tags",
       },
       {
-        label: t("sets.stats.described"),
+        label: t("stats.described"),
         value: describedSets,
         icon: "i-lucide-file-text",
       },
@@ -164,24 +161,24 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
     const total = totalSets.value;
 
     if (!total && hasActiveFilters.value) {
-      return t("sets.summary.filteredEmpty");
+      return t("summary.filteredEmpty");
     }
 
     if (!total) {
       return activeScope.value === "mine"
-        ? t("sets.summary.mineEmpty")
-        : t("sets.summary.allEmpty");
+        ? t("summary.mineEmpty")
+        : t("summary.allEmpty");
     }
 
     if (total === 1) {
       return activeScope.value === "mine"
-        ? t("sets.summary.mine", { count: total }, total)
-        : t("sets.summary.all", { count: total }, total);
+        ? t("summary.mine", { count: total }, total)
+        : t("summary.all", { count: total }, total);
     }
 
     return activeScope.value === "mine"
-      ? t("sets.summary.mine", { count: total }, total)
-      : t("sets.summary.all", { count: total }, total);
+      ? t("summary.mine", { count: total }, total)
+      : t("summary.all", { count: total }, total);
   });
 
   const canDelete = (set: ISetListItemResponse) => {
@@ -195,9 +192,7 @@ export const useSetsList = (currentUserEmail?: Ref<string | undefined>) => {
       return;
     }
 
-    const shouldDelete = window.confirm(
-      t("sets.deleteConfirm", { name: set.name }),
-    );
+    const shouldDelete = window.confirm(t("deleteConfirm", { name: set.name }));
 
     if (!shouldDelete) {
       return;

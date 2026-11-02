@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { StorageService } from "./services/storage.service";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { JwtAuthGuard } from "../auth/security/jwt-auth.guard";
 import { StorageDbBackupsService } from "./services/storage-db-backups.service";
 import { FileResponseDto } from "./dto/file.response.dto";
 import { SuccessResponseDto } from "../../common/dto/success.response.dto";

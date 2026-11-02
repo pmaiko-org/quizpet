@@ -33,11 +33,7 @@
             icon="i-lucide-cloud-check"
             class="w-fit shrink-0 rounded-full"
           >
-            {{
-              isEditMode
-                ? $t("sets.form.changesReady")
-                : $t("sets.form.draftSaved")
-            }}
+            {{ isEditMode ? $wt("form.changesReady") : $wt("form.draftSaved") }}
           </UBadge>
         </div>
 
@@ -48,9 +44,9 @@
           "
         >
           <UFormField
-            :label="$t('sets.form.name.label')"
+            :label="$wt('form.name.label')"
             name="name"
-            :description="$t('sets.form.name.description')"
+            :description="$wt('form.name.description')"
             required
             size="lg"
           >
@@ -58,14 +54,14 @@
               v-model="state.name"
               size="lg"
               class="w-full"
-              :placeholder="$t('sets.form.name.placeholder')"
+              :placeholder="$wt('form.name.placeholder')"
             />
           </UFormField>
 
           <UFormField
-            :label="$t('sets.form.level.label')"
+            :label="$wt('form.level.label')"
             name="englishLevelId"
-            :description="$t('sets.form.level.description')"
+            :description="$wt('form.level.description')"
             size="lg"
           >
             <USkeleton
@@ -81,7 +77,7 @@
               "
             >
               <p class="text-sm text-error">
-                {{ $t("sets.form.level.error") }}
+                {{ $wt("form.level.error") }}
               </p>
               <UButton
                 type="button"
@@ -91,7 +87,7 @@
                 icon="i-lucide-refresh-cw"
                 @click="handleLoadSetOptions"
               >
-                {{ $t("common.retry") }}
+                {{ $wt("common.retry") }}
               </UButton>
             </div>
 
@@ -101,7 +97,7 @@
               :items="englishLevels"
               labelKey="label"
               valueKey="id"
-              :searchInput="{ placeholder: $t('sets.filters.levelSearch') }"
+              :searchInput="{ placeholder: $wt('filters.levelSearch') }"
               size="lg"
               class="w-full"
             />
@@ -115,14 +111,14 @@
               class="mt-1 px-0"
               @click="state.englishLevelId = ''"
             >
-              {{ $t("sets.form.level.clear") }}
+              {{ $wt("form.level.clear") }}
             </UButton>
           </UFormField>
 
           <UFormField
-            :label="$t('sets.form.topics.label')"
+            :label="$wt('form.topics.label')"
             name="topicIds"
-            :description="$t('sets.form.topics.description')"
+            :description="$wt('form.topics.description')"
             required
             size="lg"
             class="md:col-span-2"
@@ -140,7 +136,7 @@
               "
             >
               <p class="text-sm text-error">
-                {{ $t("sets.form.topics.error") }}
+                {{ $wt("form.topics.error") }}
               </p>
               <UButton
                 type="button"
@@ -150,7 +146,7 @@
                 icon="i-lucide-refresh-cw"
                 @click="handleLoadSetOptions"
               >
-                {{ $t("common.retry") }}
+                {{ $wt("common.retry") }}
               </UButton>
             </div>
 
@@ -161,7 +157,7 @@
               labelKey="label"
               valueKey="id"
               :multiple="true"
-              :searchInput="{ placeholder: $t('sets.filters.topicSearch') }"
+              :searchInput="{ placeholder: $wt('filters.topicSearch') }"
               size="lg"
               class="w-full"
             >
@@ -175,9 +171,9 @@
           </UFormField>
 
           <UFormField
-            :label="$t('sets.form.description.label')"
+            :label="$wt('form.description.label')"
             name="description"
-            :description="$t('sets.form.description.description')"
+            :description="$wt('form.description.description')"
             size="lg"
             class="md:col-span-2"
           >
@@ -187,7 +183,7 @@
               autoresize
               :rows="2"
               class="w-full"
-              :placeholder="$t('sets.form.description.placeholder')"
+              :placeholder="$wt('form.description.placeholder')"
             />
           </UFormField>
         </div>
@@ -203,7 +199,7 @@
             class="mt-0.5 size-4 shrink-0 text-secondary"
           />
           <p>
-            {{ $t("sets.form.tip") }}
+            {{ $wt("form.tip") }}
           </p>
         </div>
       </div>
@@ -217,15 +213,15 @@
         "
       >
         <BaseSectionIntro
-          :eyebrow="$t('sets.form.cards.eyebrow')"
-          :title="$t('sets.form.cards.title')"
+          :eyebrow="$wt('form.cards.eyebrow')"
+          :title="$wt('form.cards.title')"
           titleTag="h2"
           size="section"
         />
         <p class="text-sm text-toned">
           {{
-            $t(
-              "sets.form.cards.count",
+            $wt(
+              "form.cards.count",
               { count: state.cards.length },
               state.cards.length,
             )
@@ -273,7 +269,7 @@
         :class="!submitting && 'cursor-pointer'"
         @click="handleAddCard"
       >
-        {{ $t("sets.form.cards.add") }}
+        {{ $wt("form.cards.add") }}
       </UButton>
 
       <UButton
@@ -306,7 +302,7 @@ import {
 } from "../types";
 import { setSchema } from "../validation";
 
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const { set } = defineProps<{
   set?: ISetDetailsResponse;
@@ -364,18 +360,16 @@ onMounted(() => {
 
 const isEditMode = computed(() => Boolean(state.id));
 const formEyebrow = computed(() =>
-  isEditMode.value ? t("sets.form.editEyebrow") : t("sets.form.newEyebrow"),
+  isEditMode.value ? t("form.editEyebrow") : t("form.newEyebrow"),
 );
 const formTitle = computed(() =>
-  isEditMode.value ? t("sets.form.editTitle") : t("sets.form.newTitle"),
+  isEditMode.value ? t("form.editTitle") : t("form.newTitle"),
 );
 const formDescription = computed(() =>
-  isEditMode.value
-    ? t("sets.form.editDescription")
-    : t("sets.form.newDescription"),
+  isEditMode.value ? t("form.editDescription") : t("form.newDescription"),
 );
 const submitLabel = computed(() =>
-  isEditMode.value ? t("common.save") : t("sets.create"),
+  isEditMode.value ? t("common.save") : t("create"),
 );
 
 watch(
@@ -465,4 +459,5 @@ const handleError = async (event: FormErrorEvent) => {
     element.focus();
   }
 };
+const $wt = t;
 </script>

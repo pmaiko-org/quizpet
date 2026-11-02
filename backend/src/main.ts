@@ -4,9 +4,14 @@ import { AppModule } from "./app.module";
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { GLOBAL_PREFIX } from "./config/constants";
 import { setupOpenApi } from "./openapi";
+import cookieParser from "cookie-parser";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableShutdownHooks();
+  app.set("trust proxy", 1);
+  app.use(cookieParser());
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(
     new ValidationPipe({

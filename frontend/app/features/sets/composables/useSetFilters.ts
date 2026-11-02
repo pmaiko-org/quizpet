@@ -148,6 +148,7 @@ export const useSetFilters = (activeScope: Readonly<Ref<TSetListScope>>) => {
       dedupe: "defer",
     },
   );
+  const filterOptionsPending = useClientAsyncDataPending(filterOptionsStatus);
 
   const authors = computed<ISetAuthorOption[]>(() => {
     return filterOptions.value.authors.map((author) => {
@@ -174,7 +175,10 @@ export const useSetFilters = (activeScope: Readonly<Ref<TSetListScope>>) => {
     topics: computed(() => filterOptions.value.topics),
     englishLevels: computed(() => filterOptions.value.englishLevels),
     authors,
-    filterOptionsReady: computed(() => filterOptionsStatus.value === "success"),
+    filterOptionsReady: computed(
+      () =>
+        !filterOptionsPending.value && filterOptionsStatus.value === "success",
+    ),
     filterOptionsError,
     refreshFilterOptions,
   };

@@ -17,10 +17,10 @@
         </span>
         <div>
           <p class="text-sm font-semibold text-highlighted">
-            {{ $t("sets.cardForm.number", { number: index + 1 }) }}
+            {{ $wt("cardForm.number", { number: index + 1 }) }}
           </p>
           <p class="text-xs text-muted">
-            {{ $t("sets.cardForm.subtitle") }}
+            {{ $wt("cardForm.subtitle") }}
           </p>
         </div>
       </div>
@@ -33,7 +33,7 @@
           size="sm"
           icon="i-lucide-arrow-up"
           :disabled="isFirst"
-          :aria-label="$t('sets.cardForm.moveUp')"
+          :aria-label="$wt('cardForm.moveUp')"
           @click="emit('moveUp')"
         />
         <UButton
@@ -43,7 +43,7 @@
           size="sm"
           icon="i-lucide-arrow-down"
           :disabled="isLast"
-          :aria-label="$t('sets.cardForm.moveDown')"
+          :aria-label="$wt('cardForm.moveDown')"
           @click="emit('moveDown')"
         />
         <UButton
@@ -53,7 +53,7 @@
           variant="ghost"
           size="sm"
           icon="i-lucide-trash-2"
-          :aria-label="$t('sets.cardForm.delete')"
+          :aria-label="$wt('cardForm.delete')"
           @click="emit('remove')"
         />
       </div>
@@ -67,8 +67,8 @@
     >
       <UFormField
         :name="fieldName('term')"
-        :label="$t('sets.cardForm.term.label')"
-        :description="$t('sets.cardForm.term.description')"
+        :label="$wt('cardForm.term.label')"
+        :description="$wt('cardForm.term.description')"
         required
         size="lg"
       >
@@ -76,28 +76,28 @@
           v-model="modelValue.term"
           size="lg"
           class="w-full"
-          :placeholder="$t('sets.cardForm.term.placeholder')"
+          :placeholder="$wt('cardForm.term.placeholder')"
         />
       </UFormField>
 
       <UFormField
         :name="fieldName('termDescription')"
-        :label="$t('sets.cardForm.hint.label')"
-        :description="$t('sets.cardForm.hint.description')"
+        :label="$wt('cardForm.hint.label')"
+        :description="$wt('cardForm.hint.description')"
         size="lg"
       >
         <UInput
           v-model="modelValue.termDescription"
           size="lg"
           class="w-full"
-          :placeholder="$t('sets.cardForm.hint.placeholder')"
+          :placeholder="$wt('cardForm.hint.placeholder')"
         />
       </UFormField>
 
       <UFormField
         :name="fieldName('definition')"
-        :label="$t('sets.cardForm.definition.label')"
-        :description="$t('sets.cardForm.definition.description')"
+        :label="$wt('cardForm.definition.label')"
+        :description="$wt('cardForm.definition.description')"
         required
         size="lg"
         class="col-span-full"
@@ -108,7 +108,7 @@
           autoresize
           :rows="2"
           class="w-full"
-          :placeholder="$t('sets.cardForm.definition.placeholder')"
+          :placeholder="$wt('cardForm.definition.placeholder')"
         />
       </UFormField>
     </div>
@@ -130,7 +130,7 @@
             name="i-lucide-palette"
             class="size-4 text-primary"
           />
-          {{ $t("sets.cardForm.appearance") }}
+          {{ $wt("cardForm.appearance") }}
         </span>
         <UIcon
           name="i-lucide-chevron-down"
@@ -150,29 +150,29 @@
         <BaseFilePicker
           v-model="modelValue.termImage"
           :name="fieldName('termImage')"
-          :label="$t('sets.cardForm.termImage.label')"
-          :description="$t('sets.cardForm.termImage.description')"
+          :label="$wt('cardForm.termImage.label')"
+          :description="$wt('cardForm.termImage.description')"
         />
 
         <BaseFilePicker
           v-model="modelValue.definitionImage"
           :name="fieldName('definitionImage')"
-          :label="$t('sets.cardForm.definitionImage.label')"
-          :description="$t('sets.cardForm.definitionImage.description')"
+          :label="$wt('cardForm.definitionImage.label')"
+          :description="$wt('cardForm.definitionImage.description')"
         />
 
         <BaseColorChooser
           v-model="modelValue.textColor"
           :name="fieldName('textColor')"
-          :label="$t('sets.cardForm.textColor.label')"
-          :description="$t('sets.cardForm.textColor.description')"
+          :label="$wt('cardForm.textColor.label')"
+          :description="$wt('cardForm.textColor.description')"
         />
 
         <BaseColorChooser
           v-model="modelValue.backgroundColor"
           :name="fieldName('backgroundColor')"
-          :label="$t('sets.cardForm.backgroundColor.label')"
-          :description="$t('sets.cardForm.backgroundColor.description')"
+          :label="$wt('cardForm.backgroundColor.label')"
+          :description="$wt('cardForm.backgroundColor.description')"
         />
       </div>
     </details>
@@ -207,4 +207,5 @@ const modelValue = defineModel<TCardFormData>({
 const fieldName = (field: keyof TCardFormData) => {
   return `cards.${index}.${field}`;
 };
+const { t: $wt } = useCmsWidgetI18n();
 </script>

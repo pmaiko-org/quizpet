@@ -8,10 +8,10 @@
   >
     <div class="space-y-2">
       <h2 class="text-2xl font-semibold text-highlighted">
-        {{ $t("pitanyachka.category.title") }}
+        {{ $wt("category.title") }}
       </h2>
       <p class="max-w-md text-sm text-muted">
-        {{ $t("pitanyachka.category.description") }}
+        {{ $wt("category.description") }}
       </p>
     </div>
 
@@ -36,7 +36,7 @@
           name="i-lucide-layers"
           class="size-4"
         />
-        {{ $t("pitanyachka.category.all") }}
+        {{ $wt("category.all") }}
         <span class="text-xs text-muted">{{ totalCount }}</span>
       </button>
 
@@ -72,7 +72,7 @@
       :disabled="disabled || !categories.length"
       @click="emit('start', selected)"
     >
-      {{ $t("pitanyachka.start") }}
+      {{ $wt("start") }}
     </UButton>
   </section>
 </template>
@@ -94,4 +94,5 @@ const selected = ref<string | null>(null);
 const totalCount = computed(() =>
   categories.reduce((sum, category) => sum + category.count, 0),
 );
+const { t: $wt } = useCmsWidgetI18n();
 </script>

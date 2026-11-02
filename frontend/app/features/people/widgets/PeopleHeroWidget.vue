@@ -1,7 +1,11 @@
 <template>
   <BaseHeroSection
-    :eyebrow="$t('people.hero.eyebrow')"
-    :title="$t('people.hero.title')"
-    :description="$t('people.hero.description')"
+    :eyebrow="$wt('eyebrow')"
+    :title="$wt('title')"
+    :description="$wt('description')"
   />
 </template>
+
+<script setup lang="ts">
+const { t: $wt } = useCmsWidgetI18n();
+</script>

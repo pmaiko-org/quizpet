@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-6">
     <BaseHeroSection
-      :eyebrow="$t('home.eyebrow')"
+      :eyebrow="$wt('eyebrow')"
       :title="heroTitle"
-      :description="$t('home.summary')"
+      :description="$wt('summary')"
       :pending="userPending"
     >
       <div
@@ -18,7 +18,7 @@
           size="lg"
           class="justify-center"
         >
-          {{ $t("home.startLearning") }}
+          {{ $wt("startLearning") }}
         </UButton>
         <UButton
           :to="routes.resolve('sets-create')"
@@ -28,7 +28,7 @@
           color="neutral"
           class="justify-center"
         >
-          {{ $t("common.newSet") }}
+          {{ $wt("common.newSet") }}
         </UButton>
       </div>
 
@@ -45,9 +45,9 @@
 
     <section class="space-y-3">
       <BaseSectionHeader
-        :eyebrow="$t('home.quickAccess')"
-        :title="$t('home.keepPace')"
-        :summary="$t('home.everythingNearby')"
+        :eyebrow="$wt('quickAccess')"
+        :title="$wt('keepPace')"
+        :summary="$wt('everythingNearby')"
       />
 
       <div
@@ -101,31 +101,29 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 const routes = usePageRoutes();
 const { stats, pending: statsPending } = useMyStats();
 const { user, pending: userPending } = useCurrentUser();
 
 const heroTitle = computed(() => {
   const firstName = user.value?.firstName?.trim();
-  return firstName
-    ? t("home.title.named", { name: firstName })
-    : t("home.title.default");
+  return firstName ? t("title.named", { name: firstName }) : t("title.default");
 });
 
 const overviewMetrics = computed(() => [
   {
-    label: t("home.metric.people"),
+    label: t("metric.people"),
     value: stats.value.peopleCount,
     icon: "i-lucide-users",
   },
   {
-    label: t("home.metric.sets"),
+    label: t("metric.sets"),
     value: stats.value.mySetsCount,
     icon: "i-lucide-layers-3",
   },
   {
-    label: t("home.metric.topics"),
+    label: t("metric.topics"),
     value: stats.value.myTopicsCount,
     icon: "i-lucide-book-open-text",
   },
@@ -133,22 +131,23 @@ const overviewMetrics = computed(() => [
 
 const quickLinks = computed(() => [
   {
-    title: t("home.link.cards.title"),
-    description: t("home.link.cards.description"),
+    title: t("link.cards.title"),
+    description: t("link.cards.description"),
     icon: "i-lucide-layers-3",
     to: routes.resolve("sets"),
   },
   {
-    title: t("home.link.profile.title"),
-    description: t("home.link.profile.description"),
+    title: t("link.profile.title"),
+    description: t("link.profile.description"),
     icon: "i-lucide-user-round-pen",
     to: routes.resolve("profile"),
   },
   {
-    title: t("home.link.people.title"),
-    description: t("home.link.people.description"),
+    title: t("link.people.title"),
+    description: t("link.people.description"),
     icon: "i-lucide-users",
     to: routes.resolve("people"),
   },
 ]);
+const $wt = t;
 </script>

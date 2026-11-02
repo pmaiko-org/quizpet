@@ -159,6 +159,8 @@ shell  →  pages  →  features  →  core  →  shared
 2. рендерит из этого presentational-компоненты (`components/SetsGrid`, `components/SetsHero`);
 3. кросс-сквозные значения (текущий юзер) берёт из `core` (`useCurrentUser`) и отдаёт композаблу аргументом-`Ref` — **не** импортом чужой фичи.
 
+CMS functional widgets receive localized `translations` with the resolved block. `CmsWidgetHost` creates a local `vue-i18n` scope, and the widget subtree reads it through `useCmsWidgetI18n()`. Widget keys are local (`title`, `form.name.label`) and do not repeat the widget name. Use the global `$t` only for application-wide shell and shared UI messages.
+
 Разделение внутри фичи:
 
 | Папка         | Что лежит                                           | Пример                             |

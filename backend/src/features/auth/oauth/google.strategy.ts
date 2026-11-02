@@ -1,33 +1,36 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import {
+  Profile,
   Strategy,
   StrategyOptions,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { GLOBAL_PREFIX } from "../../config/constants";
-import { AuthService } from "./auth.service";
+import { AuthService } from "../auth.service";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
-  constructor(private authService: AuthService) {
+  constructor(
+    private readonly authService: AuthService,
+    configService: ConfigService,
+  ) {
+    const appOrigin = configService.getOrThrow<string>("auth.appOrigin");
     const options: StrategyOptions = {
       clientID: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: `${process.env.APP_ORIGIN}/${GLOBAL_PREFIX}/auth/google/redirect`,
+      callbackURL: `${appOrigin}/backend/auth/google/redirect`,
       scope: ["email", "profile"],
     };
-
     super(options);
   }
 
   async validate(
-    accessToken: string,
-    refreshToken: string,
-    profile: any,
+    _accessToken: string,
+    _refreshToken: string,
+    profile: Profile,
     done: VerifyCallback,
   ) {
-    const user = await this.authService.validateUser(profile);
-    done(null, user);
+    done(null, await this.authService.validateGoogleUser(profile));
   }
 }

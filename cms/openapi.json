@@ -958,11 +958,34 @@
                           "enum": [
                             "widgets.home-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -976,11 +999,34 @@
                           "enum": [
                             "widgets.login-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -994,11 +1040,34 @@
                           "enum": [
                             "widgets.people-hero-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1012,11 +1081,34 @@
                           "enum": [
                             "widgets.people-grid-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1030,11 +1122,34 @@
                           "enum": [
                             "widgets.pitanyachka-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1048,11 +1163,34 @@
                           "enum": [
                             "widgets.profile-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1066,11 +1204,34 @@
                           "enum": [
                             "widgets.sets-list-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1084,11 +1245,34 @@
                           "enum": [
                             "widgets.create-set-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1102,11 +1286,34 @@
                           "enum": [
                             "widgets.set-edit-form-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1120,11 +1327,34 @@
                           "enum": [
                             "widgets.learn-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     },
                     {
@@ -1138,11 +1368,34 @@
                           "enum": [
                             "widgets.match-widget"
                           ]
+                        },
+                        "translations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "key",
+                              "value"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "__component"
+                        "__component",
+                        "translations"
                       ]
                     }
                   ]

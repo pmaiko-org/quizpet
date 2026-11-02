@@ -44,7 +44,7 @@
       trailing
       @click="emit('pass')"
     >
-      {{ $t("pitanyachka.pass") }}
+      {{ $wt("pass") }}
     </UButton>
   </section>
 </template>
@@ -59,4 +59,5 @@ const { question } = defineProps<{
 const emit = defineEmits<{
   pass: [];
 }>();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

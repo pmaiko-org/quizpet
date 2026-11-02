@@ -20,12 +20,12 @@
         </span>
         <div>
           <h3 class="text-sm font-semibold text-highlighted">
-            {{ $t("sets.csv.title") }}
+            {{ $wt("csv.title") }}
           </h3>
           <p class="mt-0.5 max-w-xl text-xs/5 text-toned">
-            {{ $t("sets.csv.columnsPrefix") }} <code>term</code>,
-            <code>termDescription</code> {{ $t("sets.csv.and") }}
-            <code>definition</code>. {{ $t("sets.csv.replaces") }}
+            {{ $wt("csv.columnsPrefix") }} <code>term</code>,
+            <code>termDescription</code> {{ $wt("csv.and") }}
+            <code>definition</code>. {{ $wt("csv.replaces") }}
           </p>
         </div>
       </div>
@@ -45,7 +45,7 @@
           :disabled="!cards.length"
           @click="handleExportCsv"
         >
-          {{ $t("sets.csv.export") }}
+          {{ $wt("csv.export") }}
         </UButton>
 
         <UButton
@@ -56,7 +56,7 @@
           icon="i-lucide-upload"
           @click="handleOpenFilePicker"
         >
-          {{ $t("sets.csv.import") }}
+          {{ $wt("csv.import") }}
         </UButton>
       </div>
     </div>
@@ -89,7 +89,7 @@ const emit = defineEmits<{
 }>();
 
 const toast = useToast();
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const handleOpenFilePicker = () => {
@@ -135,7 +135,7 @@ const handleFileChange = async (event: Event) => {
     const importedRows = parseCsv(csv);
 
     if (!importedRows.length) {
-      throw new Error(t("sets.csv.error.empty"));
+      throw new Error(t("csv.error.empty"));
     }
 
     emit(
@@ -149,18 +149,18 @@ const handleFileChange = async (event: Event) => {
     );
 
     toast.add({
-      title: t("sets.csv.toast.imported"),
+      title: t("csv.toast.imported"),
       description: t(
-        "sets.csv.toast.count",
+        "csv.toast.count",
         { count: importedRows.length },
         importedRows.length,
       ),
     });
   } catch (error) {
     toast.add({
-      title: t("sets.csv.toast.error"),
+      title: t("csv.toast.error"),
       description:
-        error instanceof Error ? error.message : t("sets.csv.error.format"),
+        error instanceof Error ? error.message : t("csv.error.format"),
       color: "error",
     });
   } finally {
@@ -201,7 +201,7 @@ const parseCsv = (input: string): ICsvRow[] => {
     termDescriptionIndex === undefined ||
     definitionIndex === undefined
   ) {
-    throw new Error(t("sets.csv.error.headers"));
+    throw new Error(t("csv.error.headers"));
   }
 
   return dataRows
@@ -255,7 +255,7 @@ const parseCsvRows = (input: string): string[][] => {
   }
 
   if (insideQuotes) {
-    throw new Error(t("sets.csv.error.quotes"));
+    throw new Error(t("csv.error.quotes"));
   }
 
   if (currentCell.length || currentRow.length) {
@@ -265,4 +265,5 @@ const parseCsvRows = (input: string): string[][] => {
 
   return rows;
 };
+const $wt = t;
 </script>

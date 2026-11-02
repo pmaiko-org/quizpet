@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import configuration, { EnvironmentVariables } from "./config/configuration";
+import configuration, { TEnvironmentVariables } from "./config/configuration";
 import { AuthModule } from "./features/auth/auth.module";
 import { AppService } from "./app.service";
 import { AppController } from "./app.controller";
@@ -10,6 +10,7 @@ import { SetsModule } from "./features/sets/sets.module";
 import { StorageModule } from "./features/storage/storage.module";
 import { PitanyachkaModule } from "./features/pitanyachka/pitanyachka.module";
 import { ScheduleModule } from "@nestjs/schedule";
+import { RedisModule } from "./common/redis/redis.module";
 
 @Module({
   imports: [
@@ -18,10 +19,11 @@ import { ScheduleModule } from "@nestjs/schedule";
       load: [configuration],
       isGlobal: true,
     }),
+    RedisModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService<EnvironmentVariables>) => {
+      useFactory: (configService: ConfigService<TEnvironmentVariables>) => {
         const db = configService.get("db", { infer: true })!;
 
         return {

@@ -10,7 +10,7 @@
         :disabled="locked"
         @click="emit('missed')"
       >
-        {{ $t("learn.missed") }}
+        {{ $wt("missed") }}
       </UButton>
 
       <UButton
@@ -23,7 +23,7 @@
         :disabled="locked"
         @click="emit('known')"
       >
-        {{ $t("learn.knownNext") }}
+        {{ $wt("knownNext") }}
       </UButton>
     </div>
   </section>
@@ -38,4 +38,5 @@ const emit = defineEmits<{
   missed: [];
   known: [];
 }>();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

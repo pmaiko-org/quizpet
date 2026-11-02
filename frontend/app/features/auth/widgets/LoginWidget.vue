@@ -8,11 +8,20 @@
   >
     <div
       class="
-        absolute top-4 right-4 z-20 rounded-full bg-white/70 p-1 shadow-sm
-        ring-1 ring-black/5 backdrop-blur-md
+        absolute top-4 right-4 z-20 flex items-center gap-1 rounded-full
+        bg-white/70 p-1 shadow-sm ring-1 ring-black/5 backdrop-blur-md
         dark:bg-white/10 dark:shadow-none dark:ring-0
       "
     >
+      <UButton
+        :to="routes.resolve('index')"
+        color="neutral"
+        variant="ghost"
+        icon="i-lucide-house"
+        size="sm"
+      >
+        {{ $t("common.landing") }}
+      </UButton>
       <UColorModeSwitch />
     </div>
 
@@ -29,5 +38,7 @@
 </template>
 
 <script setup lang="ts">
+const routes = usePageRoutes();
+
 useOAuthCallback();
 </script>

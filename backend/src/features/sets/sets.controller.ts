@@ -12,8 +12,8 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiExtraModels } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import type { AuthenticatedRequest } from "../auth/interfaces/authenticated-request.interface";
+import { JwtAuthGuard } from "../auth/security/jwt-auth.guard";
+import type { IAuthenticatedRequest } from "../auth/interfaces/authenticated-request.interface";
 import { SetsService } from "./sets.service";
 import { SetCreateDto } from "./dto/set/create.dto";
 import { SetUpdateDto } from "./dto/set/update.dto";
@@ -53,7 +53,7 @@ export class SetsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   getSets(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: IAuthenticatedRequest,
     @Query() query: SetListQueryDto,
   ): Promise<SetListResponseDto> {
     return this.setsService.getSets(req.user.sub, query);
@@ -78,7 +78,7 @@ export class SetsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   createSet(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: IAuthenticatedRequest,
     @Body() createSetDto: SetCreateDto,
   ): Promise<SetDetailsResponseDto | undefined> {
     return this.setsService.createSet(req.user.sub, createSetDto);
@@ -87,7 +87,7 @@ export class SetsController {
   @UseGuards(JwtAuthGuard)
   @Delete(":id")
   deleteSet(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: IAuthenticatedRequest,
     @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<SuccessResponseDto> {
     return this.setsService.deleteSet(req.user.sub, id);
@@ -96,7 +96,7 @@ export class SetsController {
   @UseGuards(JwtAuthGuard)
   @Patch(":id")
   updateSet(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: IAuthenticatedRequest,
     @Param("id", new ParseUUIDPipe()) id: string,
     @Body() updateSetDto: SetUpdateDto,
   ): Promise<SetDetailsResponseDto | undefined> {

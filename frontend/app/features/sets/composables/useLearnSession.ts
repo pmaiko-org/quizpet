@@ -43,9 +43,7 @@ export const useLearnSession = (currentUserEmail?: Ref<string | undefined>) => {
     return canEditSet(set.value ?? null, currentUserEmail?.value);
   });
 
-  const loading = computed(
-    () => status.value === "pending" || status.value === "idle",
-  );
+  const loading = useClientAsyncDataPending(status);
 
   const refreshSet = () => refresh();
 

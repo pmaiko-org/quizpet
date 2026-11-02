@@ -15,7 +15,7 @@
             uppercase
           "
         >
-          {{ $t("sets.card.eyebrow") }}
+          {{ $wt("card.eyebrow") }}
         </p>
         <h3 class="truncate text-xl font-semibold text-highlighted">
           {{ set.name }}
@@ -37,7 +37,7 @@
     </div>
 
     <p class="mt-3 line-clamp-2 min-h-10 text-sm/5 text-toned">
-      {{ set.description || $t("sets.card.noDescription") }}
+      {{ set.description || $wt("card.noDescription") }}
     </p>
 
     <div class="mt-3 flex flex-wrap gap-1.5">
@@ -75,7 +75,7 @@
         size="md"
         class="rounded-full px-2.5 py-0.5"
       >
-        {{ $t("sets.card.noTopics") }}
+        {{ $wt("card.noTopics") }}
       </UBadge>
     </div>
 
@@ -87,7 +87,7 @@
               text-[10px] font-semibold tracking-widest text-muted uppercase
             "
           >
-            {{ $t("sets.card.cards") }}
+            {{ $wt("card.cards") }}
           </p>
           <p class="mt-0.5 text-base font-semibold text-highlighted">
             {{ set.cardsCount }}
@@ -100,7 +100,7 @@
               text-[10px] font-semibold tracking-widest text-muted uppercase
             "
           >
-            {{ $t("sets.card.topics") }}
+            {{ $wt("card.topics") }}
           </p>
           <p class="mt-0.5 text-base font-semibold text-highlighted">
             {{ set.topics.length }}
@@ -113,7 +113,7 @@
               text-[10px] font-semibold tracking-widest text-muted uppercase
             "
           >
-            {{ $t("sets.card.author") }}
+            {{ $wt("card.author") }}
           </p>
           <p class="mt-0.5 truncate text-sm font-semibold text-highlighted">
             {{ getAuthorName(set) }}
@@ -130,7 +130,7 @@
           size="lg"
           class="min-w-32 justify-center"
         >
-          {{ $t("sets.card.learn") }}
+          {{ $wt("card.learn") }}
         </UButton>
 
         <UButton
@@ -153,7 +153,7 @@
           color="neutral"
           icon="i-lucide-pencil"
           size="lg"
-          :aria-label="$t('sets.card.edit')"
+          :aria-label="$wt('card.edit')"
         />
         <UButton
           :loading="deleting"
@@ -161,7 +161,7 @@
           variant="ghost"
           icon="i-lucide-trash-2"
           size="lg"
-          :aria-label="$t('sets.card.delete')"
+          :aria-label="$wt('card.delete')"
           @click="emit('delete', set)"
         />
       </div>
@@ -189,4 +189,5 @@ const {
 const emit = defineEmits<{
   delete: [set: ISetListItemResponse];
 }>();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

@@ -8,9 +8,9 @@
     :pending="loading"
     :error="error"
     :empty="!cards.length"
-    :errorTitle="$t('learn.loadError.title')"
-    :errorDescription="$t('learn.loadError.description')"
-    :retryLabel="$t('common.retryAgain')"
+    :errorTitle="$wt('loadError.title')"
+    :errorDescription="$wt('loadError.description')"
+    :retryLabel="$wt('common.retryAgain')"
     @retry="handleRetry"
   >
     <template #loading>
@@ -36,7 +36,7 @@
           />
         </div>
         <h2 class="mt-5 text-2xl font-semibold text-highlighted">
-          {{ $t("learn.empty") }}
+          {{ $wt("empty") }}
         </h2>
       </section>
     </template>
@@ -183,6 +183,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 onMounted(() => window.addEventListener("keydown", handleKeydown));
 onBeforeUnmount(() => window.removeEventListener("keydown", handleKeydown));
+const { t: $wt } = useCmsWidgetI18n();
 </script>
 
 <style scoped>

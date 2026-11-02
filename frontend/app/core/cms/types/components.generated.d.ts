@@ -68,6 +68,17 @@ export interface SharedSlideItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedTranslation extends Struct.ComponentSchema {
+  collectionName: "components_shared_translations";
+  info: {
+    displayName: "Translation";
+  };
+  attributes: {
+    key: Schema.Attribute.String & Schema.Attribute.Required;
+    value: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
 export interface WidgetsCalloutWidget extends Struct.ComponentSchema {
   collectionName: "components_widgets_callout_widgets";
   info: {
@@ -93,7 +104,10 @@ export interface WidgetsCreateSetWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Create Set Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsFeatureGridWidget extends Struct.ComponentSchema {
@@ -153,7 +167,10 @@ export interface WidgetsHomeWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Home Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsLearnWidget extends Struct.ComponentSchema {
@@ -161,7 +178,10 @@ export interface WidgetsLearnWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Learn Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsLoginWidget extends Struct.ComponentSchema {
@@ -169,7 +189,10 @@ export interface WidgetsLoginWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Login Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsMatchWidget extends Struct.ComponentSchema {
@@ -177,7 +200,10 @@ export interface WidgetsMatchWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Match Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsPeopleGridWidget extends Struct.ComponentSchema {
@@ -185,7 +211,10 @@ export interface WidgetsPeopleGridWidget extends Struct.ComponentSchema {
   info: {
     displayName: "People Grid Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsPeopleHeroWidget extends Struct.ComponentSchema {
@@ -193,7 +222,10 @@ export interface WidgetsPeopleHeroWidget extends Struct.ComponentSchema {
   info: {
     displayName: "People Hero Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsPitanyachkaWidget extends Struct.ComponentSchema {
@@ -201,7 +233,10 @@ export interface WidgetsPitanyachkaWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Pitanyachka Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsProfileWidget extends Struct.ComponentSchema {
@@ -209,7 +244,10 @@ export interface WidgetsProfileWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Profile Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsRichTextWidget extends Struct.ComponentSchema {
@@ -230,7 +268,10 @@ export interface WidgetsSetEditFormWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Set Edit Form Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsSetsListWidget extends Struct.ComponentSchema {
@@ -238,7 +279,10 @@ export interface WidgetsSetsListWidget extends Struct.ComponentSchema {
   info: {
     displayName: "Sets List Widget";
   };
-  attributes: {};
+  attributes: {
+    translations: Schema.Attribute.Component<"shared.translation", true> &
+      Schema.Attribute.Required;
+  };
 }
 
 export interface WidgetsSliderWidget extends Struct.ComponentSchema {
@@ -286,6 +330,7 @@ declare module "@strapi/types" {
       "shared.link": SharedLink;
       "shared.seo": SharedSeo;
       "shared.slide-item": SharedSlideItem;
+      "shared.translation": SharedTranslation;
       "widgets.callout-widget": WidgetsCalloutWidget;
       "widgets.create-set-widget": WidgetsCreateSetWidget;
       "widgets.feature-grid-widget": WidgetsFeatureGridWidget;

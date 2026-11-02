@@ -1,14 +1,14 @@
 <template>
   <nav
     class="flex flex-wrap items-center gap-2"
-    :aria-label="$t('study.modes')"
+    :aria-label="$wt('study.modes')"
   >
     <UButton
       :to="routes.resolve('sets')"
       color="neutral"
       variant="ghost"
       icon="i-lucide-arrow-left"
-      :aria-label="$t('study.backToSets')"
+      :aria-label="$wt('study.backToSets')"
     />
     <UButton
       v-for="mode in modes"
@@ -30,7 +30,7 @@ const { setId, active } = defineProps<{
   active: "sets-id-learn" | "sets-id-match";
 }>();
 
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 const modes = computed(
   () =>
     [
@@ -48,4 +48,5 @@ const modes = computed(
 );
 
 const routes = usePageRoutes();
+const $wt = t;
 </script>

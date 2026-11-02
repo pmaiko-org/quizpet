@@ -57,14 +57,14 @@ const {
   totalTime: string;
 }>();
 
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 
 const title = computed(() => {
   if (!totalCards) {
-    return t("learn.progress.empty");
+    return t("progress.empty");
   }
 
-  return t("learn.progress.step", {
+  return t("progress.step", {
     current: Math.min(currentStep + 1, queueLength),
     total: queueLength,
   });
@@ -133,17 +133,17 @@ onBeforeUnmount(() => {
 
 const stats = computed(() => [
   {
-    label: t("learn.progress.learned"),
+    label: t("progress.learned"),
     value: `${learnedCount}/${totalCards}`,
     pulseClass: knownPulse.value ? "learn-stat-pulse-known" : "",
   },
   {
-    label: t("learn.progress.repeats"),
+    label: t("progress.repeats"),
     value: mistakesCount,
     pulseClass: repeatPulse.value ? "learn-stat-pulse-missed" : "",
   },
   {
-    label: t("learn.progress.session"),
+    label: t("progress.session"),
     value: totalTime,
     pulseClass: "",
   },

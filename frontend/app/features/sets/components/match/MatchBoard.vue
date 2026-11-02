@@ -14,11 +14,11 @@
           focus:outline-none
         "
       >
-        {{ $t("match.round", { current: roundNumber, total: roundCount }) }}
+        {{ $wt("round", { current: roundNumber, total: roundCount }) }}
       </h2>
       <p class="text-sm text-muted">
         {{
-          $t("match.pairsProgress", {
+          $wt("pairsProgress", {
             matched: matchedIds.size,
             total: terms.length,
           })
@@ -69,7 +69,7 @@
         size="lg"
         @click="emit('nextRound')"
       >
-        {{ $t("match.nextRound") }}
+        {{ $wt("nextRound") }}
       </UButton>
     </div>
   </section>
@@ -109,12 +109,12 @@ const emit = defineEmits<{
 
 const board = useTemplateRef("board");
 const heading = useTemplateRef("heading");
-const { t } = useI18n();
+const { t } = useCmsWidgetI18n();
 const columns = computed(() => [
-  { side: "term" as const, label: t("match.words"), cards: terms },
+  { side: "term" as const, label: t("words"), cards: terms },
   {
     side: "definition" as const,
-    label: t("match.definitions"),
+    label: t("definitions"),
     cards: definitions,
   },
 ]);
@@ -124,10 +124,10 @@ const isSelected = (cardId: string, side: TMatchSide) => {
   );
 };
 const feedbackMessage = computed(() => {
-  if (feedback === "error") return t("match.feedback.error");
-  if (feedback === "success") return t("match.feedback.success");
-  if (roundComplete) return t("match.feedback.roundComplete");
-  return selected ? t("match.feedback.choosePair") : t("match.feedback.start");
+  if (feedback === "error") return t("feedback.error");
+  if (feedback === "success") return t("feedback.success");
+  if (roundComplete) return t("feedback.roundComplete");
+  return selected ? t("feedback.choosePair") : t("feedback.start");
 });
 
 onMounted(() => heading.value?.focus());
@@ -151,4 +151,5 @@ watch(
   },
   { flush: "post" },
 );
+const $wt = t;
 </script>

@@ -15,9 +15,7 @@
           class="size-2 rounded-full"
           :class="connected ? 'bg-primary' : 'bg-muted'"
         />
-        {{
-          connected ? $t("pitanyachka.connected") : $t("pitanyachka.connecting")
-        }}
+        {{ connected ? $wt("connected") : $wt("connecting") }}
       </span>
 
       <span class="flex items-center gap-1.5 text-sm text-muted">
@@ -50,7 +48,7 @@
           name="i-lucide-tag"
           class="size-3.5"
         />
-        {{ categoryLabel ?? $t("pitanyachka.category.all") }}
+        {{ categoryLabel ?? $wt("category.all") }}
       </span>
     </div>
 
@@ -62,7 +60,7 @@
       :disabled="!connected"
       @click="emit('restart')"
     >
-      {{ $t("pitanyachka.restart") }}
+      {{ $wt("restart") }}
     </UButton>
   </section>
 </template>
@@ -87,4 +85,5 @@ const {
 const emit = defineEmits<{
   restart: [];
 }>();
+const { t: $wt } = useCmsWidgetI18n();
 </script>

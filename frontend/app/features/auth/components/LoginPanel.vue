@@ -21,7 +21,7 @@
           dark:text-amber-300
         "
       >
-        {{ $t("login.eyebrow") }}
+        {{ $wt("eyebrow") }}
       </p>
       <h2
         class="
@@ -30,7 +30,7 @@
           dark:text-highlighted
         "
       >
-        {{ $t("login.title") }}
+        {{ $wt("title") }}
       </h2>
       <p
         class="
@@ -39,7 +39,7 @@
           dark:text-toned
         "
       >
-        {{ $t("login.description") }}
+        {{ $wt("description") }}
       </p>
 
       <div class="mt-8 space-y-4">
@@ -60,7 +60,7 @@
             alt="Google"
             class="size-5 rounded-full"
           >
-          {{ $t("login.google") }}
+          {{ $wt("google") }}
         </a>
 
         <div
@@ -77,7 +77,7 @@
               dark:text-amber-300
             "
           />
-          {{ $t("login.secure") }}
+          {{ $wt("secure") }}
         </div>
 
         <p
@@ -86,7 +86,7 @@
             dark:text-muted
           "
         >
-          {{ $t("login.agreement.prefix") }}
+          {{ $wt("agreement.prefix") }}
           <NuxtLink
             :to="routes.resolve('privacy')"
             class="
@@ -96,7 +96,7 @@
               dark:hover:text-amber-200
             "
           >
-            {{ $t("login.agreement.link") }}</NuxtLink>.
+            {{ $wt("agreement.link") }}</NuxtLink>.
         </p>
 
         <p
@@ -107,13 +107,13 @@
           "
         >
           <span>
-            {{ $t("login.openSource") }}
+            {{ $wt("openSource") }}
           </span>
           <a
             :href="githubUrl"
             target="_blank"
             rel="noopener noreferrer"
-            :aria-label="$t('login.githubAria')"
+            :aria-label="$wt('githubAria')"
             class="
               rounded-sm font-medium text-slate-600 underline-offset-2
               transition-colors
@@ -129,7 +129,7 @@
             :href="telegramUrl"
             target="_blank"
             rel="noopener noreferrer"
-            :aria-label="$t('login.telegramAria')"
+            :aria-label="$wt('telegramAria')"
             class="
               rounded-sm font-medium text-slate-600 underline-offset-2
               transition-colors
@@ -165,7 +165,7 @@
               dark:text-muted
             "
           >
-            {{ $t("login.metric.quizzes") }}
+            {{ $wt("metric.quizzes") }}
           </p>
         </div>
         <div>
@@ -183,7 +183,7 @@
               dark:text-muted
             "
           >
-            {{ $t("login.metric.live") }}
+            {{ $wt("metric.live") }}
           </p>
         </div>
         <div>
@@ -201,7 +201,7 @@
               dark:text-muted
             "
           >
-            {{ $t("login.metric.sync") }}
+            {{ $wt("metric.sync") }}
           </p>
         </div>
       </div>
@@ -222,4 +222,5 @@ const telegramUrl = computed(
     bootstrap.value?.global.socialLinks.find(link => link.label === "Telegram")
       ?.path ?? "",
 );
+const { t: $wt } = useCmsWidgetI18n();
 </script>

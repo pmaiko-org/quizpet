@@ -14,10 +14,11 @@ export const useSetEdit = () => {
     server: false,
     dedupe: "defer",
   });
+  const pending = useClientAsyncDataPending(status);
 
   return {
     set,
-    status,
+    pending,
     error,
     refresh,
     setId,

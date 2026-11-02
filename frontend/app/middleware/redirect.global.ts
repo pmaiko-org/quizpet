@@ -10,6 +10,9 @@ const cmsUnavailable = () =>
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const { $repository } = useNuxtApp();
+  const cmsPage = useCmsPage();
+  const authStore = useAuthStore();
+  const { isLoggedIn } = storeToRefs(authStore);
   const redirects = useState<TCmsRedirect[] | null>(
     "cms:redirects",
     () => null,
@@ -34,7 +37,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     );
   }
 
-  const cmsPage = useCmsPage();
   const resolved = await cmsPage.load(to.path);
 
   if (!resolved) {
@@ -43,7 +45,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   setPageLayout(resolved.page.layout);
 
-  const { isLoggedIn } = storeToRefs(useAuthStore());
+  const hasOAuthHandoff =
+    resolved.page.routeName === "login" && typeof to.query.handoff === "string";
+  if (hasOAuthHandoff) return;
+
+  await authStore.ensureAuth();
   const denied =
     (resolved.page.access === "authenticated" && !isLoggedIn.value) ||
     (resolved.page.access === "guestOnly" && isLoggedIn.value);

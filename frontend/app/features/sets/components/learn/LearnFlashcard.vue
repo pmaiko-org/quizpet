@@ -6,7 +6,7 @@
         color="primary"
         class="shrink-0 rounded-sm"
       >
-        {{ $t("sets.cardForm.number", { number: currentStep }) }}
+        {{ $wt("cardForm.number", { number: currentStep }) }}
       </UBadge>
 
       <span
@@ -30,9 +30,7 @@
           color="neutral"
           variant="ghost"
           :icon="isSpeaking ? 'i-lucide-square' : 'i-lucide-volume-2'"
-          :aria-label="
-            isSpeaking ? $t('learn.speech.stop') : $t('learn.speech.start')
-          "
+          :aria-label="isSpeaking ? $wt('speech.stop') : $wt('speech.start')"
           @click.stop="handleSpeakCurrentSide"
         />
 
@@ -43,7 +41,7 @@
           color="neutral"
           icon="i-lucide-pencil"
           :to="editLink"
-          :aria-label="$t('learn.editCard')"
+          :aria-label="$wt('editCard')"
         />
 
         <UButton
@@ -53,9 +51,7 @@
           color="neutral"
           :icon="isFullscreen ? 'i-lucide-minimize' : 'i-lucide-maximize'"
           :aria-label="
-            isFullscreen
-              ? $t('learn.fullscreen.exit')
-              : $t('learn.fullscreen.enter')
+            isFullscreen ? $wt('fullscreen.exit') : $wt('fullscreen.enter')
           "
           @click="emit('toggleFullscreen')"
         />
@@ -73,7 +69,7 @@
         focus-visible:ring-2 focus-visible:ring-primary/70
       "
       :aria-pressed="flipped"
-      :aria-label="flipped ? $t('learn.showTerm') : $t('learn.showAnswer')"
+      :aria-label="flipped ? $wt('showTerm') : $wt('showAnswer')"
       @click="handleCardClick"
       @keydown.enter.prevent="emit('flip')"
     >
@@ -92,7 +88,7 @@
           :key="flipped ? 'definition' : 'term'"
           class="learn-side"
           :side="flipped ? 'definition' : 'term'"
-          :badge="flipped ? $t('learn.answer') : $t('learn.term')"
+          :badge="flipped ? $wt('answer') : $wt('term')"
           :title="flipped ? card.definition : card.term"
           :description="flipped ? null : card.termDescription"
           :image="flipped ? card.definitionImage : card.termImage"
@@ -115,7 +111,7 @@
             class="size-9"
           />
           <span>{{
-            swipeHint === "known" ? $t("learn.known") : $t("learn.missed")
+            swipeHint === "known" ? $wt("known") : $wt("missed")
           }}</span>
         </div>
       </div>
@@ -135,7 +131,7 @@
               class="size-9"
             />
             <span>{{
-              outcome === "known" ? $t("learn.known") : $t("learn.missed")
+              outcome === "known" ? $wt("known") : $wt("missed")
             }}</span>
           </div>
         </div>
@@ -220,6 +216,7 @@ const handleSpeakCurrentSide = () => {
 
   speak(text);
 };
+const { t: $wt } = useCmsWidgetI18n();
 </script>
 
 <style scoped>
