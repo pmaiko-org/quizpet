@@ -72,6 +72,7 @@ enum ApprovalStatus {
 
 ## Infrastructure (cross-service)
 
+- **Environment variables**: adding, removing, renaming, or reordering an environment variable must update `.env`, `.env.example`, and `.env.prod` in the same task. Keep the three files synchronized by variable name and ordering; use environment-specific secret values and non-secret placeholders in `.env.example`.
 - **Docker Compose**: dev and prod stacks share `compose.yaml`; `compose.dev.yaml` and `compose.prod.yaml` override it. All services communicate over a Docker bridge named `${PROJECT_PREFIX}-internal_network`. Nginx is also on `shared_network` (external, for reverse proxy), so the external proxy must target `${PROJECT_PREFIX}-nginx:4999`.
 - **Frontend static assets**: in prod the `frontend` container copies `.output/public` into the shared `frontend-static` volume on start (`frontend/docker-entrypoint.sh`), and `nginx` mounts it read-only at `/app/.output/public` to serve `/_nuxt/` and images directly.
 - **Auth**: Google OAuth 2.0 → issues JWT access + refresh tokens. Frontend auto-refreshes on 401 via the `$fetch` plugin, then retries the original request once.
