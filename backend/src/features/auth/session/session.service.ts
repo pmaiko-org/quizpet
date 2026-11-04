@@ -30,6 +30,7 @@ import {
 import { DeviceEntity } from "./entities/device.entity";
 import type { IRefreshTokenPayload } from "../security/jwt-payload.interface";
 import type { ISessionTokens } from "./interfaces/session-tokens.interface";
+import type { IActiveSession } from "./interfaces/active-session.interface";
 import { RefreshTokenEntity } from "./entities/refresh-token.entity";
 import {
   SessionEventType,
@@ -219,6 +220,12 @@ export class SessionService {
   }
 
   async validateRefreshSession(refreshToken: string) {
+    return Boolean(await this.getActiveRefreshSession(refreshToken));
+  }
+
+  async getActiveRefreshSession(
+    refreshToken: string,
+  ): Promise<IActiveSession | null> {
     try {
       const payload = this.readRefreshPayload(refreshToken);
       const session = await this.sessionRepository.findOne({
@@ -230,15 +237,19 @@ export class SessionService {
         },
       });
 
-      return Boolean(
-        session &&
-        safeEqual(
+      if (
+        !session ||
+        !safeEqual(
           session.currentRefreshTokenHash,
           this.hashRefreshJti(payload.jti),
-        ),
-      );
+        )
+      ) {
+        return null;
+      }
+
+      return { userId: payload.sub, sessionId: payload.sid };
     } catch {
-      return false;
+      return null;
     }
   }
 

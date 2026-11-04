@@ -14,10 +14,11 @@ export class GoogleOAuthGuard extends AuthGuard("google") {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
     if (request.query.code) {
-      await this.stateService.consume(
+      const returnTo = await this.stateService.consume(
         request.query.state,
         getCookie(request, OAUTH_STATE_COOKIE),
       );
+      Object.assign(request, { oauthReturnTo: returnTo });
     }
     return super.canActivate(context) as Promise<boolean>;
   }

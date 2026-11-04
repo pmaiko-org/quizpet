@@ -22,5 +22,6 @@ import { UserEntity } from "../users/user.entity";
   ],
   controllers: [SetsController],
   providers: [SetsService, TopicsSeedService, EnglishLevelsSeedService],
+  exports: [SetsService],
 })
 export class SetsModule {}

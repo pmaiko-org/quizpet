@@ -9,6 +9,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   Req,
   Res,
   UnauthorizedException,
@@ -27,7 +28,11 @@ import {
   REFRESH_TOKEN_TTL_SECONDS,
 } from "./auth.constants";
 import { AuthService } from "./auth.service";
-import { getCookie, getRequestIp } from "./auth.utils";
+import {
+  getCookie,
+  getOAuthInteractionReturnTo,
+  getRequestIp,
+} from "./auth.utils";
 import { AccessTokenResponseDto } from "./dto/access-token.response.dto";
 import { AuthStatusResponseDto } from "./dto/auth-status.response.dto";
 import { OAuthHandoffDto } from "./dto/oauth-handoff.dto";
@@ -60,8 +65,12 @@ export class AuthController {
   ) {}
 
   @Get("google")
-  async googleStart(@Res() response: Response) {
-    const state = await this.googleStateService.create();
+  async googleStart(
+    @Query("returnTo") returnTo: unknown,
+    @Res() response: Response,
+  ) {
+    const safeReturnTo = getOAuthInteractionReturnTo(returnTo);
+    const state = await this.googleStateService.create(safeReturnTo);
     response.cookie(OAUTH_STATE_COOKIE, state, {
       ...this.baseCookieOptions(),
       httpOnly: true,
@@ -105,9 +114,11 @@ export class AuthController {
       ...this.baseCookieOptions(),
       path: "/backend/auth/google",
     });
-    return response.redirect(
-      `/login?handoff=${encodeURIComponent(handoffCode)}`,
-    );
+    const query = new URLSearchParams({ handoff: handoffCode });
+    if (request.oauthReturnTo) {
+      query.set("returnTo", request.oauthReturnTo);
+    }
+    return response.redirect(`/login?${query.toString()}`);
   }
 
   @Post("handoff")

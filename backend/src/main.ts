@@ -6,11 +6,18 @@ import { GLOBAL_PREFIX } from "./config/constants";
 import { setupOpenApi } from "./openapi";
 import cookieParser from "cookie-parser";
 import type { NestExpressApplication } from "@nestjs/platform-express";
+import express from "express";
+import { McpHttpService } from "./features/mcp/mcp-http.service";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
+  });
   app.enableShutdownHooks();
   app.set("trust proxy", 1);
+  app.get(McpHttpService).mount(app.getHttpAdapter().getInstance());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(

@@ -7,9 +7,14 @@ import { randomToken, safeEqual } from "../auth.utils";
 export class GoogleOAuthStateService {
   constructor(@Inject(REDIS_CLIENT) private readonly redis: Redis) {}
 
-  async create() {
+  async create(returnTo?: string | null) {
     const state = randomToken();
-    await this.redis.set(`auth:oauth-state:${state}`, "1", "EX", 10 * 60);
+    await this.redis.set(
+      `auth:oauth-state:${state}`,
+      returnTo ?? "null",
+      "EX",
+      10 * 60,
+    );
     return state;
   }
 
@@ -23,6 +28,9 @@ export class GoogleOAuthStateService {
     }
 
     const consumed = await this.redis.getdel(`auth:oauth-state:${queryState}`);
-    if (!consumed) throw new UnauthorizedException("OAuth state expired");
+    if (consumed === null) {
+      throw new UnauthorizedException("OAuth state expired");
+    }
+    return consumed === "null" ? null : consumed;
   }
 }

@@ -44,7 +44,7 @@
 
       <div class="mt-8 space-y-4">
         <a
-          href="/backend/auth/google"
+          :href="googleLoginUrl"
           class="
             flex w-full items-center justify-center gap-3 rounded-2xl
             bg-slate-950 px-5 py-4 text-base font-medium text-white transition
@@ -210,6 +210,22 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute();
+const returnTo = computed(() => {
+  const value = Array.isArray(route.query.returnTo)
+    ? route.query.returnTo[0]
+    : route.query.returnTo;
+  return typeof value === "string" &&
+    /^\/backend\/oauth\/interaction\/[A-Za-z0-9_-]+$/.test(value)
+    ? value
+    : null;
+});
+const googleLoginUrl = computed(() => {
+  const query = returnTo.value
+    ? `?returnTo=${encodeURIComponent(returnTo.value)}`
+    : "";
+  return `/backend/auth/google${query}`;
+});
 const routes = usePageRoutes();
 const { bootstrap } = useCmsBootstrap();
 const githubUrl = computed(

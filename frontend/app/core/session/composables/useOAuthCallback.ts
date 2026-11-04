@@ -11,6 +11,16 @@ export const useOAuthCallback = () => {
 
     try {
       await exchangeOAuthCode(handoff);
+      const returnTo = Array.isArray(route.query.returnTo)
+        ? route.query.returnTo[0]
+        : route.query.returnTo;
+      if (
+        typeof returnTo === "string" &&
+        /^\/backend\/oauth\/interaction\/[A-Za-z0-9_-]+$/.test(returnTo)
+      ) {
+        window.location.assign(returnTo);
+        return;
+      }
       await navigateTo(routes.resolve("cabinet"), { replace: true });
     } catch {
       await navigateTo(

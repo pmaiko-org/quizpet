@@ -11,6 +11,7 @@ import { StorageModule } from "./features/storage/storage.module";
 import { PitanyachkaModule } from "./features/pitanyachka/pitanyachka.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { RedisModule } from "./common/redis/redis.module";
+import { McpModule } from "./features/mcp/mcp.module";
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { RedisModule } from "./common/redis/redis.module";
     SetsModule,
     StorageModule,
     PitanyachkaModule,
+    McpModule,
   ],
   controllers: [AppController],
   providers: [AppService],

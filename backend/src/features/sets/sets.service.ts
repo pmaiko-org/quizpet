@@ -31,6 +31,7 @@ import { EnglishLevelEntity } from "./entity/english-level.entity";
 import { EnglishLevelResponseDto } from "./dto/english-level/response.dto";
 import { UserEntity } from "../users/user.entity";
 import { UserResponseDto } from "../users/dto/user.response.dto";
+import type { TSetOwnedSearchQuery } from "./sets.types";
 
 @Injectable()
 export class SetsService {
@@ -92,6 +93,42 @@ export class SetsService {
         id: "DESC",
       },
     });
+  }
+
+  async searchOwnedSets(
+    userId: string,
+    query: TSetOwnedSearchQuery,
+  ): Promise<SetListResponseDto> {
+    const baseWhere: FindOptionsWhere<SetEntity> = {
+      user: { id: userId },
+      ...(query.englishLevel
+        ? { englishLevel: { value: query.englishLevel } }
+        : {}),
+      ...(query.topic ? { topics: { value: query.topic } } : {}),
+    };
+    const where = query.search
+      ? [
+          { ...baseWhere, name: ILike(`%${query.search}%`) },
+          { ...baseWhere, description: ILike(`%${query.search}%`) },
+        ]
+      : baseWhere;
+
+    return new AbstractService(
+      this.setRepository,
+      SetListItemResponseDto,
+    ).paginate(query, {
+      where,
+      order: { createdAt: "DESC", id: "DESC" },
+    });
+  }
+
+  async getOwnedSet(userId: string, setId: string) {
+    const set = await this.setRepository.findOne({
+      where: { id: setId, user: { id: userId } },
+      relations: { cards: true },
+      order: { cards: { position: "ASC" } },
+    });
+    if (set) return new SetDetailsResponseDto(set);
   }
 
   async getAuthors(): Promise<UserResponseDto[]> {

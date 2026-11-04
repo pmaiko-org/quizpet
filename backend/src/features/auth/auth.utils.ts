@@ -24,3 +24,10 @@ export const getCookie = (request: Request, name: string) => {
 
 export const getRequestIp = (request: Request) =>
   request.ip || request.socket.remoteAddress || "unknown";
+
+export const getOAuthInteractionReturnTo = (value: unknown) => {
+  if (typeof value !== "string") return null;
+  return /^\/backend\/oauth\/interaction\/[A-Za-z0-9_-]+$/.test(value)
+    ? value
+    : null;
+};

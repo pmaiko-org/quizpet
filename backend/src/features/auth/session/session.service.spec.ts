@@ -59,8 +59,11 @@ const createHarness = (overrides: TManagerOverrides = {}) => {
       return TOKEN_PEPPER;
     }),
   };
+  const sessionRepository = {
+    findOne: jest.fn(() => Promise.resolve(session)),
+  };
   const service = new SessionService(
-    {} as never,
+    sessionRepository as never,
     {} as never,
     dataSource as never,
     jwtService,
@@ -79,10 +82,31 @@ const createHarness = (overrides: TManagerOverrides = {}) => {
       { secret: REFRESH_SECRET, expiresIn: 60 },
     );
 
-  return { service, session, currentToken, manager, redis, signRefresh };
+  return {
+    service,
+    session,
+    currentToken,
+    manager,
+    redis,
+    sessionRepository,
+    signRefresh,
+  };
 };
 
 describe("SessionService refresh rotation", () => {
+  it("resolves the active QuizPet session for an OAuth interaction", async () => {
+    const harness = createHarness();
+    const jti = "7da9b095-341c-4f61-b67b-891436153892";
+    harness.session.currentRefreshTokenHash = hashToken(jti, TOKEN_PEPPER);
+
+    await expect(
+      harness.service.getActiveRefreshSession(harness.signRefresh(jti)),
+    ).resolves.toEqual({
+      userId: harness.session.user.id,
+      sessionId: harness.session.id,
+    });
+  });
+
   it("rotates the current refresh token exactly once", async () => {
     const harness = createHarness();
     const jti = "7da9b095-341c-4f61-b67b-891436153892";

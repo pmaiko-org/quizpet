@@ -8,4 +8,5 @@ export interface IAuthenticatedRequest extends Request {
 
 export interface IGoogleAuthRequest extends Request {
   user: UserEntity;
+  oauthReturnTo: string | null;
 }
